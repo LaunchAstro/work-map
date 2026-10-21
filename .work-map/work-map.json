@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "id": "work-map",
+  "title": "Work map",
+  "productRepo": "LaunchAstro/work-map",
+  "repos": ["LaunchAstro/work-map"],
+  "files": {
+    "source": "github",
+    "flow": ".work-map/flow.json",
+    "sections": ".work-map/section-map.json"
+  },
+  "progress": {
+    "basis": "ticket-count",
+    "bugLabels": ["bug"],
+    "skipLabels": ["idea", "question"]
+  },
+  "ticketConventions": {
+    "ticketLabels": ["build", "wayfinder:grilling", "wayfinder:research", "wayfinder:task", "wayfinder:prototype"],
+    "mapLabel": "wayfinder:map"
+  },
+  "specDocuments": {
+    "tooling": ["LaunchAstro/work-map:docs/spec/build-spec.md", "LaunchAstro/work-map:docs/spec/release.md"],
+    "docs": ["LaunchAstro/work-map:docs/spec/own-map.md"],
+    "config": ["LaunchAstro/work-map:docs/spec/config-v2.md", "LaunchAstro/work-map:docs/spec/roadmap-files.md"],
+    "github": ["LaunchAstro/work-map:docs/spec/github-budget.md"],
+    "placement": ["LaunchAstro/work-map:docs/spec/must-carry-over.md", "LaunchAstro/work-map:docs/seat-gauge-file/README.md"],
+    "progress": ["LaunchAstro/work-map:docs/spec/must-carry-over.md"],
+    "service": ["LaunchAstro/work-map:docs/spec/app-layout.md"],
+    "screen": ["LaunchAstro/work-map:docs/spec/screen.md"],
+    "parity": ["LaunchAstro/work-map:docs/spec/parity.md"],
+    "start": ["LaunchAstro/work-map:docs/spec/start-a-map.md"]
+  },
+  "planningSections": ["docs"],
+  "seatGauge": {
+    "repositories": { "work-map": "LaunchAstro/work-map" },
+    "branchTicket": "^[a-z]+/([1-9][0-9]*)-"
+  },
+  "dependencies": [
+    { "from": "parity", "to": "start", "label": "Start ships in v1.1.0, after switch-over" }
+  ]
+}

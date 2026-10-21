@@ -1,0 +1,71 @@
+{
+  "_readme": "Every path in this repo has exactly one owner. Rules and tests: docs/spec/own-map.md.",
+  "boxes": {
+    "tooling": [
+      "Cargo.toml",
+      "Cargo.lock",
+      "rust-toolchain.toml",
+      ".cargo/**",
+      ".github/**",
+      ".gitignore",
+      ".gitattributes",
+      "crates/xtask/**"
+    ],
+    "config": [
+      "crates/engine/src/config/**",
+      "crates/engine/src/scores/**",
+      "crates/engine/src/example/**",
+      "examples/**",
+      "crates/xtask/src/example_refresh.rs",
+      "crates/xtask/src/export.rs"
+    ],
+    "github": [
+      "crates/engine/src/github/**",
+      "crates/engine/src/census/**",
+      "crates/engine/src/store/**"
+    ],
+    "placement": [
+      "crates/engine/src/placement/**",
+      "crates/engine/src/map_gaps/**",
+      "crates/engine/src/seat_gauge/**"
+    ],
+    "progress": [
+      "crates/engine/src/progress/**",
+      "crates/engine/src/merges/**",
+      "crates/engine/src/versions/**"
+    ],
+    "service": [
+      "crates/engine/**",
+      "crates/server/**",
+      "crates/app/**",
+      "web/src/contract/**"
+    ],
+    "screen": [
+      "web/**"
+    ],
+    "parity": [
+      "crates/parity/**",
+      "parity/**",
+      "crates/xtask/src/old_capture.rs"
+    ],
+    "start": [
+      "crates/engine/src/start/**",
+      "crates/app/src/start.rs",
+      "web/src/start/**",
+      "examples/start/**",
+      "crates/xtask/src/start_fixture.rs"
+    ],
+    "docs": [
+      "docs/**",
+      ".work-map/**",
+      "README.md",
+      "AGENTS.md",
+      "CONTEXT.md",
+      "LICENSE",
+      ".github/pull_request_template.md"
+    ]
+  },
+  "maps": {
+    "LaunchAstro/work-map#2": "docs"
+  }
+}

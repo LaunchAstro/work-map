@@ -1,0 +1,29 @@
+{
+  "title": "Work map",
+  "stages": ["Foundation", "Reading", "Working out", "Showing", "Proving", "After release one"],
+  "nodes": [
+    { "id": "tooling", "title": "Tooling", "text": "The Cargo workspace, the check runner, line counts, hosted builds and release bundles.", "stage": 1, "row": 1 },
+    { "id": "docs", "title": "Docs and planning", "text": "Specs, the guide, the README and this repo's own map.", "stage": 1, "row": 2 },
+    { "id": "config", "title": "Config and the example", "text": "Settings, config v2 and v1, roadmap files, frozen scores and the built-in example.", "stage": 2, "row": 1 },
+    { "id": "github", "title": "GitHub and the census", "text": "The GitHub port and its adapters, the budget gate, the census and the data folder.", "stage": 2, "row": 2 },
+    { "id": "placement", "title": "Placement", "text": "Every ticket and PR placed once, map gaps, and agents from Seat Gauge.", "stage": 3, "row": 1 },
+    { "id": "progress", "title": "Progress", "text": "Ticket counts, the scope and review bars, merges and served site versions.", "stage": 3, "row": 2 },
+    { "id": "service", "title": "Service and shell", "text": "The view, the engine service, the contract, dump, the server and the app.", "stage": 4, "row": 1 },
+    { "id": "screen", "title": "Screen", "text": "The React screen, its transport and its tests.", "stage": 4, "row": 2 },
+    { "id": "parity", "title": "Parity", "text": "The side-by-side harness, the streak and switch-over.", "stage": 5, "row": 1 },
+    { "id": "start", "title": "Start a map", "text": "The v1.1.0 command that proposes and writes a first map.", "stage": 6, "row": 1 }
+  ],
+  "wires": [
+    { "from": ["tooling", "r"], "to": ["config", "l"] },
+    { "from": ["tooling", "r"], "to": ["github", "l"] },
+    { "from": ["config", "r"], "to": ["placement", "l"] },
+    { "from": ["github", "r"], "to": ["placement", "l", 0.7] },
+    { "from": ["github", "r"], "to": ["progress", "l"] },
+    { "from": ["github", "r"], "to": ["service", "b"], "gap": 3, "lane": 8, "label": "The census feeds the merge panel directly" },
+    { "from": ["placement", "r"], "to": ["service", "l"] },
+    { "from": ["progress", "r"], "to": ["service", "l", 0.7] },
+    { "from": ["service", "b"], "to": ["screen", "t"] },
+    { "from": ["service", "r"], "to": ["parity", "l"] },
+    { "from": ["screen", "r"], "to": ["parity", "l", 0.7] }
+  ]
+}

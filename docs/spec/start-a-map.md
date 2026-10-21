@@ -132,7 +132,7 @@ Test: each fixture case above ends with its code.
 
 ## Fixtures
 
-The tests run on recorded surveys in the `examples/` tree: one per source in SM7, an empty repository, a 40,000-issue repository (only the five sampled pages recorded, with the totals), and a repository already listed in settings. The optional public demo repo (config-v2) is a live check, not a test. On it the labels source is expected to come first and propose the demo's `accounts`, `storage` and `editor`.
+The tests run on recorded surveys in the `examples/` tree: one per source in SM7, an empty repository, a 40,000-issue repository (only the five sampled pages recorded, with the totals), and a repository already listed in settings. This repo is a live check, not a test (`own-map.md`): its proposal is compared by hand with `.work-map/`.
 
 ## Notes for other tickets
 
