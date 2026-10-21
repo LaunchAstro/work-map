@@ -179,7 +179,7 @@ Test: closing the stream from the server leads the HTTP adapter to resubscribe a
 
 ## Window mode
 
-**L13. Only the five commands, nothing more.** The capability file allows the five contract commands and no plugin (no file system, shell, HTTP or opener). The window loads only the embedded screen. Window mode opens no HTTP port. `useHttpsScheme` stays off for good, because changing it moves the Windows webview's storage and loses saved views.
+**L13. Only the five commands, nothing more.** The capability file allows the five contract commands and no plugin (no file system, shell, HTTP or opener). The window loads only the embedded screen. Window mode opens no HTTP port. `useHttpsScheme` stays off for good, because changing it moves the Windows webview's storage and loses saved views. `v1.1.0` adds `propose_map` and `start_map`, and release two `score` and `cancel_scoring` (SR3).
 Test: a build check fails when the capability file grants anything beyond the five commands, or when `tauri.conf.json` sets `useHttpsScheme` or a remote URL.
 
 **L14. Dock and close behaviour.** On macOS, closing the window leaves the app in the Dock. The engine catches `ExitRequested` with no exit code and prevents it, and a Dock click (`Reopen`) opens the window again. Quit from the menu or Cmd-Q exits. On Windows and Linux, closing the last window quits the app. Release one has no tray icon. Seat Gauge is the tray app, and a Linux tray adds an appindicator dependency.
@@ -193,7 +193,7 @@ Test: a second copy with the same `WORK_MAP_DIR` cannot take the lock; after a k
 **L16. A second launch hands over and leaves.** A plain `work-map` launch that finds the lock held sends `show`. A window instance brings its window forward, or opens it on macOS. A served instance replies with its URL, and the second launch opens that URL in the browser. Either way the second launch exits 0. A second `serve` prints that a copy is already running, with its mode and URL, and exits 3.
 Test: launching twice leaves one process and one window; `serve` beside a running window exits 3.
 
-**L17. The control port.** One request per connection: a single JSON line of at most 4 KB, read within 2 seconds, answered with one JSON line. Requests are `{"token": "...", "op": "kick", "project": null}` or `{"token": "...", "op": "show"}`. A wrong token or a malformed line closes the connection with no answer. This port takes nothing else. An HTTP request sent to it fails as a malformed line.
+**L17. The control port.** One request per connection: a single JSON line of at most 4 KB, read within 2 seconds, answered with one JSON line. Requests are `{"token": "...", "op": "kick", "project": null}` or `{"token": "...", "op": "show"}`, and from release two `{"token": "...", "op": "score", ...}` (SR3). A wrong token or a malformed line closes the connection with no answer. This port takes nothing else. An HTTP request sent to it fails as a malformed line.
 Test: a request with the wrong token, a browser-style HTTP `POST`, and a 5 KB line all get no answer and change nothing.
 
 **L18. `work-map kick` is the outside script's call.** It reads `instance.json`, sends `kick` for the named project or every project, prints one line, and exits 0 when the app took the kick. When no copy holds the lock it prints "work map is not running" and exits 3, and nothing queues (B14). Scripts that do not care add `|| true`. In the engine, a kick runs B5's poll at once, unless a kick already started a poll for that project in the last 30 seconds. Kicks follow B10 to B12 and never read cards. With no viewer (L19), a kick sends nothing, because the next viewer's arrival polls anyway.
@@ -201,7 +201,7 @@ Test: five `kick` calls in ten seconds produce one poll; `kick` with no app runn
 
 ## Polling only while someone looks
 
-**L19. Viewers gate the timer.** A viewer is a window that exists (shown, hidden or minimised, so B4's "no slow-down when hidden" holds) or an open `/api/changes` stream. When the count rises from 0, the engine polls at once if the last poll is older than 300 seconds, then every 300 seconds (B4). When it falls to 0, the timer stops: at once for a window, after a 60-second grace for a served stream so a page reload does not cost a poll. While nobody looks, the engine sends no GitHub request and reads no Seat Gauge file. This narrows B4's "while it runs" for a served app that nobody has open.
+**L19. Viewers gate the timer.** A viewer is a window that exists (shown, hidden or minimised, so B4's "no slow-down when hidden" holds) or an open `/api/changes` stream. When the count rises from 0, the engine polls at once if the last poll is older than 300 seconds, then every 300 seconds (B4). When it falls to 0, the timer stops: at once for a window, after a 60-second grace for a served stream so a page reload does not cost a poll. While nobody looks, the engine sends no GitHub request and reads no Seat Gauge file. This narrows B4's "while it runs" for a served app that nobody has open. Release two's scoring queue and seat guard keep working with no viewer (SR8, G8); polls stay stopped.
 Test: over a fake hour with no viewer the fake GitHub sees no request; a served page reloaded within 60 seconds causes no extra poll.
 
 ## Folders

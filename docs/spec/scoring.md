@@ -41,7 +41,7 @@ Test: the example section map over a fake tree with `src/storage/a.ts`, `src/sto
 - a file whose name ends in `.lock`, `.min.js`, `.min.css` or `.map`, or is `package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`, `go.sum` or `Cargo.lock`, unread;
 - a file whose bytes hold a NUL or are not valid UTF-8, after reading.
 
-That list is fixed in the code and the same for every map. It is the only file filter; there is no per-project list.
+That list is fixed in the code and the same for every map. It and RT8's secret shapes (`docs/spec/release-two-scoring.md`) are the only file filters; there is no per-project list.
 Test: a 200 KB `src/storage/big.ts`, a `src/storage/pnpm-lock.yaml` and a PNG are each left out, counted in Y and named in the hover's breakdown; the first two are never fetched.
 
 **SC7. Whole files only.** A file is sent whole or not at all. Contents come from blob reads (`GET /repos/{repo}/git/blobs/{sha}`) through B9's cache; a blob is keyed by its SHA and never read twice. Each read counts against the GitHub budget and waits like any other read (#39 owns the pause).
@@ -148,4 +148,4 @@ Test: a frozen `U04` dated a day after a pinned `U04` leaves the pinned share in
 - #36: the prompt and schema here fill M5's `--system-prompt` and M6's `--output-schema`; the 360 KB code cap sits inside M7's 400 KB.
 - #39: owns when runs happen, the pinned store, staleness and the GitHub budget pause. It should use SC17's input key to skip unchanged sections, and keep SC15's raw answer and cause in the store.
 - #40 and the build spec's reconciliations: SC22 adds `score` to the progress bar in the contract, beyond the "shares and the date" the seam note promises. Build tickets, roughly: the file picker and blob reads (SC4 to SC10), about 350 lines; prompt, schema and answer check (SC11 to SC17), about 300; the seam adapter and floor (SC18 to SC21, SC24, SC25), about 200; the score note and hover (SC22, SC23), about 150 of Rust and 120 of screen. The OL-13 repeat check should score the example's sections twice on one commit and record the spread before scoring is switched on for anyone.
-- The example: the demo repository's source files (config-v2's demo note) should give each section at least one owned file, and `search` none, so SC10 shows.
+- The example: this repo is the example (Q16), so SC10's no-code case is built inline in its own test.

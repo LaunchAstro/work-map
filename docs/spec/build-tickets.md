@@ -52,7 +52,7 @@ Each ticket's `Section:` line, for filing the issues. This table is the only cop
 
 All 124 live tickets appear once. Tickets with no repo paths (B16, B74, B79) take the section of the spec they serve, and version bumps (B75, B80, B90), which touch only BS13's lists, take `tooling`.
 
-Release two's AI scoring tickets, PR placement layer 4's AI guess among them, are not in this plan. They come from [Release two: AI scoring build spec and tickets](https://github.com/LaunchAstro/work-map/issues/40), wired to the release-one tickets named there.
+Release two's AI scoring tickets, PR placement layer 4's AI guess among them, are R01 to R41 in the "Release two" section at the end, with their own section table, from [Release two: AI scoring build spec and tickets](https://github.com/LaunchAstro/work-map/issues/40).
 
 ## Batch 0: foundation
 
@@ -1201,5 +1201,439 @@ The version PR and tag, and a live check against this repo, whose proposal is co
 - Rules: R11, R14, start-a-map's fixtures note.
 - Acceptance: release `v1.1.0` has R1's assets; the live check's result is on the ticket.
 - Blocked by: B89, B121.
+- Lines: about 20.
+- Touches: `Cargo.toml`, `web/package.json`.
+
+## Release two
+
+The build plan for release two, AI scoring, tagged `v1.2.0` (`docs/spec/release-two-scoring.md`, RT12). The rules are the release-two specs' (M, SC, SR, G and RT ids), and their tests are each ticket's acceptance list. Release two's tickets take ids R01 up, which never change, and follow every rule above: one section each, its `Section:` line in the issue body, one session and one small PR. Each becomes a GitHub issue labelled `build` and `release-two`, in milestone `v1.2.0`, with its blocked-by edges, release-one B ids included, as native dependencies. Release two starts after switch-over (B80), so no release-two commit restarts the parity streak (P23), and its tag waits for `v1.1.0` (B90). R23 is optional, and the first cut if lines run short. "Lines" is a rough count of code plus tests.
+
+### Release two batches
+
+| Batch | Tickets | Width | Lines with tests |
+| --- | --- | --- | --- |
+| 22 Ceilings | R01 | 1 | 80 |
+| 23 Parts | R02 to R08, R13, R18 | 9 | 3,200 |
+| 24 The call, the guard, the picker, the adapter, the tag | R09 to R12, R14, R23 | 6 | 3,100 |
+| 25 One section, one guess, the scoring line, dev proofs | R15 to R17, R24 | 4 | 1,900 |
+| 26 The queue | R19 | 1 | 800 |
+| 27 Starts, staleness and the estimate | R20 | 1 | 700 |
+| 28 The view | R21 | 1 | 400 |
+| 29 The command and the two calls | R22 | 1 | 650 |
+| 30 Guide | R25 | 1 | 250 |
+| 31 Deslop | R26 to R31 | 6 | 230 |
+| 32 Unslop | R32 to R38 | 7 | 210 |
+| 33 Proofs | R39, R40 | 2 | 10 |
+| 34 Release | R41 | 1 | 20 |
+
+41 tickets in 13 batches, about 11,550 lines with tests, for about 2,790 lines of shipped code (RT11). The longest chain: B80, R01, R05, R09, R16, R19, R20, R21, R22, R25, R26, R32, R39, R41.
+
+### Release two tickets by section
+
+| Section | Tickets |
+| --- | --- |
+| `tooling` | R01, R24, R41 |
+| `docs` | R25, R32 |
+| `config` | R02, R12, R29, R36 |
+| `github` | R04, R07, R30, R37 |
+| `placement` | R03, R10, R18, R28, R35 |
+| `progress` | R13, R31, R38 |
+| `service` | R05, R06, R08, R09, R11, R16, R17, R19, R20, R21, R22, R23, R26, R33, R39, R40 |
+| `screen` | R14, R15, R27, R34 |
+
+All 41 appear once. R40 has no repo paths and takes `service`, the section of the scoring code it measures.
+
+## Batch 22: ceilings (release two)
+
+### R01. Line ceilings for release two
+`cargo xtask lines` gains rows for `model_cli` and `scoring` and the ceilings the maintainer settles for `v1.2.0`. Recommended: 3,000 for release two's code and 23,000 in all (RT11). This ticket waits for that answer.
+- Section: `tooling`.
+- Rules: BS3, RT11.
+- Acceptance: BS3's tests with the new rows; a fixture tree one line over the settled total exits 1 naming it.
+- Blocked by: B80.
+- Lines: about 80.
+- Touches: `crates/xtask/src/lines.rs`.
+
+## Batch 23: parts (release two)
+
+### R02. Settings: `ai_scoring` and `seat_guard`
+Both keys in `settings.json`, with their defaults, bad values named as CF2 names them and their defaults used, and re-read with the file (B68).
+- Section: `config`.
+- Rules: M1 (the key), G2, CF2.
+- Acceptance: M1's fresh-settings test; G2's two tests.
+- Blocked by: B12, R01.
+- Lines: about 200.
+- Touches: `crates/engine/src/config/settings.rs`.
+
+### R03. Seat Gauge reader: seat room
+The `seats` list as the file spec gives it: the row fields, at most 100 rows, a bad value or row dropped alone, the recent-reading rule, and the last good read kept. The reader never opens `headroom.json`.
+- Section: `placement`.
+- Rules: the shared file spec's seat room rules, G6 (the reading), G8, MC-56.
+- Acceptance: `seat-room.json` at the test clock gives the rows the file spec names; a bad `seats` value drops alone and the sessions still read; a symlinked file is refused.
+- Blocked by: B05, R01.
+- Lines: about 300.
+- Touches: `crates/engine/src/seat_gauge/{parse.rs, seats.rs, mod.rs}`.
+
+### R04. GitHub: the pinned head, the tree and blobs
+REST reads of the default branch head as a full SHA, the recursive tree with modes, sizes and `truncated`, and blobs decoded from base64, through the gate (B2) and the cache (B9), with each blob kept by SHA and never read twice. Also the sum SR19 needs: the remainder less the reads a section still needs, against scoring's 40% floor. No archive read (RT7).
+- Section: `github`.
+- Rules: SC4, SC5 (the read), SC7, SR19 (the sum), RT7, B2, B9.
+- Acceptance: SC4's moved-branch test at the port; a truncated tree reported as such; SC7's two-commit test; SR19's 2,100-left case on the sum.
+- Blocked by: B23, B24, R01.
+- Lines: about 350.
+- Touches: `crates/engine/src/github/{git.rs, cache.rs}`.
+
+### R05. Model CLI: finding it, the sign-in check and the states
+A new `model_cli` module, whose `mod.rs` names every file release two adds to it, as stubs for R09 and R23. M2's search with its `.exe`-only rule on Windows and the version floor, M3's status check for both CLIs, M4's environment and empty folder, and M9's states with their lines.
+- Section: `service`.
+- Rules: M1 (the CLI word), M2, M3, M4, M9 (the states).
+- Acceptance: M2's, M3's and M4's tests over fake CLIs.
+- Blocked by: B22, R01.
+- Lines: about 500.
+- Touches: `crates/engine/src/model_cli/{mod.rs, find.rs, status.rs, env.rs, state.rs, claude.rs, codex.rs, run.rs, guards.rs, shim.rs}`, its `mod` line in `crates/engine/src/lib.rs`.
+
+### R06. Scoring: the prompt, the schema and the answer check
+A new `scoring` module, whose `mod.rs` names every file release two adds to it, as stubs for later tickets. SC11's fixed prompt and `PROMPT_VERSION` with the snapshot test, SC12's definition of built, SC13's nonce markers, SC14's schema generated per call, SC15's whole-answer refusal with its cause, SC16's control-character strip, and M9's fence and one-value parse. The checker takes any generated schema, so RT3's guess reuses it.
+- Section: `service`.
+- Rules: SC11 to SC16, M9 (the parse), OL-07, OL-16 (the prompt line).
+- Acceptance: SC11's to SC15's tests, each SC15 refusal on its own; SC16's strip; M9's fenced and prose cases.
+- Blocked by: B102, R01.
+- Lines: about 650.
+- Touches: `crates/engine/src/scoring/{mod.rs, prompt.rs, schema.rs, answer.rs, pick.rs, key.rs, run.rs, guess.rs, queue.rs, triggers.rs, stale.rs, estimate.rs}`, its `mod` line in `crates/engine/src/lib.rs`.
+
+### R07. Data folder: keyed JSON files
+In `store`, generic over the value type: one JSON file per key under a project folder, named by SR14's rule, written atomically with mode 600, with a `version` check and a bad or newer file renamed `.bad` and reported; and one whole-file JSON with the same write, for `guesses.json`. The value types belong to R12 and R18.
+- Section: `github`.
+- Rules: SR14 (the names), SR15, RT6 (the write), MC-21.
+- Acceptance: SR15's crash and corrupt-file tests; two ids that differ only in case get two files.
+- Blocked by: B06, R01.
+- Lines: about 450.
+- Touches: `crates/engine/src/store/keyed.rs`.
+
+### R08. Contract: the score note, the scoring state and the guard state
+Types only: `ScoreNote` with SR17's `stale` and `checked_commit` and RT8's `secret_shaped`; the `scoring` state with the guard's state; and the request and answer types of `score` and `cancel_scoring`. The progress bar and `MapView` gain their fields, which today's view code fills with null. The two calls themselves are R22's. `contract` stays `1`.
+- Section: `service`.
+- Rules: SC22, SR17 (the fields), SR22, G11, RT8 (the field), L5, release-two reconciliation 1.
+- Acceptance: L5's drift test; the JSON field names match SC22's and SR22's lists; a release-one view fixture still parses.
+- Blocked by: B09, B64, R01.
+- Lines: about 300.
+- Touches: `crates/engine/src/contract/*`, the progress bar's and view's constructors in `crates/engine/src/view/{board.rs, build.rs}`, `web/src/contract/*`.
+
+### R13. Progress: the floor note
+SC19's floor as a value for each section and unit: the closed-ticket share when it beats the standing score, else none, from the maths that already places closed cards (MC-33, MC-34, MC-40). A ticket closing raises it with no call.
+- Section: `progress`.
+- Rules: SC19, OL-12.
+- Acceptance: SC19's test, through `scores` test doubles.
+- Blocked by: B32, B33, R01.
+- Lines: about 200.
+- Touches: `crates/engine/src/progress/{floor.rs, mod.rs}`.
+
+### R18. PR placement step 11: the AI guess
+Step 11 in B44's ladder over a lookup of stored guesses by PR key and head, with its type defined here. It places by RT4, leaves `no_guess` with its detail for no guess, `cannot_tell`, a failure, a removed section or a refused nonce, and runs only after steps 1 to 10. The lookup is a field of the existing placement input that defaults to empty, so `where` (B97) passes nothing and its callers do not change.
+- Section: `placement`.
+- Rules: RT4, PL1, PL7, PL8, PL9, release-two reconciliation 15.
+- Acceptance: RT4's tests; PL7's frozen case still places by step 10 with a guess stored.
+- Blocked by: B59, B93, R01.
+- Lines: about 250.
+- Touches: `crates/engine/src/placement/{ai_guess.rs, pr.rs, mod.rs}`.
+
+## Batch 24: the call, the guard, the picker, the adapter and the tag (release two)
+
+### R09. Model CLI: one call with tools off
+M5's and M6's arguments, M7's child (no shell, its own process group or a kill-on-close job object, the 400 KB and 10-minute limits), M8's stream guards for both CLIs with the rate-limit pause as a signal, and M9's answer text with one retry. The caller passes the answer check, so this module needs nothing from `scoring`. Cancel kills the whole tree.
+- Section: `service`.
+- Rules: M5 to M9, OL-16.
+- Acceptance: M7's timeout test; M8's scripted streams; M9's retry; a cancel mid-call leaves no child process.
+- Blocked by: R05.
+- Lines: about 750.
+- Touches: `crates/engine/src/model_cli/{claude.rs, codex.rs, run.rs, guards.rs}`.
+
+### R10. The seat-cap guard
+One answer, "send now" or "wait until", with the state for the view: the seat it picks, near the limit, windows that have reset, recent readings, the quiet notes, Codex waiting for Seat Gauge, and the 60-second re-check.
+- Section: `placement`.
+- Rules: G1 to G9, G11, G12, SR18 (the Codex wait), (Q10) to (Q13).
+- Acceptance: every G test but G10's on the example files; the "Results for the example" table.
+- Blocked by: R02, R03.
+- Lines: about 550.
+- Touches: `crates/engine/src/seat_gauge/{guard.rs, mod.rs}`.
+
+### R11. Scoring: which files a section sends
+Which sections and units a run scores, the section map check, each path's owner by MC-53, SC6's filters and RT8's secret shapes, SC8's cap and order, SC9's section block and ticket titles, SC10's no-call case, SC13's nonce drop, and SC17's input key.
+- Section: `service`.
+- Rules: SC1, SC3, SC5 (the owners), SC6, SC8, SC9, SC10, SC13 (the drop), SC17, RT8, OL-04, OL-05, release-two reconciliations 10 and 11.
+- Acceptance: SC1's, SC3's, SC5's, SC6's, SC8's, SC9's, SC10's, SC17's and RT8's tests.
+- Blocked by: B08, B31, R04, R06.
+- Lines: about 650.
+- Touches: `crates/engine/src/scoring/{pick.rs, key.rs}`.
+
+### R12. Scores seam: the pinned adapter
+The pinned score and score-file types in SR14's shape, and the second `scores` adapter over R07's files: pinned, else frozen, else none, per key. A newer score replaces down as well as up, `cannot_tell` keeps its weight, a first pinned score retires the frozen one for good, and a frozen score never outranks a pinned one.
+- Section: `config`.
+- Rules: SC18, SC20, SC21, SC24, SC25, SR14 (the types), OL-08, OL-09.
+- Acceptance: those tests; SR14's round trip.
+- Blocked by: B21, R07.
+- Lines: about 400.
+- Touches: `crates/engine/src/scores/{pinned.rs, mod.rs}`.
+
+### R14. Screen: the score tag and hover
+The grey tag after the bar ("AI 3d", "AI 3d, stale", "Old 3 Sep"), SC23's and SR17's hover lines with RT8's secret line, RT4's layer-4 line, and a "Score again" button that calls a prop R15 wires. Reasons draw as text.
+- Section: `screen`.
+- Rules: SC16 (the render), SC22 (no constants), SC23, SR17, RT4 (the hover), RT8 (the line), S7.
+- Acceptance: SC23's and SR17's browser tests; SC16's planted reason renders as text in both browsers; the screen code holds no 360, 128 or 300.
+- Blocked by: B62, B94, R08.
+- Lines: about 450.
+- Touches: the progress tag and score hover components under `web/src/`, `web/src/words/scores.ts`, their tests.
+
+### R23. Windows: the `.exe` behind an npm shim (optional)
+RT13 in M2's search. The first cut if lines run short.
+- Section: `service`.
+- Rules: RT13, M2.
+- Acceptance: RT13's tests.
+- Blocked by: R05.
+- Lines: about 300.
+- Touches: `crates/engine/src/model_cli/{find.rs, shim.rs}`.
+
+## Batch 25: one section, one guess, the scoring line and the dev proofs (release two)
+
+### R15. Screen: the scoring line, the offers and Cancel
+The scoring line drawn from SR22's state: the running section and waiting count, the pause lines with the reset time in the map's zone, the no-guard and needs-Seat-Gauge notes, M9's lines with Retry, SR2's setup offer and SR7's stale offer with the estimate line and Start or Not now, "Score the map" in the menu, and Cancel. The two calls in both transports, and R14's "Score again" wired to `score`.
+- Section: `screen`.
+- Rules: SR2, SR3 (the window side), SR4 (two steps), SR7, SR13, SR22, G10, M9 (the lines).
+- Acceptance: G10's browser test; SR22's no-constant check; a fixture per scoring state renders its line; Start and "Score again" send `score` through both transports.
+- Blocked by: B38, B49, R14.
+- Lines: about 500.
+- Touches: the scoring line and offer components under `web/src/`, `web/src/transport/*`, `web/src/words/scoring.ts`, their tests.
+
+### R16. Scoring: one section's read, end to end
+For one section at its run's head and tree: pick the files, skip the call when the input key is unchanged and move `checked`, build the prompt, make the call with the check and one retry, then write the score file, or keep the last score with the raw answer and cause. Zero files make no call. Built only.
+- Section: `service`.
+- Rules: SC2, SC4, SC10, SC15 (the stored failure), SC20, SR11 (the head per run), SR12, SR14 (the write), OL-06.
+- Acceptance: SC2's, SR12's and SR14's tests; two refusals keep the old score and store the cause, such as `units[1].unit`.
+- Blocked by: R07, R09, R11, R12.
+- Lines: about 550.
+- Touches: `crates/engine/src/scoring/run.rs`.
+
+### R17. AI placement: the guess call
+RT2's prompt under `PLACE_PROMPT_VERSION` with the PR text in nonce markers, RT3's schema and check through R06's checker, the call through R09, and the PR's entry in `guesses.json` with its head, or its failure.
+- Section: `service`.
+- Rules: RT2, RT3, RT6, OL-16.
+- Acceptance: RT2's, RT3's and RT6's tests.
+- Blocked by: R06, R07, R09, R18.
+- Lines: about 450.
+- Touches: `crates/engine/src/scoring/guess.rs`.
+
+### R24. Dev proofs: tools off and the score spread
+`cargo xtask tools-off-proof --cli claude|codex`, M10 through R09's invocation, and `cargo xtask score-spread <dir> <dir>`, RT10's report. Dev only: never in a release download, never in a hosted run.
+- Section: `tooling`.
+- Rules: M10, RT9, RT10, BS1.
+- Acceptance: RT9's and RT10's tests; `cargo tree -p work-map` still lists no `xtask`.
+- Blocked by: R09, R12.
+- Lines: about 400.
+- Touches: `crates/xtask/src/{tools_off.rs, score_spread.rs, main.rs}`.
+
+## Batch 26: the queue (release two)
+
+### R19. Scoring: the queue
+One queue in memory for every project, first in and first out, holding section and guess entries. Runs pin one head. Before each entry and its call the queue asks the guard, wakes on G9's re-check, and waits on scoring's GitHub floor and M8's rate-limit pause. Also Cancel, off, not ready with M3 once per batch, draining with no viewer, and nothing kept across a restart. The engine service holds it.
+- Section: `service`.
+- Rules: SR8 to SR11, SR13, SR18 to SR21, G1, G9, RT5, OL-14, OL-15, release-two reconciliations 5 and 8.
+- Acceptance: those tests on a fake clock with fake CLIs.
+- Blocked by: B23, B66, R10, R16, R17.
+- Lines: about 800.
+- Touches: `crates/engine/src/scoring/queue.rs`, the queue's handle in `crates/engine/src/engine/service.rs`.
+
+## Batch 27: starts, staleness and the estimate (release two)
+
+### R20. Scoring: what starts it, staleness and the estimate
+SR1's starts and RT1's guess starts; the sections a merged PR touched, from file lists read once (B28), with layer-4 placements touching none; once per merge commit; merges while scoring was off; stale marks worked out from merges already read; SR4's estimate with no blob read, counting guesses and RT7's resets; and SR2's offer with Not now.
+- Section: `service`.
+- Rules: SR1 to SR7, SR16, RT1, RT5 (touching), RT7 (the estimate line), release-two reconciliations 6, 7 and 9.
+- Acceptance: SR1's to SR7's and SR16's tests; RT1's test; RT7's estimate case.
+- Blocked by: B25, B28, B68, R19.
+- Lines: about 700.
+- Touches: `crates/engine/src/scoring/{triggers.rs, stale.rs, estimate.rs}`, the merge hook in `crates/engine/src/engine/timers.rs`.
+
+## Batch 28: the view (release two)
+
+### R21. View: score notes and the scoring line
+Each bar's `ScoreNote` from the seam, the floor, the stale marks and the stored failure, and each project's `scoring` state from the queue, the guard, the offers and M9's state. The engine writes every line's text.
+- Section: `service`.
+- Rules: SC22, SR17 (the engine side), SR22, G11, M9 (the state in the view).
+- Acceptance: SC22's view test with `floor: 0.5`; SR22's `paused_budget` case; G11's `seat2` case under Codex.
+- Blocked by: B67, R08, R10, R12, R13, R20.
+- Lines: about 400.
+- Touches: `crates/engine/src/view/{scoring.rs, build.rs}`.
+
+## Batch 29: the command and the two calls (release two)
+
+### R22. The `score` command, the control op and the two calls
+`Contract` and the recorded engine gain `score` and `cancel_scoring`, and the engine implements them over R19 and R20. Also the server's two routes under L11's guard, the capability file, the control op `score` with `cancel`, and `work-map score` with its estimate, `Start? [y/N]`, `--yes` off a terminal and exits 3 and 5. The headless build runs it, and `work-map.exe` refuses it on Windows.
+- Section: `service`.
+- Rules: SR3, SR4 (the command line), L13, L17, R3, R7, R14, release-two reconciliations 2 to 4.
+- Acceptance: SR3's tests; SR4's piped case; L13's capability check with the two new commands; L17's tests with the new op; `work-map.exe score` exits 2.
+- Blocked by: B37, B54, B66, B106, R20, R21.
+- Lines: about 650.
+- Touches: `crates/engine/src/contract/*`, `crates/engine/src/engine/service.rs`, `crates/server/src/routes.rs`, `crates/app/src/{score.rs, control.rs, main.rs}`, R7's list in `crates/app/src/window.rs`, `crates/app/capabilities/`, `web/src/contract/*`.
+
+## Batch 30: the guide (release two)
+
+### R25. The guide's AI scoring page
+`docs/ai-scoring.md`: turning scoring on in `settings.json` and what each line means, what is sent and to whom, why Claude Code is recommended over Codex, the seat guard and Seat Gauge, the cost in calls and GitHub requests, the hover, and AI placement as a guess. Linked from the getting-started guide and from the attribution page's layer 4. Config-v2's settings sample gains the two keys.
+- Section: `docs`.
+- Rules: M1, G2, (Q11) to (Q14), RT4, RT5, release-two reconciliation 12.
+- Acceptance: every command and settings sample in it runs or loads as written against the example.
+- Blocked by: R22.
+- Lines: about 250.
+- Touches: `docs/ai-scoring.md`, `docs/getting-started.md`, `docs/attribution.md`, `docs/spec/config-v2.md`.
+
+## Batch 31: deslop (release two)
+
+### R26. Deslop pass on release two: `service`
+BS10's deslop pass over the `service` section's code new since R01. R27 to R31 take the other sections with release-two code, one each, side by side. The fixed prompts are left alone: changing one is a prompt change with a new version, not a cleanup.
+- Section: `service`.
+- Rules: BS10.
+- Acceptance: as B76.
+- Blocked by: R15, R22, R23, R24, R25.
+- Lines: a net cut, about 80 changed.
+- Touches: the `service` section's shipped paths new since R01.
+
+### R27. Deslop pass on release two: `screen`
+As R26, over the `screen` section's code.
+- Section: `screen`.
+- Rules: BS10.
+- Acceptance: as B76.
+- Blocked by: R15, R22, R23, R24, R25.
+- Lines: about 30 changed.
+- Touches: the `screen` section's paths new since R01.
+
+### R28. Deslop pass on release two: `placement`
+As R26, over the `placement` section's code.
+- Section: `placement`.
+- Rules: BS10.
+- Acceptance: as B76.
+- Blocked by: R15, R22, R23, R24, R25.
+- Lines: about 30 changed.
+- Touches: the `placement` section's paths new since R01.
+
+### R29. Deslop pass on release two: `config`
+As R26, over the `config` section's code.
+- Section: `config`.
+- Rules: BS10.
+- Acceptance: as B76.
+- Blocked by: R15, R22, R23, R24, R25.
+- Lines: about 30 changed.
+- Touches: the `config` section's shipped paths new since R01.
+
+### R30. Deslop pass on release two: `github`
+As R26, over the `github` section's code.
+- Section: `github`.
+- Rules: BS10.
+- Acceptance: as B76.
+- Blocked by: R15, R22, R23, R24, R25.
+- Lines: about 30 changed.
+- Touches: the `github` section's paths new since R01.
+
+### R31. Deslop pass on release two: `progress`
+As R26, over the `progress` section's code.
+- Section: `progress`.
+- Rules: BS10.
+- Acceptance: as B76.
+- Blocked by: R15, R22, R23, R24, R25.
+- Lines: about 30 changed.
+- Touches: the `progress` section's paths new since R01.
+
+## Batch 32: unslop (release two)
+
+### R32. Unslop pass on release two: `docs`
+BS10's unslop pass over the docs new since R01. R33 to R38 take the screen words, errors, comments and test names of each section with release-two code, one each, side by side. The fixed prompts are left alone, as in R26.
+- Section: `docs`.
+- Rules: BS10.
+- Acceptance: as B76.
+- Blocked by: R26, R27, R28, R29, R30, R31.
+- Lines: about 50 changed.
+- Touches: the `docs` section's paths new since R01.
+
+### R33. Unslop pass on release two: `service`
+As R32, over the `service` section's words.
+- Section: `service`.
+- Rules: BS10.
+- Acceptance: as B76.
+- Blocked by: R26, R27, R28, R29, R30, R31.
+- Lines: about 60 changed.
+- Touches: the `service` section's shipped paths new since R01.
+
+### R34. Unslop pass on release two: `screen`
+As R32, over the `screen` section's words.
+- Section: `screen`.
+- Rules: BS10.
+- Acceptance: as B76.
+- Blocked by: R26, R27, R28, R29, R30, R31.
+- Lines: about 20 changed.
+- Touches: the `screen` section's paths new since R01.
+
+### R35. Unslop pass on release two: `placement`
+As R32, over the `placement` section's words.
+- Section: `placement`.
+- Rules: BS10.
+- Acceptance: as B76.
+- Blocked by: R26, R27, R28, R29, R30, R31.
+- Lines: about 20 changed.
+- Touches: the `placement` section's paths new since R01.
+
+### R36. Unslop pass on release two: `config`
+As R32, over the `config` section's words.
+- Section: `config`.
+- Rules: BS10.
+- Acceptance: as B76.
+- Blocked by: R26, R27, R28, R29, R30, R31.
+- Lines: about 20 changed.
+- Touches: the `config` section's shipped paths new since R01.
+
+### R37. Unslop pass on release two: `github`
+As R32, over the `github` section's words.
+- Section: `github`.
+- Rules: BS10.
+- Acceptance: as B76.
+- Blocked by: R26, R27, R28, R29, R30, R31.
+- Lines: about 20 changed.
+- Touches: the `github` section's paths new since R01.
+
+### R38. Unslop pass on release two: `progress`
+As R32, over the `progress` section's words.
+- Section: `progress`.
+- Rules: BS10.
+- Acceptance: as B76.
+- Blocked by: R26, R27, R28, R29, R30, R31.
+- Lines: about 20 changed.
+- Touches: the `progress` section's paths new since R01.
+
+## Batch 33: the proofs (release two)
+
+### R39. Tools-off proof and the version floor (maintainer task)
+RT9 on each CLI and OS, run by hand on a plan login, with the results on the ticket, then one PR that sets M2's floors to the newest versions that passed.
+- Section: `service`.
+- Rules: M10, RT9, (Q12).
+- Acceptance: the ticket lists each CLI, version, OS and result; Claude Code passes on all three OSes.
+- Blocked by: R32, R33, R34, R35, R36, R37, R38.
+- Lines: about 10.
+- Touches: the version floors in `crates/engine/src/model_cli/find.rs`.
+
+### R40. The score spread on the example (maintainer task)
+RT10 on this repo at one commit, for each CLI on offer, with the report on the ticket.
+- Section: `service`.
+- Rules: RT10, OL-13.
+- Acceptance: the report is on the ticket and passes the gate, or a prompt fix and a re-run are.
+- Blocked by: R32, R33, R34, R35, R36, R37, R38.
+- Lines: none in this repo.
+- Touches: scratch data folders only.
+
+## Batch 34: release (release two)
+
+### R41. Release `v1.2.0`
+The version PR and tag, with R39's and R40's reports in the release notes.
+- Section: `tooling`.
+- Rules: R11, R14, RT12.
+- Acceptance: release `v1.2.0` has R1's assets, and its notes carry both reports.
+- Blocked by: B90, R39, R40.
 - Lines: about 20.
 - Touches: `Cargo.toml`, `web/package.json`.
