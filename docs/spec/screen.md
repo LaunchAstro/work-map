@@ -114,6 +114,9 @@ Test: a type check fails when a `PendingWhy` code has no entry in the words tabl
 **S11. GitHub states and Sync.** The header draws L23's line for each `GitHubState`, with a Retry button that calls `retrySignIn`, and disables Sync in every state but `ready`. The Sync button draws each `SyncOutcome` kind and stays disabled while one runs. Its label drops "and round context".
 Test: each state and outcome fixture renders its line and the right enabled state.
 
+**S20. A newer release is one footer line.** When `hello.newer_release` is set (release spec R16), the footer says "Work map 1.3.0 is out on GitHub Releases." Served, the line is a link to `url`. In the window it is plain text with the address. There is no dismiss button and no download.
+Test: a `hello` fixture with `newer_release` shows the line, as a link only in served mode; without it the footer has no such line.
+
 ## What is cut
 
 | Retired feature | Screen code cut | Rough lines |
@@ -184,7 +187,7 @@ Test: the version in the built screen equals `cargo metadata`'s workspace versio
 ## Notes for other tickets
 
 - #6 takes the engine-maths test cases above, and TN-65's two hour rules on one strip, since the engine now sends both numbers.
-- #9: S4 states the CSP that L11 and L13 refer to, and S14 adds the window's navigation handler, which L13 does not mention.
+- #9: S4 states the CSP that L11 and L13 refer to, and S14 adds the window's navigation handler, which L13 does not mention. S20 follows R16 as written; if #9 accepts S14, the window's release line could become a link too.
 - #11's project ids become the saved-view keys (S15).
 - #16 gets one build ticket for the move (S1 to S3, S8, the cuts) and one each for S5 and S6, the numbers handover (S7, S9 to S11), the browser suite (S16, F1 to F8) and the build (S17 to S19).
 
