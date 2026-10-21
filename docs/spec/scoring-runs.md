@@ -18,7 +18,7 @@ Inputs: the Q1 answer, the old audit's lessons (`docs/review/old-audit.md`, OL i
 
 ## When scoring runs
 
-**SR1. Three starts, nothing else.** Scoring queues work only from a confirmed deep audit (SR2 to SR4), a merge seen while the app runs (SR5, SR6), or "Score again" and the stale offer (SR3, SR7). A poll that finds no merge, a Sync, a kick, a start-up, a settings change and a new `PROMPT_VERSION` queue nothing. The only timers are G9's 60-second re-check and the budget's reset wait (SR19), and they only resume entries already waiting (OL-14).
+**SR1. Three starts, nothing else.** Scoring queues work only from a confirmed deep audit (SR2 to SR4), a merge seen while the app runs (SR5, SR6), or "Score again" and the stale offer (SR3, SR7). A PR placement guess is the one other start (`docs/spec/release-two-scoring.md`, RT1). A poll that finds no merge, a Sync, a kick, a start-up, a settings change and a new `PROMPT_VERSION` queue no section. The only timers are G9's 60-second re-check and the budget's reset wait (SR19), and they only resume entries already waiting (OL-14).
 Test: a fake hour of polls with no merges, three Syncs, a kick and a restart start no CLI and send no tree or blob read.
 
 **SR2. The deep audit is offered at setup, never started.** When scoring is ready (M3) for a project that has a section map (SC3) and no section with a pinned score, the scoring line offers "Score this map?" with SR4's estimate and two buttons, Start and Not now. Not now hides the offer until the app restarts. "Score the map" stays in the scoring line's menu.
@@ -31,7 +31,7 @@ work-map score [--project ID] [--section ID]... [--yes]
 work-map score --cancel [--project ID]
 ```
 
-The command reads `instance.json` and sends op `score` over the control port (L17), with the project, up to 64 section ids (none means the whole map) and whether the user confirmed. With no copy running it prints "work map is not running" and exits 3, and nothing queues (as L18). With scoring off or not ready it prints the M9 line and exits 5. This makes `score` the binary's fifth entry (L2). The contract gains two calls, `score` and `cancel_scoring`, as Tauri commands and `POST /api/projects/{id}/score` and `/score/cancel` under L11's guard, and the capability file allows them (L13).
+The command reads `instance.json` and sends op `score` over the control port (L17), with the project, up to 64 section ids (none means the whole map) and whether the user confirmed. With no copy running it prints "work map is not running" and exits 3, and nothing queues (as L18). With scoring off or not ready it prints the M9 line and exits 5. This makes `score` a later entry of the binary (L2), after release one's six and `v1.1.0`'s `start`. The contract gains two calls, `score` and `cancel_scoring`, as Tauri commands and `POST /api/projects/{id}/score` and `/score/cancel` under L11's guard, and the capability file allows them (L13).
 Test: `work-map score` with no app running exits 3; with scoring off it exits 5 and prints the off line; `--section editor --yes` queues one entry.
 
 **SR4. Ask first, with an estimate.** A deep audit and any request for more than one section is two steps: the engine returns an estimate, then queues only on a yes. "Score again" on one section and merge re-scores do not ask. To estimate, the engine reads the head and tree (SC4, SC5), picks each section's files by SC6 and SC8 from the tree's sizes, and computes each input key (SC17) from paths, blob SHAs and ticket titles, with no blob read. The window and the CLI show the same line:
@@ -117,6 +117,6 @@ Test: the view for SR19's case is `paused_budget` with 1 waiting; the screen cod
 
 ## Notes for other tickets
 
-- App layout: L2 gains `score` as a fifth entry, L17 an op `score`, the contract two calls (SR3), and L19 a narrowing for the scoring queue (SR8).
+- App layout: L2 gains `score` as an entry, L17 an op `score`, the contract two calls (SR3), and L19 a narrowing for the scoring queue (SR8).
 - #40, build tickets, roughly: triggers and touched sections (SR1 to SR7), about 220 lines; the queue, runs, cancel and pauses (SR8 to SR13, SR18, SR19, SR21), about 300; the store and staleness (SR14 to SR17), about 200; the CLI command, control op and contract calls (SR3, SR4), about 150; the scoring line, offer and stale tag on the screen (SR17, SR22), about 150.
-- SC7 reads one blob per file. A deep audit of a large repository could spend a few thousand REST requests. One tarball read per run (`GET /repos/{repo}/tarball/{sha}`) costs one request; whether to use it is proposed as its own ticket.
+- SC7 reads one blob per file. A deep audit of a large repository could spend a few thousand REST requests. One tarball read per run (`GET /repos/{repo}/tarball/{sha}`) costs one request. Settled on #40: blob reads stay and there is no archive read (`docs/spec/release-two-scoring.md`, RT7).
