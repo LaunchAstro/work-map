@@ -44,7 +44,7 @@ The reader refuses a file that is a symlink, is not a regular file, or is larger
 | `version` is missing or not a whole number | Damaged. Same as above. |
 | `version` is higher than the reader knows | A newer Seat Gauge. Parse nothing else. Show no agents and say Seat Gauge is newer than this reader. Never guess at the fields. |
 | `updated` older than 90 seconds, or more than 60 seconds ahead of the reader's clock | Stale. Rows may still be shown as last seen, but none counts as current. |
-| `problems` not empty | The writer could not read some machines. Rows from those machines are not current; rows from other machines may be. |
+| `problems` not empty | The writer could not read some machines. The check is per machine (TN-42): only rows whose `machine` is a key in `problems` stop being current. Rows from other machines, and the file's freshness, are judged as if `problems` were empty. |
 
 How long a reader keeps showing stale rows is its own choice. The work map shows last-seen agents for 15 minutes after `updated`, then none.
 
@@ -78,7 +78,7 @@ Within version 1 the writer may add new fields, at the top or in a row. Readers 
 | `tool` | text | yes | The agent CLI, such as `claude` or `codex`. |
 | `status` | text | yes | See statuses below. |
 | `as_of` | time | yes | When the writer last observed this session. Never later than `updated`. |
-| `stale` | true or false | yes | True when this row's last observation failed, so its token totals may be behind. It does not by itself change the row's status. |
+| `stale` | true or false | optional | True when this row's last observation failed, so its token totals may be behind. It does not by itself change the row's status. The Swift Seat Gauge still writes it on every row, because its own reader requires it, so writers keep writing it in version 1. Readers must not require it (TN-66); the work map ignores it. |
 | `model` | text | nullable | Model name the session runs, when known. |
 | `effort` | text | nullable | Reasoning effort, when known. |
 | `repo` | text | nullable | Repo label the writer read from the workspace label. A label, not a GitHub name; the reader maps it. |
@@ -113,9 +113,10 @@ Seat Gauge also writes `headroom.json` (seat windows), `machines.json` (machine 
 
 | File | What it shows | Reader result at the test clock |
 | --- | --- | --- |
-| `normal.json` | Three sessions on one machine: one working with totals and price, one idle with no known price, one closed. Nullable fields appear both as `null` and as missing keys. | Fresh. All three rows fresh; the closed one keeps its totals but is no longer an agent at work. |
+| `normal.json` | Three sessions on one machine: one working with totals and price, one idle with no known price, one closed. Nullable fields appear both as `null` and as missing keys. The closed row leaves out `stale` (TN-66). | Fresh. All three rows fresh; the closed one keeps its totals but is no longer an agent at work. |
 | `empty.json` | Seat Gauge running with no sessions. | Fresh, no agents. |
 | `future-version.json` | `version` 2 with a changed shape. | Refused as newer. No agents, "Seat Gauge is newer" note. |
+| `one-machine-failing.json` | A fresh snapshot from two machines, one of them in `problems` (TN-42). | Fresh. The working row on the healthy machine is current; the failing machine's row is shown as last seen, not current. |
 | `stale.json` | A snapshot left behind when the app quit, with one machine failing. | Stale. Rows shown as last seen, none current. |
 | `half-written.json` | A file cut off part way. Not valid JSON on purpose. | Read failed. Last good read kept. |
 

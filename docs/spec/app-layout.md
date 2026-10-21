@@ -48,6 +48,10 @@ Test: every file in `web/dist` comes back from `serve` with the same bytes and a
 
 The Rust types in `engine::contract` are the contract. `ts-rs` generates `web/src/contract/` from them. Times are UTC RFC 3339 strings and the screen formats them in the viewer's own zone. The inner shapes of the board, merges, agents, versions and gaps belong to the `view` module and #10. This spec fixes the envelope around them.
 
+The view's contents start from TN-29: its list of what the archive's screen reads from the snapshot is what `view` has to supply, not the old snapshot. The parts TN-29 marks as never read (the four-hour and thirty-minute stats, the stalled flag, fog, frontier, destination, switch-ons and inferred PRs) stay out unless #10 asks for one.
+
+The screen's input checks are trimmed in the same change that moves it onto this contract (TN-64). The checks that demand the retired sweep and legacy measure objects, the agents file's retired direct-lane fields and a recounted census are deleted, not fed by engine stubs.
+
 ```ts
 type ProjectId = string;
 type Stamp = string;        // opaque; changes whenever the project's view changes
