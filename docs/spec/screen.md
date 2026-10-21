@@ -104,6 +104,7 @@ interface MergeFlow {
   average: number; last_hour: number; queue: { length: number; first: PrRef[] }; loading_bay: BayRow[];
 }
 interface Agents { cards: Record<string, { open: Session[]; last_closed: Session | null; total: number }>; unmapped: number }
+// every PrRef also carries placement: { section, layer, rule, evidence, inferred, guessed } | null and, when Not placed, reasons: { code, layer, detail }[] (PL1, PL8)
 ```
 
 `Versions` and `GapReport` are what the `versions` and `map_gaps` modules return. The engine buckets merge hours on the machine's local hour boundaries. `serve` is loopback only (L10, Q5), so the viewer is normally on that machine and the labels match. A viewer on another device, through the guide's tunnel or mesh VPN, sees bars on the host's hours. The scope bar has no `built` segment (Q3, MC-39).
