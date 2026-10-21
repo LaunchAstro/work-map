@@ -41,7 +41,7 @@ Each ticket's `Section:` line, for filing the issues. This table is the only cop
 | --- | --- |
 | `tooling` | B01, B02, B61, B75, B80, B90, B107 |
 | `docs` | B73, B78, B87, B98, B99, B103, B121 |
-| `config` | B03, B12, B18, B19, B20, B21, B43, B56, B57, B58, B63, B71, B92, B96, B100, B109, B115, B125 |
+| `config` | B03, B12, B18, B19, B20, B21, B43, B56, B57, B58, B63, B71, B92, B96, B100, B109, B110, B115, B125 |
 | `github` | B04, B06, B22, B23, B24, B25, B26, B27, B28, B46, B47, B95, B104, B111, B116 |
 | `placement` | B05, B07, B08, B17, B36, B44, B48, B59, B91, B93, B97, B112, B117 |
 | `progress` | B13, B29, B30, B31, B32, B33, B34, B35, B45, B60, B113, B118 |
