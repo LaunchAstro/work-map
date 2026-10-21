@@ -9,7 +9,7 @@ Inputs: the Q1 answer, the old audit's lessons (`docs/review/old-audit.md`, OL i
 ## The answer in short
 
 - A score is one model's built share for a section, or for each unit in it, read from the section's own files at one pinned commit. It is a whole percent or "cannot tell", with a short reason. There is no confidence number.
-- [R2-built] The score covers built only. Live keeps coming from the unit audit and switch-on evidence.
+- (Q14, settled) The score covers built only. Live keeps coming from the unit audit and switch-on evidence.
 - The model gets whole files by path ownership (MC-53) at the pinned commit, up to 360 KB of code, plus the section's title and text, its units and its work tickets' titles. It never sees PR text or the previous score.
 - No rubric per project. The prompt carries one fixed definition of "built", the same for every map, shipped in the binary.
 - The engine generates a strict schema per call and checks the answer in Rust. One bad answer gets one retry (M9); a second keeps the last score and stores the raw text and its cause.
@@ -22,7 +22,7 @@ Inputs: the Q1 answer, the old audit's lessons (`docs/review/old-audit.md`, OL i
 **SC1. One read per section.** A scoring call covers one section of the diagram (OL-01). A section with `units` gets one share per unit in the same answer. A section with `units: []` on a ticket map gets one share for the section. A section with `units: []` on a scope map is pending (MC-03) and is never scored. Notes (RF10) are never scored.
 Test: on `example/scope/flow.json`, a deep audit makes six calls, none for `search`; the `storage` answer must hold exactly `U02` and `U03`.
 
-**SC2. Built only [R2-built].** A score sets a unit's or section's built share and nothing else. It never raises a live share. Live comes from the unit audit's `live` answer and switch-on evidence, as in release one, and stays at or below the new built share (MC-33, MC-40).
+**SC2. Built only (Q14).** A score sets a unit's or section's built share and nothing else. It never raises a live share. Live comes from the unit audit's `live` answer and switch-on evidence, as in release one, and stays at or below the new built share (MC-33, MC-40).
 Test: `U02` with audit code 0.8 and live `partly` scored at 30% shows built 30% and live 30%; scored at 100% it shows live 40%, as before the score.
 
 **SC3. A section map is needed.** Scoring reads files by the section map (`files.sections`) and its `repo`. A project without one shows "AI scoring needs a section map" in the scoring line and makes no call.

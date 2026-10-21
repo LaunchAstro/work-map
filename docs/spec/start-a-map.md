@@ -12,7 +12,7 @@ Inputs: the settled decisions in #3 (decision 11 above all), `docs/spec/config-v
 - The user sees the proposal and can change it before anything is written: pick another source, rename, drop, reorder or add back sections, and set the title and id.
 - It runs in the window and on the command line, both through one engine call. A served page shows the command line to run instead of a button.
 - A survey costs at most 9 requests and about 12 GraphQL points, whatever the size of the repository, and keeps to the budget rules.
-- It never writes to GitHub. It never overwrites a file. On a repository that already has a map, it stops and says where that map is.
+- It never writes to GitHub (Q9, settled: read-only on GitHub). It never overwrites a file. On a repository that already has a map, it stops and says where that map is.
 
 ## Running it
 
@@ -78,8 +78,8 @@ Test: a tree of `src/`, `docs/`, `.github/`, `vendor/` and `README.md` gives one
 **SM11. At most 12 sections, largest first.** A source proposes its candidates by sampled issues covered, most first, ties by name. Folders sort by name. Past the 12th, candidates are listed as "left out" with their counts, and the user can add any of them back. Section titles drop the family prefix (`area:editor` becomes "Editor"), a parent's leading `Epic:`, `Map:` or `Feature:`, and change `-` and `_` to spaces, with a capital first letter and at most 120 characters. Each section's `text` names its rule: "Issues labelled area:editor.", "Sub-issues of #12.", "Titles that start Search:." or "Files under src/editor/."
 Test: a family of 15 labels proposes 12 and lists 3 as left out; `--add` on a left-out label adds it as the 13th section.
 
-**SM12. Section ids follow the roadmap rule.** An id is the title in lower case, each run of characters outside `a-z0-9` turned into one `-`, trimmed of `-` and cut to 40 (RF7). An id that is empty, starts with a digit, is `outside`, or repeats another id is flagged, and nothing is written until the user renames that section. The command never invents a suffix.
-Test: titles "2FA" and "Editor" plus "editor!" give one flagged id `2fa` and one clash; `--rename 2fa=Two-factor` and a rename of the clash let it write.
+**SM12. Section ids follow the roadmap rule, as one word (Q20).** An id is the title in lower case with every character outside `a-z0-9` dropped, cut to 40 (RF7), so it never holds a hyphen and CF26 never warns about it. An id that is empty, starts with a digit, is `outside`, or repeats another id is flagged, and nothing is written until the user renames that section. The command never invents a suffix.
+Test: titles "2FA" and "Editor" plus "editor!" give one flagged id `2fa` and one clash; `--rename 2fa=Two-factor` (id `twofactor`) and a rename of the clash let it write.
 
 **SM13. Bug and question labels.** When the repository has a label named `bug`, `type:bug` or `kind/bug`, ignoring case, it goes in `bugLabels`. A `question` label goes in `skipLabels`. Nothing else is guessed.
 Test: a repository with `Bug` and `question` gets `bugLabels: ["Bug"]` and `skipLabels: ["question"]`; one with neither writes neither field.
@@ -114,7 +114,7 @@ Test: for every fixture survey and every source that qualifies on it, the writte
 **SM20. Settings get one new line at the end.** After the files, `write` takes a short exclusive lock on `settings.lock`, reads `settings.json` again, appends `{ "config": "<absolute path>" }` as the last entry, keeps every other entry, key and order, and replaces the file atomically. It writes nothing to settings when the file is not JSON, has a version other than 1, or already holds 20 entries. Then it prints the entry to add by hand and why, with exit 0 because the map files exist. With no settings file it writes CF1's default with this one entry. The settings write comes last, so no entry ever points at a missing file.
 Test: a settings file with two entries and `check_for_updates: false` gains a third entry and keeps the other two and the flag; a file with 20 entries is left byte for byte and the command prints the line to add.
 
-**SM21. It never writes to GitHub.** The `start` module sends GET requests and GraphQL queries only. It has no mutation, no POST, PATCH, PUT or DELETE, and no option to commit the files or open a PR. A user who wants the map in their repository uses `--out` into a clone and commits it themselves.
+**SM21. It never writes to GitHub (Q9).** The `start` module sends GET requests and GraphQL queries only. It has no mutation, no POST, PATCH, PUT or DELETE, and no option to commit the files or open a PR. A user who wants the map in their repository uses `--out` into a clone and commits it themselves.
 Test: a fake GitHub that fails the test on any write method or any GraphQL `mutation` sees none across every fixture; a source check finds no `mutation` keyword in the module.
 
 ## A repository that already has a map

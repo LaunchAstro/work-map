@@ -6,14 +6,14 @@
     {
       "machine": "machine-a",
       "session_id": "44444444-4444-4444-8444-444444444444",
-      "workspace": "web-app-S0-1f-seat-a",
+      "workspace": "web-app-S0-1f-seat1",
       "pane": "agent-4",
       "tool": "claude",
       "model": "model-x",
       "effort": "high",
       "repo": "web-app",
       "section": "S0-1f",
-      "seat": "seat-a",
+      "seat": "seat1",
       "branch": "plan/s0-1f-sign-in-form",
       "pr": {
         "repo": "example-org/web-app",
@@ -29,13 +29,13 @@
     {
       "machine": "machine-a",
       "session_id": "55555555-5555-4555-8555-555555555555",
-      "workspace": "web-app-board-seat-b",
+      "workspace": "web-app-board-seat2",
       "pane": "agent-5",
       "tool": "codex",
       "model": "model-y",
       "repo": "web-app",
       "section": "board",
-      "seat": "seat-b",
+      "seat": "seat2",
       "branch": "plan/22-board-filter",
       "pr": {
         "repo": "example-org/web-app",

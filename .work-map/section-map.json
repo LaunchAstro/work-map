@@ -1,5 +1,5 @@
 {
-  "_readme": "Every path in this repo has exactly one owner. Rules and tests: docs/spec/own-map.md.",
+  "_readme": "Every path in this repo has exactly one owner, no glob sits under two sections, and every section id is one word (Q20). Rules and tests: docs/spec/own-map.md.",
   "boxes": {
     "tooling": [
       "Cargo.toml",
