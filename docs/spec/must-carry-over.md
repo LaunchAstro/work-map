@@ -11,7 +11,7 @@ Inputs: the settled decisions in #3 (9 and 10 above all), the thermonuclear revi
 - "Old proof" names an archive test by what it checks, so a builder can find it in the archive and copy its cases. Where no old test exists, the item says so and names the case the new test must cover.
 - Rust tests run on the recorded GitHub adapter, a fake clock and the Seat Gauge example files, as the review and the budget spec set out.
 - A tag such as [Q1] marks an item built on a recommended default for a question still open on #2. If the maintainer answers differently, only the tagged items change.
-- A mark such as (Q2), in round brackets, cites a question the maintainer settled in batch one on #2. A removed item keeps its id and says "Removed".
+- A mark such as (Q2), in round brackets, cites a question the maintainer settled on #2. A removed item keeps its id and says "Removed".
 - The deliberate fixes at the end have `KD` ids. They seed the known-differences list the switch-over check uses.
 
 ## Defaults in force
@@ -195,7 +195,7 @@ Inputs: the settled decisions in #3 (9 and 10 above all), the thermonuclear revi
 
 ## `server`
 
-**MC-70 Every request is guarded.** A `Host` that is an IP address and port, never a name (L11); an `Origin`, when sent, equal to `http://` and that `Host`; each POST with no body, a custom header, an exact JSON content type, and `Sec-Fetch-Site` absent or same-origin; no CORS grant. GET serves only the built screen and the API routes. Real paths must stay inside their folder: symlinks out, `..` segments and malformed escapes are refused, and a malformed path is a 404, not a crash. Every answer is `no-store`. Loopback only (Q5). Behind it: TN-22, TN-23, L10, L11. Old proof: the Sync tests that refuse foreign, parameterised, body-carrying and unmarked requests, and the local server tests.
+**MC-70 Every request is guarded.** A `Host` that is an IP address and port, or a name listed in `allowed_hosts` with the served port (Q8, CF25), never any other name (L11); an `Origin`, when sent, equal to `http://` and that `Host`; each POST with no body, a custom header, an exact JSON content type, and `Sec-Fetch-Site` absent or same-origin; no CORS grant. GET serves only the built screen and the API routes. Real paths must stay inside their folder: symlinks out, `..` segments and malformed escapes are refused, and a malformed path is a 404, not a crash. Every answer is `no-store`. Loopback only (Q5). Behind it: TN-22, TN-23, L10, L11. Old proof: the Sync tests that refuse foreign, parameterised, body-carrying and unmarked requests, and the local server tests.
 
 ## The kept screen (TypeScript, #10)
 
@@ -266,7 +266,7 @@ Inputs: the settled decisions in #3 (9 and 10 above all), the thermonuclear revi
 | KD-37 | Frozen inputs stop moving [Q1] | AR question 1 | Yes, if the old engine keeps re-checking |
 | KD-38 | The design package and fonts inlined; MIT headers | TN-54 | No |
 | KD-39 | A read on the hour shows the hour just ended, not an empty bar | TN-65 | Chart only |
-| KD-40 | PRs place in layers: prose tickets before changed files, the repository default before the frozen model placement, which drops to layer 4 as guessed (Q2 revised, PL1) | #45 | Yes: PR counts where the old order chose differently |
+| KD-40 | PRs place in layers: prose tickets before changed files (Q19), the repository default before the frozen model placement, which drops to layer 4 as guessed (Q2 revised, PL1) | #45 | Yes: PR counts where the old order chose differently; each card moved at switch-over is listed (Q19) |
 | KD-41 | Ticket ids per project, read from ticket titles by patterns, matched next to hyphens and ignoring case, plus the branch's ticket number (PL3, PL4) | #45 | Yes: Not placed count, card PR counts |
 | KD-42 | A PR is placed by the agent session that made it (PL6) | #45, #7 | Yes: Not placed count |
 | KD-43 | Every placement names its layer, rule and evidence, and every Not placed PR its reasons (PL1, PL8) | #45 | No, hovers and lists only |

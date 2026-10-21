@@ -21,6 +21,12 @@ Inputs: the settled decisions in #3 (9 to 11), the config items in `docs/spec/mu
 - (Q2) No PR placement from fleet round logs, so the lane fields are gone. Agreed as recommended.
 - (Q5) The served map stays on loopback, with no network option in release one. The guide gives the routes from another device (step 7).
 
+## Settled in batches three to five
+
+- (Q8) Settings gain `allowed_hosts`, a short list of host names the served map accepts besides IP addresses (CF25, L11). Changed from the recommended default, which accepted no names.
+- (Q16) No separate public demo repo. This repo is the live example.
+- (Q20) Sections come first: one-word ids, a plain name and owned folders, every folder owned once or marked shared. The loader warns about the rest (CF26).
+
 ## Settings: the list of projects
 
 `settings.json` sits in the data folder from L20: `$HOME/Library/Application Support/com.launchastro.workmap/` on macOS, `%LOCALAPPDATA%\com.launchastro.workmap\` on Windows, and `$XDG_DATA_HOME/com.launchastro.workmap/` (else `$HOME/.local/share/...`) on Linux. `WORK_MAP_DIR` moves it with the rest of the folder. The file uses snake case, as R16 set for `check_for_updates`.
@@ -32,7 +38,8 @@ Inputs: the settled decisions in #3 (9 to 11), the config items in `docs/spec/mu
     { "config": "/home/user/code/demo-roadmap/work-map.json" },
     { "config": "D:/maps/shop.json", "roadmap": "D:/pinned/shop-roadmap", "frozen": "D:/pinned/shop-data" }
   ],
-  "check_for_updates": true
+  "check_for_updates": true,
+  "allowed_hosts": ["build-box"]
 }
 ```
 
@@ -44,6 +51,7 @@ Inputs: the settled decisions in #3 (9 to 11), the config items in `docs/spec/mu
 | `projects[].roadmap` | no | none | Absolute folder that holds the roadmap files, read from disk whatever `files.source` says |
 | `projects[].frozen` | no | none | Absolute folder that holds the frozen inputs, instead of `frozen.folder` |
 | `check_for_updates` | no | `true` | R16's daily release check; `WORK_MAP_NO_UPDATE_CHECK=1` also turns it off |
+| `allowed_hosts` | no | `[]` | Host names `work-map serve` accepts besides IP addresses (CF25, L11, Q8) |
 
 **CF1. The app writes settings once.** When `settings.json` is missing at start, the app writes the default above with an empty list, atomically and owner-only (600), and shows the example. It never writes the file again. The user, or the start-a-map command (#15), owns it after that.
 Test: a first start with `WORK_MAP_DIR` set to an empty folder writes exactly that file and shows the example tab; a later start leaves an existing file byte for byte as it was.
@@ -59,6 +67,9 @@ Test: adding an entry with a fake clock gives a `hello` with the new tab within 
 
 **CF5. A bad config never empties the window.** A config that fails at start is not a tab. It is listed in `hello` as a config problem (path and message), shown as a header line on every tab. A config that fails on a later re-read keeps its last good version, and the line says the change was not applied. When no project loads, the example shows, with the problem lines.
 Test: one good and one broken config give one tab plus the broken file's line; breaking the good one afterwards keeps its board and adds a "not applied" line; with both broken, the example shows with two lines.
+
+**CF25. Allowed host names (Q8).** `allowed_hosts` holds 0 to 20 names. Each is 1 to 253 characters of lower-case letters, digits, `-` and `.`, with no scheme, port, path or `*`, and is not an IP address, which passes L11 without a listing. L11 accepts a listed name only with the served port, compared exactly, and nothing else about its guard changes. The list matters only to `work-map serve`; the window opens no port (L13). A bad entry is named and dropped alone, as in CF2. List only names that your own network resolves to this machine, such as the name a mesh VPN gives it. A page served under a listed name passes the guard, so a public name that someone else controls must never go on the list.
+Test: `["build-box", "Build-Box", "build-box:4317", "*.example", "192.0.2.7"]` keeps `build-box` and gives four lines, each naming its entry; a served map with that file answers `Host: build-box:4317` with 200 and `Host: other-box:4317` with 403.
 
 ## Project config v2
 
@@ -129,6 +140,13 @@ Test: an audit `asAt` of `2026-10-01` reads as `2026-10-01T13:59:59.999Z` under 
 **CF17. Frozen inputs [Q1].** `frozen` is `{ folder, scores, estimates, sourceFindings, placements, confidence }`. `folder` is relative to the config's folder and needed when the block is present; a settings entry's `frozen` folder replaces it. Frozen files are always read from disk, whatever `files.source` says, because they are copies of the old engine's local files. The four names default to the old engine's own file names: `unit-scores.json`, `estimates.json`, `code-audits` (a folder of runs, each with `summary.json`) and `inferred.json`. `confidence` runs from 0 to 1, default 0.6 (MC-05). The engine reads them when the config loads, never writes them, and keeps each value's date for the hover. A missing file is no input, not an error. From `placements` it takes only the entries a model wrote; it works out the rule-based ones again (MC-26). `scores` gives unit scores on a map with `unitAudit` and section scores on a ticket map without one (MC-34).
 Test: a frozen folder with only `unit-scores.json` loads with scores and no estimates; the engine leaves every frozen file's bytes and times unchanged; a placement entry made by a rule is ignored.
 
+**CF26. Sections first, checked at load (Q20).** A project's sections are set before its tickets. Each has a one-word id, a plain name (its diagram `title`) and the folders it owns in the section map's `boxes`. Every folder belongs to exactly one section, or sits in the section map's `shared` list (the section map table in `roadmap-files.md`), which marks it shared. Every ticket names exactly one section, and is split until it does (guide step 5). The loader checks the first two and warns, never refusing:
+- A section id that is not one word. RF7 allows lower-case letters, digits and hyphens, so the warning is for a hyphen: `flow.json: nodes[3].id: warning: "sign-in" is not one word, and workspace labels split on hyphens (Q15)`.
+- A folder claimed twice: the same glob listed under two sections in `boxes`, or listed both in `shared` and under a section. A glob inside a broader one, such as `crates/engine/src/config/**` under one section and `crates/engine/**` under another, is not a claim by two, because RF20 gives every path under the longer glob to its section alone.
+
+Warnings use CF6's line form with `warning:` before the message. They show as header lines on the project's tab, beside CF5's lines, and `work-map sections` lists them (PL23). A warning never stops a project loading, so the maintainer's live maps, whose ids may hold hyphens, still load for the comparison.
+Test: a diagram with the id `sign-in`, and a section map listing `src/shared/**` under both `editor` and `search`, load with two warning lines naming them; `crates/engine/src/config/**` under `config` with `crates/engine/**` under `service` gives none; this repo's `.work-map/` loads with no warning (OM2).
+
 ## Reading a version 1 config
 
 **CF18. Read in memory, never rewritten.** A `version: 1` file loads through a mapping onto version 2. Missing `progress` becomes `scope`. Retired fields (the list under the table) are ignored and named in the run log, not on screen. `recheck.confidence` becomes `frozen.confidence`. Unknown keys are ignored, as the archive's reader did, except that `sites` and `timeZone` are read in their version 2 form, so the maintainer can add them to a live file the old engine still reads. Frozen inputs for a version 1 file come only from a settings entry's `frozen` folder, under the old names. The roadmap root is the entry's `roadmap` folder, else the config's folder, as the old `--repo-root` flag worked.
@@ -160,9 +178,9 @@ Test: with fake clocks a week apart, the example's newest merge is the same minu
 **CF24. One fixture, three users.** The engine's example tests, the screen's fixtures (S16) and the parity harness's example test (P25) all come from `examples/demo/`; rule cases the recording lacks are built inline over the fake GitHub (B04). The embedded copy is under 300 KB.
 Test: a build check fails when the embedded example passes 300 KB or `web/test/fixtures/` differs from a fresh export.
 
-### The public demo repo (optional)
+### No separate public demo repo
 
-[Q7] Recommended not needed (`docs/spec/own-map.md`). This repo's own map is the example, so the example's links open real issues and PRs, and anyone can save `.work-map/work-map.json`, list its path in settings and see the same map live on their own `gh` login, for a few points a Sync. #15 can test against this repo.
+(Q16) Settled: not needed (`docs/spec/own-map.md`). This repo's own map is the example, so the example's links open real issues and PRs, and anyone can save `.work-map/work-map.json`, list its path in settings and see the same map live on their own `gh` login, for a few points a Sync. #15 can test against this repo.
 
 ## What the start-a-map command (#15) must output
 
@@ -177,12 +195,13 @@ Test: a build check fails when the embedded example passes 300 KB or `web/test/f
 1. Install, linking to the README's steps for each OS (release spec).
 2. The example map: what a card, its bars, the merge panel, Next up and agents mean.
 3. Sign in once with `gh auth login`.
-4. Point it at your repo: copy the sample config, name your sections in a diagram, list the config in `settings.json` (path per OS), and the tab appears.
-5. Name your work: `Section:` lines, `Closes #n`, labels and title prefixes, and where an unplaced ticket shows.
+4. Point it at your repo: copy the sample config, set your sections before any ticket (one-word ids with no hyphens, a plain name each, and the folders each owns in a section map, with any folder no section owns marked `shared`; Q20), list the config in `settings.json` (path per OS), and the tab appears. The header warns about an id with a hyphen or a folder claimed twice (CF26).
+5. Name your work: `Section:` lines, `Closes #n`, labels and title prefixes, and where an unplaced ticket shows. Every ticket names exactly one section; one that spans two is split until each part names one (Q20).
 6. Optional parts: Seat Gauge for agents, served sites, a section map for map gaps, spec documents.
 7. Without a window: `work-map serve`, and `work-map kick` after a merge. Opening it from another device (Q5): the map answers only on its own machine, so use one of two routes.
    - An SSH tunnel: on the device, `ssh -L 4317:127.0.0.1:4317 <host>`, then open `http://127.0.0.1:4317`.
-   - A mesh VPN: on a host whose VPN client hands inbound connections to loopback (Tailscale's userspace networking mode is one example), open `http://<the host's VPN address>:4317` with no extra step. Use the address, not a name: the server refuses names (L11). Anyone on the VPN who can reach the host can then open the map and press Sync, so check the VPN's access rules.
+   - A mesh VPN: on a host whose VPN client hands inbound connections to loopback (Tailscale's userspace networking mode is one example), open `http://<the host's VPN address>:4317` with no extra step. The server refuses any name it has not been given (L11). Anyone on the VPN who can reach the host can then open the map and press Sync, so check the VPN's access rules.
+   - The same VPN by machine name (Q8): add the name the VPN gives the host to `allowed_hosts` in `settings.json` (CF25), then open `http://<name>:4317`. List only names your own VPN or network resolves to that host. The VPN's access rules still decide who can reach it, so check them.
 8. When something is wrong: the header's `gh`, budget and config lines, and what each fix is.
 
 When #15 ships, its command replaces step 4's copying.
@@ -193,4 +212,4 @@ When #15 ships, its command replaces step 4's copying.
 - #12 and `census`: CF11's roadmap file reads are Sync reads under B9 and B11.
 - #13: the operator adds `sites` and `timeZone: "+10:00"` (the old engine's zone) to each live version 1 file, and writes the dump's settings file with the pinned folders (CF20).
 - #15: the output list above.
-- #16: build tickets for settings (CF1 to CF5), the config loader (CF6 to CF17), the version 1 reader (CF18, CF19), the example and its refresh command (CF21 to CF24, `docs/spec/own-map.md`) and the guide. The loader stays within the `config` module's 1,000 lines; the example's embedding and time shift add about 200 to `engine`.
+- #16: build tickets for settings (CF1 to CF5, CF25), the config loader (CF6 to CF17, CF26), the version 1 reader (CF18, CF19), the example and its refresh command (CF21 to CF24, `docs/spec/own-map.md`) and the guide. The loader stays within the `config` module's 1,000 lines; the example's embedding and time shift add about 200 to `engine`.

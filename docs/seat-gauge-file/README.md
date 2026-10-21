@@ -87,7 +87,7 @@ Within version 1 the writer may add new fields, at the top or in a row. Readers 
 | `model` | text | nullable | Model name the session runs, when known. |
 | `effort` | text | nullable | Reasoning effort, when known. |
 | `repo` | text | nullable | Repo label the writer read from the workspace label with `workspace_pattern`. A label, not a GitHub name; the reader maps it. |
-| `section` | text | nullable | Section label read the same way. May hold hyphens, such as `S0-1f`. |
+| `section` | text | nullable | Section label read the same way. One word under the default split (Q15). Only the repo-label fallback can give one with hyphens, such as `S0-1f` from an older label. |
 | `seat` | text | nullable | Seat label read the same way. |
 | `branch` | text | nullable | The git branch checked out in the session's working folder. |
 | `started_at` | time | nullable | When the session was first seen working. |
@@ -101,15 +101,17 @@ Within version 1 the writer may add new fields, at the top or in a row. Readers 
 
 The writer's user sets the pattern; the default is `<repo>-<section>-<seat>`. A pattern holds `<section>` once, may hold `<repo>` and `<seat>` once each, and has literal text, such as `-`, between any two of them. It may also have literal text before the first or after the last.
 
-The writer splits each label like this:
+Section ids and seat names are one word, with no hyphens (Q15, settled through Q20). So a label splits from the right, and the writer splits each one like this:
 
 1. A cut places the pattern's literal text in the label and leaves no part empty. A label with no cut gets `repo`, `section` and `seat` all null.
-2. Known values come first. The seat must be one of the seat labels in the writer's config, and the repo one of the repo labels its user lists, when there are any. A list that matches no cut of this label is set aside for it; then cuts that break a remaining list are dropped. If no cut is left, all three are null.
-3. Parts with no list are filled from the right. Each takes as little of the label as it can, and the leftmost one takes the rest, hyphens included.
+2. The default split fills the parts from the right. Each part takes as little of the label as it can, and the leftmost one takes the rest, hyphens included. Under the default pattern the seat is the last word, the section the word before it, and the rest is the repo.
+3. The repo-label list is a fallback for older labels only, written before section ids lost their hyphens. When the user lists repo labels and the pattern holds `<repo>`, a label whose step 2 repo is not on the list, but which has a cut whose repo is a listed label, takes that cut instead: the longest listed label that fits is the repo, the parts after it fill from the right as in step 2, and the part next to the repo takes what is left, hyphens included. A label that fits no listed label keeps its step 2 split.
 
-With seat `seat-a` and repo `web-app` listed, `web-app-S0-1f-seat-a` gives repo `web-app`, section `S0-1f` and seat `seat-a`. With no repo list it gives repo `web-app-S0` and section `1f`, so a user whose section ids carry hyphens lists their repo labels, or picks a separator the ids never use. With no lists at all, the default pattern gives the Swift Seat Gauge's result.
+Seat names come from the writer's config, so the writer warns its user about a seat name that is not one word, because a label naming it splits the wrong way.
 
-The Swift Seat Gauge writes no `workspace_pattern`. It splits on every hyphen: the last piece is the seat, the one before it the section, and the rest the repo. It has no lists and no pattern setting, so a hyphenated seat or section is cut short.
+`web-app-board-seat2` gives repo `web-app`, section `board` and seat `seat2` with no list. The older label `web-app-S0-1f-seat1` gives repo `web-app-S0` and section `1f` by step 2; with `web-app` listed, the fallback gives repo `web-app`, section `S0-1f` and seat `seat1`.
+
+The Swift Seat Gauge writes no `workspace_pattern`. It splits on every hyphen: the last piece is the seat, the one before it the section, and the rest the repo. That is step 2 under the default pattern, so with one-word ids and seat names it gives the same result. It has no list and no pattern setting, so an older label with a hyphenated section is cut short.
 
 Readers take `repo`, `section` and `seat` as written and never derive them again from `workspace`, with `workspace_pattern` or otherwise. A reader uses the pattern to explain a placement or a "Not placed" reason, and may warn when it differs from the pattern the project expects. It may still match its own patterns against `workspace`, as the work map does to find a ticket or PR number.
 
@@ -189,8 +191,8 @@ Seat Gauge also writes `headroom.json` (seat windows), `machines.json` (machine 
 | `one-machine-failing.json` | A fresh snapshot from two machines, one of them in `problems` (TN-42). | Fresh. The working row on the healthy machine is current; the failing machine's row is shown as last seen, not current. |
 | `stale.json` | A snapshot left behind when the app quit, with one machine failing. | Stale. Rows shown as last seen, none current. |
 | `half-written.json` | A file cut off part way. Not valid JSON on purpose. | Read failed. Last good read kept. |
-| `seat-room.json` | One working session and six seat rows: a Claude seat past 90% of its 5-hour window, a Codex seat past 85% of its week, a Claude seat read 40 minutes ago, a Codex seat whose high 5-hour window reset at 03:00 and which carries a window name readers do not know, a Claude seat never read, and a Codex seat whose `read_at` is not a time. | Fresh, one agent. Five seat rows: `seat-f` is dropped alone. `seat-a`, `seat-b` and `seat-d` have recent readings; `seat-c` and `seat-e` have none. `seat-d`'s 5-hour window counts as 0 used. The seat-cap guard's results for this file are in its spec. |
-| `attribution.json` | Three sessions under the default pattern. One has the hyphenated section `S0-1f` and a PR found through herdr. One has a PR with a source readers do not know. One has a label that fits no cut, so `repo`, `section` and `seat` are null, and a `pr` whose `number` is text. | Fresh, three rows. The first places in section `S0-1f` with PR 57. The second's source shows as text and ranks below `agent`. The third has no section, and its bad `pr` drops alone. |
+| `seat-room.json` | One working session and six seat rows: a Claude seat past 90% of its 5-hour window, a Codex seat past 85% of its week, a Claude seat read 40 minutes ago, a Codex seat whose high 5-hour window reset at 03:00 and which carries a window name readers do not know, a Claude seat never read, and a Codex seat whose `read_at` is not a time. | Fresh, one agent. Five seat rows: `seat6` is dropped alone. `seat1`, `seat2` and `seat4` have recent readings; `seat3` and `seat5` have none. `seat4`'s 5-hour window counts as 0 used. The seat-cap guard's results for this file are in its spec. |
+| `attribution.json` | Three sessions under the default pattern. One is the fallback case: the older label `web-app-S0-1f-seat1`, split with `web-app` on the repo list into the hyphenated section `S0-1f`, with a PR found through herdr. One has the one-word section `board`, split from the right with no list, and a PR with a source readers do not know. One has a label that fits no cut, so `repo`, `section` and `seat` are null, and a `pr` whose `number` is text. | Fresh, three rows. The first places in section `S0-1f` with PR 57. The second's source shows as text and ranks below `agent`. The third has no section, and its bad `pr` drops alone. |
 
 The first six files have no `seats` key, and only `normal.json` and `attribution.json` carry `workspace_pattern` and `pr`. A file without them looks like a writer from before 21 October 2026: a reader finds no seat room, no pattern and no PR evidence.
 

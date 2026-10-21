@@ -5,13 +5,13 @@
     {
       "machine": "machine-a",
       "session_id": "11111111-1111-4111-8111-111111111111",
-      "workspace": "repo-board-seat-a",
+      "workspace": "repo-board-seat1",
       "pane": "agent-1",
       "tool": "claude",
       "model": "model-x",
       "repo": "repo",
       "section": "board",
-      "seat": "seat-a",
+      "seat": "seat1",
       "branch": "plan/12-example-change",
       "started_at": "2026-10-21T02:30:00Z",
       "status": "working",
@@ -22,7 +22,7 @@
   "problems": {},
   "seats": [
     {
-      "seat": "seat-a",
+      "seat": "seat1",
       "tool": "claude",
       "read_at": "2026-10-21T02:58:00Z",
       "windows": {
@@ -31,7 +31,7 @@
       }
     },
     {
-      "seat": "seat-b",
+      "seat": "seat2",
       "tool": "codex",
       "read_at": "2026-10-21T02:58:00Z",
       "windows": {
@@ -40,7 +40,7 @@
       }
     },
     {
-      "seat": "seat-c",
+      "seat": "seat3",
       "tool": "claude",
       "read_at": "2026-10-21T02:20:00Z",
       "windows": {
@@ -49,7 +49,7 @@
       }
     },
     {
-      "seat": "seat-d",
+      "seat": "seat4",
       "tool": "codex",
       "read_at": "2026-10-21T02:58:00Z",
       "windows": {
@@ -59,12 +59,12 @@
       }
     },
     {
-      "seat": "seat-e",
+      "seat": "seat5",
       "tool": "claude",
       "read_at": null
     },
     {
-      "seat": "seat-f",
+      "seat": "seat6",
       "tool": "codex",
       "read_at": "not a time",
       "windows": {
