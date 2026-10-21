@@ -23,7 +23,7 @@
     "docs": ["LaunchAstro/work-map:docs/spec/own-map.md"],
     "config": ["LaunchAstro/work-map:docs/spec/config-v2.md", "LaunchAstro/work-map:docs/spec/roadmap-files.md"],
     "github": ["LaunchAstro/work-map:docs/spec/github-budget.md"],
-    "placement": ["LaunchAstro/work-map:docs/spec/must-carry-over.md", "LaunchAstro/work-map:docs/seat-gauge-file/README.md"],
+    "placement": ["LaunchAstro/work-map:docs/spec/placement.md", "LaunchAstro/work-map:docs/spec/must-carry-over.md", "LaunchAstro/work-map:docs/seat-gauge-file/README.md"],
     "progress": ["LaunchAstro/work-map:docs/spec/must-carry-over.md"],
     "service": ["LaunchAstro/work-map:docs/spec/app-layout.md"],
     "screen": ["LaunchAstro/work-map:docs/spec/screen.md"],
