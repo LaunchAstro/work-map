@@ -6,7 +6,7 @@ Inputs: the settled decisions in #3 (9 to 11), the config items in `docs/spec/mu
 
 ## The answer in short
 
-- A project config stays one JSON file. Version 2 is version 1 with its field names kept, the retired fields gone, and three additions: served `sites` (moved out of the old data folder), the `frozen` inputs [Q1] and an optional `timeZone`.
+- A project config stays one JSON file. Version 2 is version 1 with its field names kept, the retired fields gone, and four additions: served `sites` (moved out of the old data folder), the `frozen` inputs [Q1], an optional `timeZone`, and `attribution` (ticket id patterns, the branch ticket pattern and the merge check, with `seatGauge.workspacePattern` beside it; PL ids in `docs/spec/placement.md`).
 - `files.source` says where the roadmap files come from: the config's own folder on disk, or the roadmap repository's default branch on GitHub. The GitHub source needs no clone and nothing to keep pulled.
 - `settings.json` in the app's data folder lists project configs by absolute path, in tab order, replacing the old tab file of loopback addresses. An entry can pin a roadmap folder and a frozen-input folder, which is how `work-map dump` reads the same inputs as the old engine.
 - A version 1 config is read as it is, in memory, and never rewritten, so the old and new engines can share one file during the comparison.
