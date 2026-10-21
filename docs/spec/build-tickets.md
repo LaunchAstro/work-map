@@ -35,7 +35,7 @@ Each ticket becomes a GitHub issue labelled `build`, with its blocked-by edges a
 
 ## Tickets by section
 
-Each ticket's `Section:` line, for filing the issues. `docs/spec/own-map.md`'s table should match it.
+Each ticket's `Section:` line, for filing the issues. This table is the only copy; `docs/spec/own-map.md` points here.
 
 | Section | Tickets |
 | --- | --- |
