@@ -8,8 +8,8 @@ An outline of `examples/demo/`, the example the binary carries (CF21 to CF24 in 
 examples/demo/
 ├── work-map.json          the config, as ../example/work-map.json
 ├── roadmap/
-│   ├── flow.json          the diagram: three stages, seven sections, wires
-│   └── section-map.json   path globs per section, shared paths, one map issue
+│   ├── flow.json          the diagram, as ../example/roadmap/flow.json
+│   └── section-map.json   the section map, as ../example/roadmap/section-map.json
 ├── github/                recorded answers, one file per request, times as offsets
 ├── sites/                 the recorded build file and home page of the one site
 └── seat-gauge/log.json    a Seat Gauge version 1 file, times as offsets
@@ -29,7 +29,7 @@ Every recorded time is an offset from one reference instant, written `T-3h12m`. 
 | Launch | `docs` | A planning section, built by a docs-only PR; waits on `editor` by a configured arrow |
 | Launch | `release` | A ticket closed with no reason, so its count is pending |
 
-Wires run stage to stage. The configured dependency draws `editor` to `docs` dashed.
+Wires run stage to stage. The configured dependency draws `editor` to `docs` dashed. The file formats are in `../roadmap-files.md`; `scope/` beside this outline holds a scope-basis variant of the same app (audit, plan table and approved mappings) that the readers' tests use and the demo does not.
 
 ## Issues
 
