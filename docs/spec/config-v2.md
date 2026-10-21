@@ -15,7 +15,11 @@ Inputs: the settled decisions in #3 (9 to 11), the config items in `docs/spec/mu
 ## Defaults in force
 
 - [Q1] The scores, estimates, source findings and model placements the retired features wrote are read once, read-only, as frozen inputs, each with its date.
-- [Q2] No PR placement from fleet round logs, so the lane fields are gone.
+
+## Settled in batch one
+
+- (Q2) No PR placement from fleet round logs, so the lane fields are gone. Agreed as recommended.
+- (Q5) The served map stays on loopback, with no network option in release one. The guide gives the routes from another device (step 7).
 
 ## Settings: the list of projects
 
@@ -87,7 +91,7 @@ The sample in `docs/spec/example/work-map.json` is the example project's own con
 | `timeZone` | no | `"UTC"` | Zone for date-only stamps (CF16) | new; the old engine assumed UTC+10 |
 | `frozen` | no | none | Frozen inputs [Q1] (CF17) | new; replaces fixed names in the data folder |
 
-Gone with the retired features: `lanePrefix` and `laneRules` [Q2], the idea step's two fields (MC-47), the `estimated-scope` basis, and every `recheck` block apart from its `confidence`, which becomes `frozen.confidence`.
+Gone with the retired features: `lanePrefix` and `laneRules` (Q2), the idea step's two fields (MC-47), the `estimated-scope` basis, and every `recheck` block apart from its `confidence`, which becomes `frozen.confidence`.
 
 **CF6. Strict, and every problem named.** Unknown keys are refused. The loader collects up to 20 problems before it stops, one per line, each as `<file>: <field path>: <what is wrong>`, such as `work-map.json: progress.placement["acme/app"].labels["ui"]: "ui-shell" is not a section on the diagram`.
 Test: a config with a misspelt key and two bad section names gives three lines in that form, and no tab.
@@ -176,7 +180,9 @@ The maintainer may create a public repo, `LaunchAstro/work-map-demo`, at no cost
 4. Point it at your repo: copy the sample config, name your sections in a diagram, list the config in `settings.json` (path per OS), and the tab appears.
 5. Name your work: `Section:` lines, `Closes #n`, labels and title prefixes, and where an unplaced ticket shows.
 6. Optional parts: Seat Gauge for agents, served sites, a section map for map gaps, spec documents.
-7. Without a window: `work-map serve`, and `work-map kick` after a merge.
+7. Without a window: `work-map serve`, and `work-map kick` after a merge. Opening it from another device (Q5): the map answers only on its own machine, so use one of two routes.
+   - An SSH tunnel: on the device, `ssh -L 4317:127.0.0.1:4317 <host>`, then open `http://127.0.0.1:4317`.
+   - A mesh VPN: on a host whose VPN client hands inbound connections to loopback (Tailscale's userspace networking mode is one example), open `http://<the host's VPN address>:4317` with no extra step. Use the address, not a name: the server refuses names (L11). Anyone on the VPN who can reach the host can then open the map and press Sync, so check the VPN's access rules.
 8. When something is wrong: the header's `gh`, budget and config lines, and what each fix is.
 
 When #15 ships, its command replaces step 4's copying.
