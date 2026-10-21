@@ -2,7 +2,7 @@
 
 How we prove the old TypeScript engine and the Rust engine show the same numbers on every card of the maintainer's two live maps, so switch-over can happen. The same comparison runs on the example project as an ordinary test. Resolves #13.
 
-Inputs: the settled decisions in #3 (15 and 17), the known-differences seed KD-01 to KD-39 in `docs/spec/must-carry-over.md`, the view contract and `work-map dump` in `docs/spec/app-layout.md` (L2, L10, L15), the budget rules in `docs/spec/github-budget.md` (B2, B8, B11), what the old screen reads (TN-29 in `docs/review/thermonuclear.md`), the architecture review's notes on frozen inputs and the recorded adapter, and how the private archive's engine serves its answers today. The open switch-over question on #2 is answered with its recommended default, tagged [Q4] below.
+Inputs: the settled decisions in #3 (15 and 17), the known-differences seed KD-01 to KD-39 in `docs/spec/must-carry-over.md`, the view contract and `work-map dump` in `docs/spec/app-layout.md` (L2, L10, L15), the budget rules in `docs/spec/github-budget.md` (B2, B8, B11), what the old screen reads (TN-29 in `docs/review/thermonuclear.md`), the architecture review's notes on frozen inputs and the recorded adapter, and how the private archive's engine serves its answers today. The switch-over question on #2 was settled by the maintainer as recommended in batch one; items resting on it are marked (Q4). The scope bar has three shares, not four (Q3).
 
 ## The answer in short
 
@@ -10,7 +10,7 @@ Inputs: the settled decisions in #3 (15 and 17), the known-differences seed KD-0
 - The old side is a read-only capture: the files the old engine's servers already answer with, fetched over loopback with plain `GET`s, plus each Seat Gauge file version seen during the capture.
 - The new side is `work-map dump`. It runs one full read into an empty data folder, builds every view at the old capture's moment, and writes one parity record. It opens no port, so the old engine keeps port 4317.
 - A dev-only `parity` tool turns the old capture into the same record shape and compares the two, card by card and field by field.
-- A card passes when it matches, or differs only in fields that a listed KD id covers, with a reason [Q4]. A difference caused by GitHub changing between the two reads is "moved" and is checked again in the next run.
+- A card passes when it matches, or differs only in fields that a listed KD id covers, with a reason (Q4). A difference caused by GitHub changing between the two reads is "moved" and is checked again in the next run.
 - Switch-over needs three clean runs on three different days, on one Rust engine commit, covering every card of both live maps.
 
 ## Words used here
@@ -64,7 +64,7 @@ Check: both the adapter's and the dump's output pass one schema test, and `cargo
 **P12. Cards pair by id, on both maps.** A card on one side only fails as `card missing` on the other. Maps pair by project id.
 Check: a dump missing one section gives one `FAIL ... card missing` line for it.
 
-**P13. What is compared.** Each section card: its state and pending reason, the four scope display shares and the raw fractions behind them, the Tickets bar (completed, total, absorbed, dropped, unknown, left), weighted built and live, days left, the Review bar's line counts, state and PR lists, open PRs, placed PRs, blockers, Next up, the planning checklist, missing steps and spec documents. The map cards add the header totals, stage bars, unplaced PRs, the merge panel's figures and queue, the twelve bars, the loading bay, map-gap count and paths, each site's revision and merge distance, and each agent row's identity, place, state and token totals.
+**P13. What is compared.** Each section card: its state and pending reason, the scope display shares and the raw fractions behind them (three in the new engine, Q3; an old built-but-unmerged share above 0, or a section the old engine held pending for its open PRs, is a KD-31 difference), the Tickets bar (completed, total, absorbed, dropped, unknown, left), weighted built and live, days left, the Review bar's line counts, state and PR lists, open PRs, placed PRs, blockers, Next up, the planning checklist, missing steps and spec documents. The map cards add the header totals, stage bars, unplaced PRs, the merge panel's figures and queue, the twelve bars, the loading bay, map-gap count and paths, each site's revision and merge distance, and each agent row's identity, place, state and token totals.
 Check: a fixture that changes each listed field by one gives exactly one `FAIL` line naming that field.
 
 **P14. What is not compared.** Read and build times, ages, stamps, notes, hover wording, budget figures, the placement step that put a PR somewhere (only the section it lands in counts), layout and camera, and every retired field.
@@ -84,7 +84,7 @@ Check: a fixture where one issue closes between the reads gives `MOVED` naming t
 **P18. One list, keyed by KD id.** `parity/known-differences.toml` holds one entry per KD row in `docs/spec/must-carry-over.md`, with its TN or B ids, a one-line reason, and the field patterns it may excuse. Rows marked "No" in the KD table excuse no number field. KD-18 and KD-34, marked "lists only", excuse only their lists. A new deliberate fix gets the next KD id in the must-carry-over list first, then an entry here. Nothing else excuses a difference.
 Check: an entry whose id is not in the must-carry-over table, or a "No" row naming a number field, fails the list's own test.
 
-**P19. Each excused difference names its KD id and its reason [Q4].** Some KD entries carry a mechanical test, and the comparator applies those by itself: KD-02 (a merge exactly on an hour boundary), KD-30 (a PR the old engine placed by its lane) and KD-39 (a read exactly on the hour). Every other excuse is a line in the run's `explanations.toml`: card, field, KD id and a reason for this case, such as "PR 812 had only a lane placement". The comparator rejects an explanation whose KD entry does not cover that field.
+**P19. Each excused difference names its KD id and its reason (Q4).** Some KD entries carry a mechanical test, and the comparator applies those by itself: KD-02 (a merge exactly on an hour boundary), KD-30 (a PR the old engine placed by its lane) and KD-39 (a read exactly on the hour). Every other excuse is a line in the run's `explanations.toml`: card, field, KD id and a reason for this case, such as "PR 812 had only a lane placement". The comparator rejects an explanation whose KD entry does not cover that field.
 Check: a planted KD-30 difference passes with no explanation line; an explanation naming KD-12 for a `next_up` field is rejected.
 
 **P20. Stale explanations fail.** An explanation that matches no difference in the run makes the run fail, so old excuses cannot hide a later change.
@@ -110,7 +110,7 @@ Check: the harness refuses an output folder inside a git checkout.
 
 ## The switch-over rule
 
-**P23. Three clean runs [Q4].** A run is clean when no card fails. Switch-over needs three clean runs in a row, on three different days, all on one Rust engine commit. Every card of both live maps must be compared, not moved, in at least two of the three. A void run neither counts nor breaks the streak. A failing run resets it. A new engine commit starts a new streak.
+**P23. Three clean runs (Q4).** A run is clean when no card fails. Switch-over needs three clean runs in a row, on three different days, all on one Rust engine commit. Every card of both live maps must be compared, not moved, in at least two of the three. A void run neither counts nor breaks the streak. A failing run resets it. A new engine commit starts a new streak.
 Check: the `parity streak` command reads the kept reports and prints `ready` only for such a sequence; with one card moved in two of three runs it prints which card still needs a run.
 
 **P24. Switch-over is still the maintainer's call.** `ready` means the numbers agree. The maintainer decides when to retire the old engine's jobs and give port 4317 to the Rust app.

@@ -96,7 +96,7 @@ interface Card {
 }
 interface Bar {
   kind: "progress" | "tickets" | "review";
-  segments: { tone: "live" | "merged" | "built" | "rest" | "reviewed" | "completed"; exact: number; shown: number; count: number | null }[];
+  segments: { tone: "live" | "merged" | "rest" | "reviewed" | "completed"; exact: number; shown: number; count: number | null }[];
   pending: PendingWhy | null;          // a closed list of reason codes; the screen holds the words
 }
 interface MergeFlow {
@@ -106,7 +106,7 @@ interface MergeFlow {
 interface Agents { cards: Record<string, { open: Session[]; last_closed: Session | null; total: number }>; unmapped: number }
 ```
 
-`Versions` and `GapReport` are what the `versions` and `map_gaps` modules return. The engine buckets merge hours on the machine's local hour boundaries. `serve` is loopback only (L10), so the viewer is on that machine and the labels match.
+`Versions` and `GapReport` are what the `versions` and `map_gaps` modules return. The engine buckets merge hours on the machine's local hour boundaries. `serve` is loopback only (L10, Q5), so the viewer is normally on that machine and the labels match. A viewer on another device, through the guide's tunnel or mesh VPN, sees bars on the host's hours. The scope bar has no `built` segment (Q3, MC-39).
 
 **S10. Every reason code has words.** The pending words, the zero-segment filter and the "<1%" label live in one module (TN-81).
 Test: a type check fails when a `PendingWhy` code has no entry in the words table.

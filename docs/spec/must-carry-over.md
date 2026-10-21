@@ -11,21 +11,25 @@ Inputs: the settled decisions in #3 (9 and 10 above all), the thermonuclear revi
 - "Old proof" names an archive test by what it checks, so a builder can find it in the archive and copy its cases. Where no old test exists, the item says so and names the case the new test must cover.
 - Rust tests run on the recorded GitHub adapter, a fake clock and the Seat Gauge example files, as the review and the budget spec set out.
 - A tag such as [Q1] marks an item built on a recommended default for a question still open on #2. If the maintainer answers differently, only the tagged items change.
+- A mark such as (Q2), in round brackets, cites a question the maintainer settled in batch one on #2. A removed item keeps its id and says "Removed".
 - The deliberate fixes at the end have `KD` ids. They seed the known-differences list the switch-over check uses.
 
 ## Defaults in force
 
 - [Q1] The last scores and placements the retired re-checks and sweeps wrote are read once, read-only, as frozen inputs, each shown with its date.
-- [Q2] No PR placement from the build fleet's round logs.
-- [Q3] The scope bar's "built but unmerged" share counts plan tickets named by an open PR, weighted by unit days.
-- [Q4] Switch-over passes a card that matches the old engine or differs only by a listed KD id.
-- [Q5] The served map listens on loopback only.
+
+## Settled in batch one
+
+- (Q2) No PR placement from the build fleet's round logs. Agreed as recommended.
+- (Q3) No "built but unmerged" share. The scope bar is live, merged and planned only, because an open PR already says what that share would have said. The maintainer chose this over the recommended default.
+- (Q4) Switch-over passes a card that matches the old engine or differs only by a listed KD id. Agreed as recommended.
+- (Q5) The served map listens on loopback only, with no network option in release one. The guide names two routes from another device: an SSH tunnel, and a mesh VPN whose client hands inbound connections to loopback.
 
 ## The answer in short
 
-- 81 behaviours: 70 in the engine and server, 11 in the screen.
-- 39 deliberate fixes. 24 of them can move a number on a card or the header, and two more only the merge chart, so the parity check in #13 must name the KD id behind every difference [Q4].
-- The engine comes to about 11,200 lines of Rust, tests aside: 56% of the 20,000-line target. The kept screen adds about 4,000 lines of TypeScript, so the whole app stays under the target too.
+- 80 behaviours: 69 in the engine and server, 11 in the screen. MC-41 is removed (Q3).
+- 39 deliberate fixes. 24 of them can move a number on a card or the header, and two more only the merge chart, so the parity check in #13 must name the KD id behind every difference (Q4).
+- The engine comes to about 11,100 lines of Rust, tests aside: 56% of the 20,000-line target. The kept screen adds about 4,000 lines of TypeScript, so the whole app stays under the target too.
 
 ## `config`
 
@@ -87,7 +91,7 @@ Inputs: the settled decisions in #3 (9 and 10 above all), the thermonuclear revi
 
 **MC-25 The Section line.** `Section:` takes a whole diagram id and nothing longer, and a line naming no section is ignored. Old proof: the version 2 tests that read a whole id after `Section:` and ignore a Section line naming no section.
 
-**MC-26 PR placement order.** The first match wins: (1) the PR's own Section line; (2) a plan unit or ticket it names; (3) `Ticket: none`, which puts it outside the plan whether open or merged (KD-23); (4) a configured placement for the PR; (5) the first placed issue among its closing links and keyword references; (6) for a merged PR, its frozen model placement [Q1], else the section most of its owned files point to; (7) issues named in prose, only when all sit in one section; (8) the repository default on ticket-count maps. The old lane step is gone [Q2] (KD-30). Anything after step 2 is shown as inferred. Closing references that disagree resolve first-wins, now with a note (KD-36). A repository default never applies to a PR's own key in step 4. Behind it: TN-12, AR-04, AR question 2. Old proof: the version 3 tests (Section before ticket, Section before a parent-map guess, linked PRs without repository defaults on their own keys, a prose link to a placed ticket) and the section-map test that places a PR by most of its owned files.
+**MC-26 PR placement order.** The first match wins: (1) the PR's own Section line; (2) a plan unit or ticket it names; (3) `Ticket: none`, which puts it outside the plan whether open or merged (KD-23); (4) a configured placement for the PR; (5) the first placed issue among its closing links and keyword references; (6) for a merged PR, its frozen model placement [Q1], else the section most of its owned files point to; (7) issues named in prose, only when all sit in one section; (8) the repository default on ticket-count maps. The old lane step is gone (Q2, KD-30). Anything after step 2 is shown as inferred. Closing references that disagree resolve first-wins, now with a note (KD-36). A repository default never applies to a PR's own key in step 4. Behind it: TN-12, AR-04, AR question 2. Old proof: the version 3 tests (Section before ticket, Section before a parent-map guess, linked PRs without repository defaults on their own keys, a prose link to a placed ticket) and the section-map test that places a PR by most of its owned files.
 
 **MC-27 Issue placement order.** A project override wins and records what it overrode. Then the issue's own Section line, a declared id in its body, its own section-map entry, its parent's entry (where the parent's override beats the parent's entry), a bare id in its title, the parent's own line or ids, a roadmap unit issue, and the parent's placement, followed up the chain with a loop check. Last comes the ticket's own repository default, never a parent's. A map entry naming a section no longer on the diagram places nothing. Everything after the issue's own lines is inferred. Behind it: AR-04. Old proof: the version 2 ticket-issue tests (own Section or id, else parent map; skip a parent map whose section is gone; a Ticket line before the parent map; a mapped parent beats a bare title id) and the ticket-progress tests on the order and on nested cross-repository evidence.
 
@@ -115,11 +119,11 @@ Inputs: the settled decisions in #3 (9 and 10 above all), the thermonuclear revi
 
 **MC-38 When a ticket count is current.** A count is current only when the read is complete, no ticket is unknown and the total is above 0. An empty section is never finished. A missing configured issue holds every count. A placed card's cut-short labels or unsettled chain holds only its section. An old complete read stays current at any age; a future read time does not. Behind it: TN-03, TN-13. Old proof: the ticket-progress tests (reopening, unknown reasons and failures cannot claim complete; complete evidence stays current past ten minutes; future dates refused) and the ticket screen tests on failed and future reads.
 
-**MC-39 Four scope shares that add to 100.** Live, merged but not live, built but unmerged, and planned. Rounding is largest remainder: floor each share, then hand leftover points to the largest fractions, earlier category first on ties. Shares adding to more than 100 are clamped first (KD-28). Raw fractional audit weights are kept, not rounded. Behind it: TN-01, TN-69. Old proof: the scope tests on exclusive shares and joint rounding. TN-01's probe of 200,000 random sections becomes a property test.
+**MC-39 Three scope shares that add to 100 (Q3).** Live, merged but not live, and planned. The old engine's fourth share, built but unmerged, is dropped: an open PR says it instead, on the card's PR list and in the section's build state (MC-42). The bar is pending only when the section has no approved units or its read is incomplete, never for having open PRs (KD-31). Rounding is largest remainder: floor each share, then hand leftover points to the largest fractions, earlier category first on ties. Shares adding to more than 100 are clamped first (KD-28). Raw fractional audit weights are kept, not rounded. Behind it: TN-01, TN-69. Old proof: the scope tests on exclusive shares and joint rounding, with the built share left out. New case: a section with approved units, a complete read and an open PR shows its three shares and is not pending. TN-01's probe of 200,000 random sections becomes a property test.
 
 **MC-40 Scope inputs.** Coded is the audit's code share weighted by unit days. Live is the smaller of coded and code times the live factor. The merged baseline is the larger of coded and the unit estimate. The estimate is a frozen model estimate newer than the audit [Q1], held at the audit when a newer frozen source finding says the unit falls short, never shown below the audit; else the share of the unit's plan tickets a merged PR named complete; else the audit. PRs merged since the audit show beside it without moving its percentage, and a PR merged at the audit minute is not after it. Behind it: TN-55, AR question 1. Old proof: the core snapshot tests (weights by estimate days, compares times as times, merged since the audit), the version 2 test that never shows an estimate below the audit, and the scope tests that keep live and merged true.
 
-**MC-41 Built but unmerged [Q3].** For each unit: the share of its plan tickets that an open PR placed in the section names, and that no merged PR named complete, capped at the unit's remaining scope. The section's share is the unit-days average. Two PRs naming one ticket count it once. A PR naming only a unit adds nothing and is listed. The hover says "has an open PR". A section is pending only when it has no approved units or its read is incomplete, no longer for having open PRs (KD-31). Behind it: TN-55. Old proof: the scope tests that use unit day weights and cap each unit at its remaining scope, and that do not count stacked PRs twice; their source changes from a model estimate to named tickets.
+**MC-41 Removed (Q3).** This was the built-but-unmerged share, filled from plan tickets named by open PRs. The maintainer dropped the share in batch one. Its pending rule moved to MC-39. Behind it: TN-55.
 
 **MC-42 Section build state.** Built while it has an open PR; merged when the merged share is above 0, or live is 0 and PRs merged since the audit; live when live is above 0; planned otherwise. Old proof: the version 3 test that shows merged and live shares apart without turning an open PR into a percentage.
 
@@ -137,9 +141,9 @@ Inputs: the settled decisions in #3 (9 and 10 above all), the thermonuclear revi
 
 ## `merges`
 
-**MC-49 The clock-hour chart [Q5].** The engine sends twelve bars, newest last, each with its start, end and merge count. They are bucketed on the machine's local hour boundaries, so a zone at a half or quarter hour also works (KD-01). That is right only because the served map is loopback only and the viewer sits at that machine; if Q5 opens the map to other machines, the bucketing needs the viewer's zone. The newest bar is the hour so far, and each earlier bar starts on a local hour. A bar holds merges from its start up to, but not including, its end (KD-02). Future and older merges are left out, and empty bars stay. Behind it: TN-47, TN-56, AR-06, and the screen spec (#10), which moved the bucketing out of the screen. Old proof: the clock-hour test, whose boundary case flips, and the camera-file tests on exact hourly boundaries.
+**MC-49 The clock-hour chart (Q5).** The engine sends twelve bars, newest last, each with its start, end and merge count. They are bucketed on the machine's local hour boundaries, so a zone at a half or quarter hour also works (KD-01). That is right because the served map is loopback only (Q5), so the viewer normally sits at that machine. A viewer who opens it from another device through the guide's tunnel or mesh VPN sees bars on the host's hours, which release one accepts. The newest bar is the hour so far, and each earlier bar starts on a local hour. A bar holds merges from its start up to, but not including, its end (KD-02). Future and older merges are left out, and empty bars stay. Behind it: TN-47, TN-56, AR-06, and the screen spec (#10), which moved the bucketing out of the screen. Old proof: the clock-hour test, whose boundary case flips, and the camera-file tests on exact hourly boundaries.
 
-**MC-50 Two hour rules on one strip [Q5].** The engine also sends the average per hour and "last hour", both over rolling 60-minute windows ending at the read. They differ from the newest bar on purpose: merges at 02:15, 02:30, 02:45, 02:50 and 03:05, read at 03:10, give a last hour of 5 and a newest bar of 1. A read exactly on a local hour would make the newest bar a zero-length window, so the newest bar is then the hour just ended (KD-39). The screen labels "last hour" as the last 60 minutes. Behind it: TN-65, AR-06. Old proof: none beyond TN-65's example, which becomes the test, plus one read on the hour.
+**MC-50 Two hour rules on one strip (Q5).** The engine also sends the average per hour and "last hour", both over rolling 60-minute windows ending at the read. They differ from the newest bar on purpose: merges at 02:15, 02:30, 02:45, 02:50 and 03:05, read at 03:10, give a last hour of 5 and a newest bar of 1. A read exactly on a local hour would make the newest bar a zero-length window, so the newest bar is then the hour just ended (KD-39). The screen labels "last hour" as the last 60 minutes. Behind it: TN-65, AR-06. Old proof: none beyond TN-65's example, which becomes the test, plus one read on the hour.
 
 **MC-51 Merge figures keep their last good read.** A skipped or failed poll keeps the last figures with their time. A partial read whose later page stops keeps the old queue figures and the old time, rather than stamping a new time on them (KD-17). Behind it: TN-13, TN-46. Old proof: the GitHub freshness tests and the cards-keep-last test for a skipped merge read.
 
@@ -191,7 +195,7 @@ Inputs: the settled decisions in #3 (9 and 10 above all), the thermonuclear revi
 
 ## `server`
 
-**MC-70 Every request is guarded.** Exact loopback `Host`; an `Origin`, when sent, equal to the server's own; each POST with no body, a custom header, an exact JSON content type, and `Sec-Fetch-Site` absent or same-origin; no CORS grant. GET serves only the built screen and the API routes. Real paths must stay inside their folder: symlinks out, `..` segments and malformed escapes are refused, and a malformed path is a 404, not a crash. Every answer is `no-store`. Loopback only [Q5]. Behind it: TN-22, TN-23, L10, L11. Old proof: the Sync tests that refuse foreign, parameterised, body-carrying and unmarked requests, and the local server tests.
+**MC-70 Every request is guarded.** A `Host` that is an IP address and port, never a name (L11); an `Origin`, when sent, equal to `http://` and that `Host`; each POST with no body, a custom header, an exact JSON content type, and `Sec-Fetch-Site` absent or same-origin; no CORS grant. GET serves only the built screen and the API routes. Real paths must stay inside their folder: symlinks out, `..` segments and malformed escapes are refused, and a malformed path is a 404, not a crash. Every answer is `no-store`. Loopback only (Q5). Behind it: TN-22, TN-23, L10, L11. Old proof: the Sync tests that refuse foreign, parameterised, body-carrying and unmarked requests, and the local server tests.
 
 ## The kept screen (TypeScript, #10)
 
@@ -219,11 +223,11 @@ Inputs: the settled decisions in #3 (9 and 10 above all), the thermonuclear revi
 
 ## Deliberate fixes: the known-differences seed
 
-"Moves numbers" says whether the fix can change a figure on a card or header of the maintainer's live maps at switch-over. Those rows are the ids the parity check in #13 may cite [Q4].
+"Moves numbers" says whether the fix can change a figure on a card or header of the maintainer's live maps at switch-over. Those rows are the ids the parity check in #13 may cite (Q4).
 
 | Id | Fix | From | Moves numbers |
 | --- | --- | --- | --- |
-| KD-01 | Times in the viewer's zone; chart hours on the machine's local hours [Q5] | TN-56, AR-09 | Chart only, on machines away from UTC+10 |
+| KD-01 | Times in the viewer's zone; chart hours on the machine's local hours (Q5) | TN-56, AR-09 | Chart only, on machines away from UTC+10 |
 | KD-02 | Clock-hour bars start-inclusive | TN-47 | Yes, merges on the hour |
 | KD-03 | Perl lock helpers replaced by one process and a native lock | TN-58, AR-03 | No |
 | KD-04 | launchd jobs, fixed macOS paths, Homebrew path, Chrome launcher gone | TN-59, TN-86 | No |
@@ -252,8 +256,8 @@ Inputs: the settled decisions in #3 (9 and 10 above all), the thermonuclear revi
 | KD-27 | All-zero-line review shows "no changed lines", not pending | TN-70 | No |
 | KD-28 | Scope shares clamped before rounding | TN-69 | No, nothing produces such input today |
 | KD-29 | Map-gap caps bound a Sync, not the census | TN-60 | Yes: map gaps shown instead of pending |
-| KD-30 | No placement by the lane that opened a PR [Q2] | TN-12, AR question 2 | Yes: open PR counts |
-| KD-31 | Built-but-unmerged from tickets named by open PRs [Q3] | TN-55 | Yes: scope bars, pending sections |
+| KD-30 | No placement by the lane that opened a PR (Q2) | TN-12, AR question 2 | Yes: open PR counts |
+| KD-31 | No built-but-unmerged share, and open PRs no longer make a section pending (Q3) | TN-55 | Yes: scope bars, pending sections |
 | KD-32 | Deleted issues leave within seven days, not one | B8 | Yes, until the next full read |
 | KD-33 | Seat Gauge reader per the file spec: quiet when missing, refuses newer versions | #7 | Yes: agents |
 | KD-34 | Next up lists the cards behind "N left" | TN-68 | No, lists only |
@@ -281,7 +285,7 @@ Estimated from the architecture review's module sizes, plus what the budget spec
 | `census` | 1,700 | 1,800 | Resumable first read (MC-16) |
 | `store` | 250 | 250 | |
 | `placement` | 1,100 | 1,200 | One Markdown-aware reference extractor (MC-22) |
-| `progress` | 1,500 | 1,600 | Built-but-unmerged from named tickets (MC-41) |
+| `progress` | 1,500 | 1,500 | The built-but-unmerged share dropped (Q3) |
 | `merges` | 350 | 350 | |
 | `map_gaps` | 250 | 250 | |
 | `versions` | 450 | 450 | |
@@ -291,13 +295,13 @@ Estimated from the architecture review's module sizes, plus what the budget spec
 | `contract` | | 250 | Added by the app layout |
 | `server` | 350 | 450 | Event stream, view ETags, CSP (L10 to L12) |
 | `app` with the folded `cli` | 370 | 600 | Window, control port, instance file, kick and dump (L13 to L18) |
-| Total | 9,770 | about 11,200 | 56% of the 20,000 target |
+| Total | 9,770 | about 11,100 | 56% of the 20,000 target |
 
-The biggest risks are `census` and `placement`, where the old tests hold the most edge cases. Even at 1.5 times this estimate the engine stays under the target. The screen spec (#10) keeps about 3,650 lines of drawing TypeScript plus a client module of about 320, with about 1,270 lines of CSS beside them. Engine and screen TypeScript together come to about 15,200.
+The biggest risks are `census` and `placement`, where the old tests hold the most edge cases. Even at 1.5 times this estimate the engine stays under the target. The screen spec (#10) keeps about 3,650 lines of drawing TypeScript plus a client module of about 320, with about 1,270 lines of CSS beside them. Engine and screen TypeScript together come to about 15,100.
 
 ## Notes for other tickets
 
 - #11: project config v2 needs an optional time zone for date-only stamps in roadmap files (MC-04), the frozen input file names (MC-05), project ids limited as in MC-67, and the served sites. The maintainer's live maps should set the zone the old engine assumed, so audit dates match at switch-over.
-- #13: compare only after both engines have made a full read (KD-32), with the old engine's re-checks and sweeps stopped (KD-37), and compare times as UTC instants (KD-01). Every difference must cite a KD row marked "Yes" [Q4].
-- #16: each MC item is a test in the build tickets. Most module tickets can take their MC items as their acceptance list.
+- #13: compare only after both engines have made a full read (KD-32), with the old engine's re-checks and sweeps stopped (KD-37), and compare times as UTC instants (KD-01). Every difference must cite a KD row marked "Yes" (Q4).
+- #16: each MC item is a test in the build tickets, apart from MC-41, which is removed (Q3). Most module tickets can take their MC items as their acceptance list.
 - #10: MC-71 to MC-81 are the screen's list, and KD-21 its fixes.
