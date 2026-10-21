@@ -2,9 +2,9 @@
 
 > Draft. Moves to the seat-gauge repo when the Rust version takes that name. Seat Gauge owns this format.
 
-Seat Gauge writes `log.json`, one snapshot of the agent sessions it can see. The work map reads it to put agents on its cards. Each tool works alone. When both are installed, this file is the only thing they share.
+Seat Gauge writes `log.json`, one snapshot of the agent sessions it can see and of the room left on each seat. The work map reads it to put agents on its cards, and from its release two to pause AI scoring when the scoring seat is near its limit (`docs/spec/seat-cap-guard.md`). Each tool works alone. When both are installed, this file is the only thing they share.
 
-This spec is version 1, the format the Swift Seat Gauge writes today. The Rust Seat Gauge writes the same version 1, so the work map reads either one without a change.
+This spec is version 1, the format the Swift Seat Gauge writes today. The Rust Seat Gauge writes the same version 1, so the work map reads either one without a change. Seat room, the top-level `seats` list, joined version 1 on 21 October 2026 as an added field (#37). A writer that predates it leaves the key out, and a reader that predates it ignores the key, as the version rules below allow.
 
 ## Where the file lives
 
@@ -30,6 +30,7 @@ The folder should be readable by its owner only (mode 700 on macOS and Linux), b
 - Leave `log.json` in place when the app quits. Readers see it go stale.
 - Encode as UTF-8 JSON with no byte order mark. Write times in UTC with a `Z` suffix.
 - Stay under the reader limits below. Drop the oldest closed rows first if a file would pass them.
+- Write `seats` from the seat readings the writer already holds. Seats are read on their own, slower schedule, so most rounds copy the same readings again. Filling `seats` must never start a model turn or any other read that costs the seat usage.
 
 ## Reading the file
 
@@ -40,7 +41,7 @@ The reader refuses a file that is a symlink, is not a regular file, or is larger
 | Case | What the reader does |
 | --- | --- |
 | Folder or file missing | Seat Gauge is not installed or has not run yet. Show no agents and a quiet note. This is not an error. |
-| File is not valid JSON, or fails the field rules below | Half-written or damaged. Treat this read as failed, keep the last good read, and try again next round. |
+| File is not valid JSON, or fails the field rules below (seat room aside: a bad `seats` value or seat row drops alone) | Half-written or damaged. Treat this read as failed, keep the last good read, and try again next round. |
 | `version` is missing or not a whole number | Damaged. Same as above. |
 | `version` is higher than the reader knows | A newer Seat Gauge. Parse nothing else. Show no agents and say Seat Gauge is newer than this reader. Never guess at the fields. |
 | `updated` older than 90 seconds, or more than 60 seconds ahead of the reader's clock | Stale. Rows may still be shown as last seen, but none counts as current. |
@@ -66,6 +67,7 @@ Within version 1 the writer may add new fields, at the top or in a row. Readers 
 | `updated` | time | yes | When the writer finished this snapshot. |
 | `sessions` | array of rows | yes | At most 5,000 rows. May be empty. Newest start first, though readers must not rely on order. |
 | `problems` | object | yes | Machine label to a message, for each machine whose last read failed. May be empty. Messages are for people at that machine; readers must not republish them. |
+| `seats` | array of seat rows | optional | Seat room, one row per seat in the writer's config. At most 100 rows. Missing means this writer does not share seat room; empty means it shares it and has no seats. See below. |
 
 ### Session row
 
@@ -95,6 +97,28 @@ Readers take `repo`, `section` and `seat` as written and never derive them again
 
 Token counts are an object with seven whole numbers, all required: `responses`, `input`, `output`, `thinking`, `cacheRead`, `cacheWrite5m`, `cacheWrite1h`. `thinking` is part of `output`, not added to it. The camel-case keys inside token counts are version 1 as written; they stay until a version 2.
 
+### Seat room
+
+The writer puts every seat its config names into `seats`, read or not, so a reader can tell a seat with no reading from a seat that does not exist. A seat's windows are account-wide, so seat rows carry no `machine`, and `problems` does not touch them.
+
+| Field | Type | Required | Meaning |
+| --- | --- | --- | --- |
+| `seat` | text, not empty | yes | The seat's label in the writer's config. Unique in the list. When a workspace label names this seat, the session rows' `seat` uses the same label. |
+| `tool` | text | yes | The CLI the seat signs in to, in the session rows' words: `claude` or `codex`. |
+| `read_at` | time | nullable | When the writer took the windows below. Missing until the seat has been read. Never later than `updated`. A seat whose last read failed keeps its last windows and their `read_at`, so the age tells the reader how old they are. |
+| `windows` | object | nullable | Window name to a window. Missing or empty when `read_at` is missing. |
+
+A window is an object with two required fields: `used`, a whole number from 0 to 100 giving the percent of the window used, and `resets`, the time the window starts again. Version 1 names two windows, `five_hour` and `weekly`, each written only when the seat's provider reports it. The writer may add other names, such as a window that one model has to itself. Readers ignore names they do not know.
+
+A seat row holds no account, address, plan, token file or login path. The seat label is the only name in it.
+
+Reading seat room:
+
+- A bad `seats` value, one that is not an array, drops `seats` alone. The sessions and the rest of the file read as usual.
+- A seat row that breaks a rule above (a missing `seat` or `tool`, a `read_at` that is not a time, a `used` outside 0 to 100) is dropped alone, as is a bad window inside an otherwise good row. Two rows with the same `seat` are both dropped.
+- A seat reading counts as recent when its `read_at` is at most 15 minutes old and not more than 60 seconds ahead of the reader's clock. The file's own 90-second freshness rule is for sessions, not seat room: a file can be stale for agents while its seat readings are still recent. A file whose `updated` is more than 15 minutes old means Seat Gauge is not running, and none of its seat readings counts as recent.
+- A window whose `resets` time has passed has started again since the reading. A reader counts it as 0 used.
+
 ### Statuses
 
 `working`, `idle`, `blocked` and `done` come from herdr's agent status for the pane. `done` means a turn finished and the session is still open. Seat Gauge adds `closed` when the pane or agent is gone, and `superseded` when a placeholder row was replaced by the session's real id. `unknown` means herdr reported nothing usable.
@@ -105,7 +129,7 @@ A reader shows any status it does not know as text, and counts that row as not c
 
 The file names herdr ideas (workspace, pane, agent status) and nothing tied to one OS. It holds no process ids, file paths, process arguments, prompts, commands or message content. Machine labels come from the writer's config, so a Mac, a Windows machine and a Linux machine all write the same shape.
 
-Seat Gauge also writes `headroom.json` (seat windows), `machines.json` (machine load) and `spend.csv` beside this file. They are Seat Gauge's own files for agents and people, not part of this format. The work map reads none of them in release one. The old engine read `headroom.json` only for the Codex audit's seat cap, which is retired. A later reader that needs seat room gets it added to this spec first.
+Seat Gauge also writes `headroom.json` (seat windows), `machines.json` (machine load) and `spend.csv` beside this file. They are Seat Gauge's own files for agents and people, not part of this format, and the work map reads none of them. The old engine read `headroom.json` for the Codex audit's seat cap, which is retired. Seat room now comes through `seats` in this file, because settled decision 12 has the two tools share one file. `seats` is a smaller copy of the same readings: no plan, no `left` (it is 100 minus `used`), and no stale flag, since `read_at` gives the age and readers must not depend on a writer's flag (TN-66).
 
 ## Examples
 
@@ -119,5 +143,8 @@ Seat Gauge also writes `headroom.json` (seat windows), `machines.json` (machine 
 | `one-machine-failing.json` | A fresh snapshot from two machines, one of them in `problems` (TN-42). | Fresh. The working row on the healthy machine is current; the failing machine's row is shown as last seen, not current. |
 | `stale.json` | A snapshot left behind when the app quit, with one machine failing. | Stale. Rows shown as last seen, none current. |
 | `half-written.json` | A file cut off part way. Not valid JSON on purpose. | Read failed. Last good read kept. |
+| `seat-room.json` | One working session and six seat rows: a Claude seat past 90% of its 5-hour window, a Codex seat past 85% of its week, a Claude seat read 40 minutes ago, a Codex seat whose high 5-hour window reset at 03:00 and which carries a window name readers do not know, a Claude seat never read, and a Codex seat whose `read_at` is not a time. | Fresh, one agent. Five seat rows: `seat-f` is dropped alone. `seat-a`, `seat-b` and `seat-d` have recent readings; `seat-c` and `seat-e` have none. `seat-d`'s 5-hour window counts as 0 used. The seat-cap guard's results for this file are in its spec. |
+
+The first six files have no `seats` key. A reader finds no seat room in them, which is how a writer from before 21 October 2026 looks.
 
 A missing file has no example: the test removes the file.

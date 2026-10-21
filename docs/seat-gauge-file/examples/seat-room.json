@@ -1,0 +1,75 @@
+{
+  "version": 1,
+  "updated": "2026-10-21T03:00:00Z",
+  "sessions": [
+    {
+      "machine": "machine-a",
+      "session_id": "11111111-1111-4111-8111-111111111111",
+      "workspace": "repo-board-seat-a",
+      "pane": "agent-1",
+      "tool": "claude",
+      "model": "model-x",
+      "repo": "repo",
+      "section": "board",
+      "seat": "seat-a",
+      "branch": "plan/12-example-change",
+      "started_at": "2026-10-21T02:30:00Z",
+      "status": "working",
+      "as_of": "2026-10-21T03:00:00Z",
+      "stale": false
+    }
+  ],
+  "problems": {},
+  "seats": [
+    {
+      "seat": "seat-a",
+      "tool": "claude",
+      "read_at": "2026-10-21T02:58:00Z",
+      "windows": {
+        "five_hour": { "used": 92, "resets": "2026-10-21T05:00:00Z" },
+        "weekly": { "used": 61, "resets": "2026-10-24T00:00:00Z" }
+      }
+    },
+    {
+      "seat": "seat-b",
+      "tool": "codex",
+      "read_at": "2026-10-21T02:58:00Z",
+      "windows": {
+        "five_hour": { "used": 12, "resets": "2026-10-21T06:10:00Z" },
+        "weekly": { "used": 88, "resets": "2026-10-23T09:00:00Z" }
+      }
+    },
+    {
+      "seat": "seat-c",
+      "tool": "claude",
+      "read_at": "2026-10-21T02:20:00Z",
+      "windows": {
+        "five_hour": { "used": 40, "resets": "2026-10-21T04:00:00Z" },
+        "weekly": { "used": 30, "resets": "2026-10-24T00:00:00Z" }
+      }
+    },
+    {
+      "seat": "seat-d",
+      "tool": "codex",
+      "read_at": "2026-10-21T02:58:00Z",
+      "windows": {
+        "five_hour": { "used": 97, "resets": "2026-10-21T03:00:00Z" },
+        "weekly": { "used": 50, "resets": "2026-10-25T09:00:00Z" },
+        "weekly_model_x": { "used": 99, "resets": "2026-10-25T09:00:00Z" }
+      }
+    },
+    {
+      "seat": "seat-e",
+      "tool": "claude",
+      "read_at": null
+    },
+    {
+      "seat": "seat-f",
+      "tool": "codex",
+      "read_at": "not a time",
+      "windows": {
+        "five_hour": { "used": 10, "resets": "2026-10-21T05:00:00Z" }
+      }
+    }
+  ]
+}
