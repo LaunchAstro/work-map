@@ -48,15 +48,15 @@ Test: a repo test matches every path in `build-tickets.md`'s `Touches:` lines, b
 **OM3. `.work-map/` holds this repo's map.** The config sets `files.source: "github"`, so the paths in it (`.work-map/flow.json`, `.work-map/section-map.json`) are relative to this repo's root on its default branch and need no clone. To read a local checkout instead, a settings entry sets `roadmap` to the clone's root (CF11).
 Test: the config loads with no problem lines from GitHub, and again from a settings entry whose `roadmap` is a clone's root.
 
-**OM4. Planning tickets place by the map, build tickets by their line.** The section map's `maps` entry puts the children of map issue #2 on `docs`. A build ticket places by its own `Section:` line, which beats a parent's entry (MC-27). The config sets no repository default, so a ticket or PR that names nothing shows in Not on the map rather than on a guessed card. `idea` and `question` issues are left out of the counts.
-Test: in the example, every child of #2 with no `Section:` line is on `docs`, and a `build` issue with no line is in Not on the map.
+**OM4. Planning tickets place by the map, build tickets by their line.** The section map's `maps` entry puts the children of map issue #2 on `docs`. A build ticket places by its own `Section:` line, which beats a parent's entry (MC-27). The config sets no repository default, so a ticket or PR that names nothing shows in Not placed rather than on a guessed card (PL8, KD-23). `idea` and `question` issues are left out of the counts.
+Test: in the example, every child of #2 with no `Section:` line is on `docs`, and a `build` issue with no line is in Not placed.
 
 ## The Section rule
 
 **OM5. One line on every PR.** A PR body carries exactly one line `Section: <id>`, with an id from `.work-map/flow.json`. Planning and docs PRs say `Section: docs`. A PR whose files span sections names the one with most of its changed lines; one that truly spans two is split (BS5). `.github/pull_request_template.md` starts with the line.
 Test: the check below passes `Section: docs`, and refuses no line, `Section: doc`, `Section: docs and more`, and two lines naming different sections.
 
-**OM6. One line on every build ticket.** Each `build` issue's body carries `Section: <id>` from the table below. A ticket that would span two sections is split until each part names one (Q20). Whoever files the ticket runs the same check on its body.
+**OM6. One line on every build ticket.** Each `build` issue's body carries `Section: <id>` from the table in `build-tickets.md`. A ticket that would span two sections is split until each part names one (Q20). Whoever files the ticket runs the same check on its body.
 Test: every open `build` issue's body passes the check.
 
 **OM7. The merge check.** Until #45's commands exist, whoever merges runs this from a checkout of the PR head, and does not merge on exit 1:
@@ -71,22 +71,7 @@ Test: the cases in OM5, on a body with Windows line ends too.
 
 ## Build tickets by section
 
-Each ticket takes the section that owns most of its `Touches:` lines. Maintainer tasks with no repo paths take the section of the spec they serve. Cleanup passes take `tooling` for code and `docs` for words, except v1.1.0's, which stay on `start`.
-
-| Section | Tickets |
-| --- | --- |
-| `tooling` | B01, B02, B61, B75, B76, B80, B90 |
-| `docs` | B73, B78, B87 |
-| `config` | B03, B12, B18, B19, B20, B21, B43, B56, B57, B58, B63, B71, B77 |
-| `github` | B04, B06, B22, B23, B24, B25, B26, B27, B28, B46, B47 |
-| `placement` | B05, B07, B08, B17, B36, B44, B48, B59 |
-| `progress` | B13, B29, B30, B31, B32, B33, B34, B35, B45, B60 |
-| `service` | B09, B10, B37, B53, B54, B55, B64, B65, B66, B67, B68, B69, B70 |
-| `screen` | B11, B38, B39, B49, B50, B51, B62 |
-| `parity` | B14, B15, B16, B40, B41, B42, B52, B72, B74, B79 |
-| `start` | B81, B82, B83, B84, B85, B86, B88, B89 |
-
-All 90 appear once. B77 leaves the table when the build plan drops it (Q16).
+Each build ticket's section is the Section column of "Tickets by section" in `docs/spec/build-tickets.md`. That table is the only copy, so the two docs can't drift (Q20, the build spec's reconciliation 28).
 
 ## The example project
 
@@ -126,6 +111,6 @@ Patched because the example is now this repo:
 
 ## Notes for other tickets
 
-- #16: every build issue gets its `Section:` line from the table above. B56 is now the refresh command, blocked also by B22 (the live adapter); B71 and B72 add `expected.json`, the fixtures and the capture to it.
+- #16: every build issue gets its `Section:` line from the table in `build-tickets.md`. B56 is now the refresh command, blocked also by B22 (the live adapter); B71 and B72 add `expected.json`, the fixtures and the capture to it.
 - #45: `work-map sections` and `work-map where` replace OM7's shell lines; the config's `seatGauge` takes the workspace pattern #45 settles.
 - #15: this repo is a live check of `work-map start`; its proposal is compared by hand with `.work-map/`.

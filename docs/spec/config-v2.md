@@ -96,7 +96,8 @@ This repo's own config, `.work-map/work-map.json`, is the example project's conf
 | `specMembership`, `specDocuments`, `planningSections` | no | none | MC-46, MC-17, MC-29 | kept |
 | `reviewReceiptAuthors` | no | `[]` | Trusted receipt authors (MC-45) | kept |
 | `ledgerPrReadyLabel` | no | none | The loading bay's ready label (MC-52) | kept |
-| `seatGauge` | no | none | `repositories`, `branchTicket`, `workspace` (MC-58) | kept |
+| `seatGauge` | no | none | `repositories`, `branchTicket`, `workspace` (MC-58), `workspacePattern` (PL13) | kept; `workspacePattern` new |
+| `attribution` | no | PL12's defaults | `ticketIds`, `branchTicket`, `check` (PL12) | new; also read from a version 1 file (CF18) |
 | `dependencies` | no | `[]` | Dashed arrows, `{ from, to, label }` | kept, now optional |
 | `sites` | no | none | Up to 10 served sites (CF15) | moved from the data folder's site file |
 | `timeZone` | no | `"UTC"` | Zone for date-only stamps (CF16) | new; the old engine assumed UTC+10 |
@@ -128,7 +129,7 @@ Test: `../x.json`, `/etc/x`, `C:\x`, a quoted path and a symlink out of the fold
 **CF13. One basis, its own fields.** `scope` needs `files.audit` and `files.plan`, and takes no ticket fields. `ticket-count` takes the ticket fields. `estimated-scope` is refused: "Estimated scope is retired. Set progress.basis to scope or ticket-count."
 Test: a scope map without `files.plan`, a scope map with `bugLabels` and an `estimated-scope` map are each refused with their lines.
 
-**CF14. Patterns are Rust patterns.** `branchTicket`, `workspace.pattern`, `unitPattern` and `specPattern` compile with the Rust `regex` crate, at most 256 characters. The first three need a capture group. Look-around and back-references, which the archive's JavaScript allowed, are refused naming the pattern. Label lists keep the trailing `*` prefix rule (MC-32).
+**CF14. Patterns are Rust patterns.** `branchTicket`, `workspace.pattern`, each `attribution.ticketIds` entry, `attribution.branchTicket`, `unitPattern` and `specPattern` compile with the Rust `regex` crate, at most 256 characters. All but the last two need a capture group, and the two `attribution` ones exactly one (PL12). Look-around and back-references, which the archive's JavaScript allowed, are refused naming the pattern. Label lists keep the trailing `*` prefix rule (MC-32).
 Test: a pattern with no group, one with a look-ahead, and one of 257 characters are each refused; `^[a-z]+/([1-9][0-9]*)-` reads `wm/149-zoom` as 149.
 
 **CF15. Sites.** `sites` holds 1 to 10 entries of `name` (1 to 100 characters), `origin` (a bare `https://` origin with a dotted host and no credentials), `buildPath` (matching `^/[A-Za-z0-9/_-]+\.json$`) and `metaName` (matching `^[A-Za-z0-9_-]{1,100}$`), with unique origins (MC-55). Absent or empty means no sites, and `versions` is `null`.
@@ -149,7 +150,7 @@ Test: a diagram with the id `sign-in`, and a section map listing `src/shared/**`
 
 ## Reading a version 1 config
 
-**CF18. Read in memory, never rewritten.** A `version: 1` file loads through a mapping onto version 2. Missing `progress` becomes `scope`. Retired fields (the list under the table) are ignored and named in the run log, not on screen. `recheck.confidence` becomes `frozen.confidence`. Unknown keys are ignored, as the archive's reader did, except that `sites` and `timeZone` are read in their version 2 form, so the maintainer can add them to a live file the old engine still reads. Frozen inputs for a version 1 file come only from a settings entry's `frozen` folder, under the old names. The roadmap root is the entry's `roadmap` folder, else the config's folder, as the old `--repo-root` flag worked.
+**CF18. Read in memory, never rewritten.** A `version: 1` file loads through a mapping onto version 2. Missing `progress` becomes `scope`. Retired fields (the list under the table) are ignored and named in the run log, not on screen. `recheck.confidence` becomes `frozen.confidence`. Unknown keys are ignored, as the archive's reader did, except that `sites`, `timeZone` and `attribution` (PL12) are read in their version 2 form, so the maintainer can add them to a live file the old engine still reads. Frozen inputs for a version 1 file come only from a settings entry's `frozen` folder, under the old names. The roadmap root is the entry's `roadmap` folder, else the config's folder, as the old `--repo-root` flag worked.
 Test: each archive config test case, written once as version 1 and once as version 2, loads to equal projects; a version 1 file with `laneRules` loads and logs one line; the file's bytes never change.
 
 **CF19. Some version 1 files are refused.** The version 2 checks still run (CF8 to CF17), so an `estimated-scope` basis, an id outside CF8 or a pattern Rust cannot compile is refused with its line and the fix. The maintainer's two live configs must pass before the comparison starts.
