@@ -1,0 +1,12 @@
+{
+  "asAt": "2026-10-01",
+  "units": {
+    "U01": { "title": "Sign-in", "days": 4, "code": 1, "live": "yes", "why": "Sign-in and sign-out shipped in the last tag." },
+    "U02": { "title": "Local store", "days": 6, "code": 0.8, "live": "partly" },
+    "U03": { "title": "Sync", "days": 8, "code": 0.25, "live": "no" },
+    "U04": { "title": "Editor", "days": 10, "code": 0.5, "live": "no" },
+    "U05": { "title": "Share links", "days": 5, "code": 0 },
+    "U06": { "title": "Guide", "code": 0.4 },
+    "U07": { "title": "First tag", "days": 2, "code": 0, "live": "no" }
+  }
+}

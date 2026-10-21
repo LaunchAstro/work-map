@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "id": "demo-scope",
+  "title": "Work map demo, scope",
+  "productRepo": "LaunchAstro/work-map-demo",
+  "repos": ["LaunchAstro/work-map-demo"],
+  "files": {
+    "source": "local",
+    "flow": "flow.json",
+    "audit": "audit.json",
+    "plan": "plan.md",
+    "mapping": "mapping.json"
+  },
+  "progress": { "basis": "scope" },
+  "timeZone": "+10:00"
+}

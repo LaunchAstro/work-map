@@ -1,0 +1,20 @@
+{
+  "title": "Work map demo, scope",
+  "stages": ["Foundations", "Features", "Launch"],
+  "nodes": [
+    { "id": "accounts", "title": "Accounts", "text": "Sign-up, sign-in and profiles.", "stage": 1, "row": 1, "units": ["U01"] },
+    { "id": "storage", "title": "Storage", "text": "Notes saved on the device and synced.", "stage": 1, "row": 2, "units": ["U02", "U03"] },
+    { "id": "editor", "title": "Editor", "text": "Writing and formatting a note.", "stage": 2, "row": 1, "units": ["U04"] },
+    { "id": "sharing", "title": "Sharing", "text": "Share links and shared notebooks.", "stage": 2, "row": 2, "units": ["U05"] },
+    { "id": "search", "title": "Search", "text": "Not scoped yet.", "stage": 2, "row": 3, "units": [] },
+    { "id": "docs", "title": "Docs", "text": "The getting-started guide.", "stage": 3, "row": 1, "units": ["U06"] },
+    { "id": "release", "title": "Release", "text": "Tags, changelog and builds.", "stage": 3, "row": 2, "units": ["U07"] },
+    { "id": "later", "title": "After the first tag", "text": "Ideas parked for later.", "stage": 3, "row": 3, "note": true }
+  ],
+  "wires": [
+    { "from": ["accounts", "r"], "to": ["editor", "l"] },
+    { "from": ["storage", "r"], "to": ["sharing", "l"] },
+    { "from": ["editor", "r"], "to": ["release", "l"] },
+    { "from": ["release", "b"], "to": ["later", "t"] }
+  ]
+}
