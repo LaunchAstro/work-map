@@ -29,7 +29,7 @@ Inputs: the settled decisions in #3 (9 and 10 above all), the thermonuclear revi
 
 - 80 behaviours: 69 in the engine and server, 11 in the screen. MC-41 is removed (Q3).
 - 43 deliberate fixes. 27 of them can move a number on a card or the header, and two more only the merge chart, so the parity check in #13 must name the KD id behind every difference (Q4).
-- The engine comes to about 11,100 lines of Rust, tests aside: 56% of the 20,000-line target. The kept screen adds about 4,000 lines of TypeScript, so the whole app stays under the target too.
+- The engine comes to about 11,100 lines of Rust, tests aside, a sizing estimate rather than a limit (Q21). The kept screen adds about 4,000 lines of TypeScript.
 
 ## `config`
 
@@ -299,7 +299,7 @@ Estimated from the architecture review's module sizes, plus what the budget spec
 | `contract` | | 250 | Added by the app layout |
 | `server` | 350 | 450 | Event stream, view ETags, CSP (L10 to L12) |
 | `app` with the folded `cli` | 370 | 600 | Window, control port, instance file, kick and dump (L13 to L18) |
-| Total | 9,770 | about 11,100 | 56% of the 20,000 target |
+| Total | 9,770 | about 11,100 | Sizing estimate, no ceiling (Q21) |
 
 The biggest risks are `census` and `placement`, where the old tests hold the most edge cases. Even at 1.5 times this estimate the engine stays under the target. The screen spec (#10) keeps about 3,650 lines of drawing TypeScript plus a client module of about 320, with about 1,270 lines of CSS beside them. Engine and screen TypeScript together come to about 15,100.
 

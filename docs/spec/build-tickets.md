@@ -60,7 +60,7 @@ Release two's AI scoring tickets, PR placement layer 4's AI guess among them, ar
 The Cargo workspace root with `members = ["crates/*"]` and one version `1.0.0-rc.0` (R13, R14), a pinned stable toolchain, `.cargo/config.toml`, and the `xtask` crate with `check` and `lines`. `check` holds the build spec's whole step list, with `--ci` and `--docs`; each step is skipped until the thing it runs exists (`web/package.json`, `web/test/browser/`, the `export` and `example-refresh` commands' `--check` modes), so no later ticket edits the list. R13's test reads `web/package.json` when it exists. The crates themselves are B102's.
 - Section: `tooling`.
 - Rules: R13, BS2, BS3, the build spec's local checks.
-- Acceptance: BS2's and BS3's fixture tests; R13's test with and without `web/package.json`; `cargo xtask check` on the bare workspace runs every step it can and names each skipped one.
+- Acceptance: BS2's and BS3's fixture tests, with `lines` reporting estimates against actuals and never exiting 1 on size (Q21); R13's test with and without `web/package.json`; `cargo xtask check` on the bare workspace runs every step it can and names each skipped one.
 - Blocked by: none.
 - Lines: about 450.
 - Touches: `Cargo.toml`, `.cargo/config.toml`, `rust-toolchain.toml`, `crates/xtask/*`.
@@ -1206,13 +1206,13 @@ The version PR and tag, and a live check against this repo, whose proposal is co
 
 ## Release two
 
-The build plan for release two, AI scoring, tagged `v1.2.0` (`docs/spec/release-two-scoring.md`, RT12). The rules are the release-two specs' (M, SC, SR, G and RT ids), and their tests are each ticket's acceptance list. Release two's tickets take ids R01 up, which never change, and follow every rule above: one section each, its `Section:` line in the issue body, one session and one small PR. Each becomes a GitHub issue labelled `build` and `release-two`, in milestone `v1.2.0`, with its blocked-by edges, release-one B ids included, as native dependencies. Release two starts after switch-over (B80), so no release-two commit restarts the parity streak (P23), and its tag waits for `v1.1.0` (B90). R23 is optional, and the first cut if lines run short. "Lines" is a rough count of code plus tests.
+The build plan for release two, AI scoring, tagged `v2.0.0` (`docs/spec/release-two-scoring.md`, RT12, Q22). The rules are the release-two specs' (M, SC, SR, G and RT ids), and their tests are each ticket's acceptance list. Release two's tickets take ids R01 up, which never change, and follow every rule above: one section each, its `Section:` line in the issue body, one session and one small PR. Each becomes a GitHub issue labelled `build` and `release-two`, in milestone `v2.0.0` (Q22), with its blocked-by edges, release-one B ids included, as native dependencies. Release two starts after switch-over (B80), so no release-two commit restarts the parity streak (P23), and its tag waits for `v1.1.0` (B90). R23 is optional (RT13). "Lines" is a rough count of code plus tests, for sizing only: nothing waits on it and nothing fails on it (Q21).
 
 ### Release two batches
 
 | Batch | Tickets | Width | Lines with tests |
 | --- | --- | --- | --- |
-| 22 Ceilings | R01 | 1 | 80 |
+| 22 Line estimates (Q21) | R01 | 1 | 80 |
 | 23 Parts | R02 to R08, R13, R18 | 9 | 3,200 |
 | 24 The call, the guard, the picker, the adapter, the tag | R09 to R12, R14, R23 | 6 | 3,100 |
 | 25 One section, one guess, the scoring line, dev proofs | R15 to R17, R24 | 4 | 1,900 |
@@ -1243,13 +1243,13 @@ The build plan for release two, AI scoring, tagged `v1.2.0` (`docs/spec/release-
 
 All 41 appear once. R40 has no repo paths and takes `service`, the section of the scoring code it measures.
 
-## Batch 22: ceilings (release two)
+## Batch 22: line estimates (release two)
 
-### R01. Line ceilings for release two
-`cargo xtask lines` gains rows for `model_cli` and `scoring` and the ceilings the maintainer settles for `v1.2.0`. Recommended: 3,000 for release two's code and 23,000 in all (RT11). This ticket waits for that answer.
+### R01. Line estimate rows for release two
+`cargo xtask lines` gains rows for `model_cli` and `scoring` with release-two-scoring's estimates, and a release-two row of about 2,790. They are report-only: `lines` prints each estimate against the actual count and never exits 1 on size (BS3, RT11, Q21).
 - Section: `tooling`.
 - Rules: BS3, RT11.
-- Acceptance: BS3's tests with the new rows; a fixture tree one line over the settled total exits 1 naming it.
+- Acceptance: BS3's tests with the new rows; a fixture tree whose `scoring` count passes its estimate prints both numbers and exits 0 (Q21).
 - Blocked by: B80.
 - Lines: about 80.
 - Touches: `crates/xtask/src/lines.rs`.
@@ -1385,7 +1385,7 @@ The grey tag after the bar ("AI 3d", "AI 3d, stale", "Old 3 Sep"), SC23's and SR
 - Touches: the progress tag and score hover components under `web/src/`, `web/src/words/scores.ts`, their tests.
 
 ### R23. Windows: the `.exe` behind an npm shim (optional)
-RT13 in M2's search. The first cut if lines run short.
+RT13 in M2's search.
 - Section: `service`.
 - Rules: RT13, M2.
 - Acceptance: RT13's tests.
@@ -1629,11 +1629,11 @@ RT10 on this repo at one commit, for each CLI on offer, with the report on the t
 
 ## Batch 34: release (release two)
 
-### R41. Release `v1.2.0`
+### R41. Release `v2.0.0`
 The version PR and tag, with R39's and R40's reports in the release notes.
 - Section: `tooling`.
 - Rules: R11, R14, RT12.
-- Acceptance: release `v1.2.0` has R1's assets, and its notes carry both reports.
+- Acceptance: release `v2.0.0` (Q22) has R1's assets, and its notes carry both reports.
 - Blocked by: B90, R39, R40.
 - Lines: about 20.
 - Touches: `Cargo.toml`, `web/package.json`.
