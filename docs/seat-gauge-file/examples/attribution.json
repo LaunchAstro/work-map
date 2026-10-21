@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "updated": "2026-10-21T03:00:00Z",
+  "workspace_pattern": "<repo>-<section>-<seat>",
+  "sessions": [
+    {
+      "machine": "machine-a",
+      "session_id": "44444444-4444-4444-8444-444444444444",
+      "workspace": "web-app-S0-1f-seat-a",
+      "pane": "agent-4",
+      "tool": "claude",
+      "model": "model-x",
+      "effort": "high",
+      "repo": "web-app",
+      "section": "S0-1f",
+      "seat": "seat-a",
+      "branch": "plan/s0-1f-sign-in-form",
+      "pr": {
+        "repo": "example-org/web-app",
+        "number": 57,
+        "url": "https://github.com/example-org/web-app/pull/57",
+        "source": "herdr"
+      },
+      "started_at": "2026-10-21T02:40:00Z",
+      "status": "working",
+      "as_of": "2026-10-21T03:00:00Z",
+      "stale": false
+    },
+    {
+      "machine": "machine-a",
+      "session_id": "55555555-5555-4555-8555-555555555555",
+      "workspace": "web-app-board-seat-b",
+      "pane": "agent-5",
+      "tool": "codex",
+      "model": "model-y",
+      "repo": "web-app",
+      "section": "board",
+      "seat": "seat-b",
+      "branch": "plan/22-board-filter",
+      "pr": {
+        "repo": "example-org/web-app",
+        "number": 58,
+        "source": "build-log"
+      },
+      "started_at": "2026-10-21T02:50:00Z",
+      "status": "idle",
+      "as_of": "2026-10-21T03:00:00Z",
+      "stale": false
+    },
+    {
+      "machine": "machine-a",
+      "session_id": "66666666-6666-4666-8666-666666666666",
+      "workspace": "scratch",
+      "pane": "agent-6",
+      "tool": "claude",
+      "repo": null,
+      "section": null,
+      "seat": null,
+      "branch": "main",
+      "pr": {
+        "repo": "example-org/web-app",
+        "number": "57",
+        "source": "agent"
+      },
+      "started_at": "2026-10-21T02:55:00Z",
+      "status": "working",
+      "as_of": "2026-10-21T03:00:00Z",
+      "stale": false
+    }
+  ],
+  "problems": {}
+}

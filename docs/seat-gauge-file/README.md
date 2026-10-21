@@ -4,7 +4,7 @@
 
 Seat Gauge writes `log.json`, one snapshot of the agent sessions it can see and of the room left on each seat. The work map reads it to put agents on its cards, and from its release two to pause AI scoring when the scoring seat is near its limit (`docs/spec/seat-cap-guard.md`). Each tool works alone. When both are installed, this file is the only thing they share.
 
-This spec is version 1, the format the Swift Seat Gauge writes today. The Rust Seat Gauge writes the same version 1, so the work map reads either one without a change. Seat room, the top-level `seats` list, joined version 1 on 21 October 2026 as an added field (#37). A writer that predates it leaves the key out, and a reader that predates it ignores the key, as the version rules below allow.
+This spec is version 1, the format the Swift Seat Gauge writes today. The Rust Seat Gauge writes the same version 1, so the work map reads either one without a change. Seat room, the top-level `seats` list, joined version 1 on 21 October 2026 as an added field (#37). A writer that predates it leaves the key out, and a reader that predates it ignores the key, as the version rules below allow. Attribution joined version 1 the same way on 21 October 2026 (#7): `workspace_pattern` at the top says how `repo`, `section` and `seat` were read from each workspace label, and `pr` in a row gives the PR the session is working on.
 
 ## Where the file lives
 
@@ -30,6 +30,8 @@ The folder should be readable by its owner only (mode 700 on macOS and Linux), b
 - Leave `log.json` in place when the app quits. Readers see it go stale.
 - Encode as UTF-8 JSON with no byte order mark. Write times in UTC with a `Z` suffix.
 - Stay under the reader limits below. Drop the oldest closed rows first if a file would pass them.
+- Split every workspace label with the user's pattern (see workspace labels below) and write that pattern as `workspace_pattern`.
+- Write `pr` only from the evidence named under PR evidence below. Never guess one from a workspace label or a ticket number; that is the reader's job.
 - Write `seats` from the seat readings the writer already holds. Seats are read on their own, slower schedule, so most rounds copy the same readings again. Filling `seats` must never start a model turn or any other read that costs the seat usage.
 
 ## Reading the file
@@ -67,6 +69,7 @@ Within version 1 the writer may add new fields, at the top or in a row. Readers 
 | `updated` | time | yes | When the writer finished this snapshot. |
 | `sessions` | array of rows | yes | At most 5,000 rows. May be empty. Newest start first, though readers must not rely on order. |
 | `problems` | object | yes | Machine label to a message, for each machine whose last read failed. May be empty. Messages are for people at that machine; readers must not republish them. |
+| `workspace_pattern` | text | nullable | The pattern every row's `repo`, `section` and `seat` were read with. See workspace labels below. Missing means the writer did not say. |
 | `seats` | array of seat rows | optional | Seat room, one row per seat in the writer's config. At most 100 rows. Missing means this writer does not share seat room; empty means it shares it and has no seats. See below. |
 
 ### Session row
@@ -83,17 +86,60 @@ Within version 1 the writer may add new fields, at the top or in a row. Readers 
 | `stale` | true or false | optional | True when this row's last observation failed, so its token totals may be behind. It does not by itself change the row's status. The Swift Seat Gauge still writes it on every row, because its own reader requires it, so writers keep writing it in version 1. Readers must not require it (TN-66); the work map ignores it. |
 | `model` | text | nullable | Model name the session runs, when known. |
 | `effort` | text | nullable | Reasoning effort, when known. |
-| `repo` | text | nullable | Repo label the writer read from the workspace label. A label, not a GitHub name; the reader maps it. |
-| `section` | text | nullable | Section label the writer read from the workspace label. |
-| `seat` | text | nullable | Seat label the writer read from the workspace label. |
+| `repo` | text | nullable | Repo label the writer read from the workspace label with `workspace_pattern`. A label, not a GitHub name; the reader maps it. |
+| `section` | text | nullable | Section label read the same way. May hold hyphens, such as `S0-1f`. |
+| `seat` | text | nullable | Seat label read the same way. |
 | `branch` | text | nullable | The git branch checked out in the session's working folder. |
 | `started_at` | time | nullable | When the session was first seen working. |
 | `closed_at` | time | nullable | When the pane went away or its agent exited. Set exactly when `status` is `closed` or `superseded`. |
 | `tokens` | token counts | nullable | Whole-session totals. Missing while totals are pending. |
 | `usd` | number, 0 or more | nullable | List-price US dollars for the whole session. Missing when a model has no known price. |
+| `pr` | PR evidence | nullable | The PR the session is working on, and how the writer found it. See PR evidence below. |
 | `models` | object | optional | Model name to token counts. The work map ignores it. |
 
-Readers take `repo`, `section` and `seat` as written and never derive them again from `workspace`. A reader may still match its own patterns against `workspace`, as the work map does to find a ticket or PR number.
+### Workspace labels
+
+The writer's user sets the pattern; the default is `<repo>-<section>-<seat>`. A pattern holds `<section>` once, may hold `<repo>` and `<seat>` once each, and has literal text, such as `-`, between any two of them. It may also have literal text before the first or after the last.
+
+The writer splits each label like this:
+
+1. A cut places the pattern's literal text in the label and leaves no part empty. A label with no cut gets `repo`, `section` and `seat` all null.
+2. Known values come first. The seat must be one of the seat labels in the writer's config, and the repo one of the repo labels its user lists, when there are any. A list that matches no cut of this label is set aside for it; then cuts that break a remaining list are dropped. If no cut is left, all three are null.
+3. Parts with no list are filled from the right. Each takes as little of the label as it can, and the leftmost one takes the rest, hyphens included.
+
+With seat `seat-a` and repo `web-app` listed, `web-app-S0-1f-seat-a` gives repo `web-app`, section `S0-1f` and seat `seat-a`. With no repo list it gives repo `web-app-S0` and section `1f`, so a user whose section ids carry hyphens lists their repo labels, or picks a separator the ids never use. With no lists at all, the default pattern gives the Swift Seat Gauge's result.
+
+The Swift Seat Gauge writes no `workspace_pattern`. It splits on every hyphen: the last piece is the seat, the one before it the section, and the rest the repo. It has no lists and no pattern setting, so a hyphenated seat or section is cut short.
+
+Readers take `repo`, `section` and `seat` as written and never derive them again from `workspace`, with `workspace_pattern` or otherwise. A reader uses the pattern to explain a placement or a "Not placed" reason, and may warn when it differs from the pattern the project expects. It may still match its own patterns against `workspace`, as the work map does to find a ticket or PR number.
+
+### PR evidence
+
+`pr` is an object, one PR per row:
+
+| Field | Type | Required | Meaning |
+| --- | --- | --- | --- |
+| `repo` | text, not empty | yes | The PR's GitHub repository as `owner/name`. Unlike the row's `repo`, a GitHub name, not a label. |
+| `number` | whole number, 1 or more | yes | The PR number. |
+| `url` | text | nullable | The PR's web address, when the writer has it. |
+| `source` | text | yes | How the writer found the PR. |
+
+Sources, strongest first:
+
+- `branch`: an open PR whose head branch is exactly the row's `branch`, in the repository the session's working folder pushes to, so a fork never matches (the rule in MC-58).
+- `herdr`: herdr reported the PR for the pane or its workspace.
+- `agent`: the agent reported it in its own output, such as its hand-back line.
+
+When the evidence names more than one PR, the writer keeps the one from the strongest source and leaves `pr` out if two from that source disagree. A closed row keeps its `pr`, so it still says what it made. The Swift Seat Gauge reads the branch from git in the session's working folder but knows no PR, so it writes no `pr`.
+
+Reading `pr`:
+
+- `pr` is evidence, not proof. A reader uses it only when the PR is in its own PR list for one of the project's repositories. When the reader's own branch match (MC-58) finds a different PR, the reader's match wins.
+- A source the reader does not know is shown as text and ranks below `agent`. A writer may add sources within version 1.
+- A bad `pr` (not an object, a missing `repo` or `source`, a `number` that is not a whole number of 1 or more) drops alone; the row reads as usual.
+- The work map's placement layer 3, who made it, ties a PR to a session through `pr` or its own branch match, and takes the section from the row's `section`.
+
+### Token counts
 
 Token counts are an object with seven whole numbers, all required: `responses`, `input`, `output`, `thinking`, `cacheRead`, `cacheWrite5m`, `cacheWrite1h`. `thinking` is part of `output`, not added to it. The camel-case keys inside token counts are version 1 as written; they stay until a version 2.
 
@@ -137,14 +183,15 @@ Seat Gauge also writes `headroom.json` (seat windows), `machines.json` (machine 
 
 | File | What it shows | Reader result at the test clock |
 | --- | --- | --- |
-| `normal.json` | Three sessions on one machine: one working with totals and price, one idle with no known price, one closed. Nullable fields appear both as `null` and as missing keys. The closed row leaves out `stale` (TN-66). | Fresh. All three rows fresh; the closed one keeps its totals but is no longer an agent at work. |
+| `normal.json` | Three sessions on one machine: one working with totals and price, one idle with no known price, one closed. Nullable fields appear both as `null` and as missing keys. The closed row leaves out `stale` (TN-66). `workspace_pattern` is the default; the working row has a PR found by branch, the idle row a `null` `pr`, and the closed row a PR the agent reported. | Fresh. All three rows fresh; the closed one keeps its totals but is no longer an agent at work. |
 | `empty.json` | Seat Gauge running with no sessions. | Fresh, no agents. |
 | `future-version.json` | `version` 2 with a changed shape. | Refused as newer. No agents, "Seat Gauge is newer" note. |
 | `one-machine-failing.json` | A fresh snapshot from two machines, one of them in `problems` (TN-42). | Fresh. The working row on the healthy machine is current; the failing machine's row is shown as last seen, not current. |
 | `stale.json` | A snapshot left behind when the app quit, with one machine failing. | Stale. Rows shown as last seen, none current. |
 | `half-written.json` | A file cut off part way. Not valid JSON on purpose. | Read failed. Last good read kept. |
 | `seat-room.json` | One working session and six seat rows: a Claude seat past 90% of its 5-hour window, a Codex seat past 85% of its week, a Claude seat read 40 minutes ago, a Codex seat whose high 5-hour window reset at 03:00 and which carries a window name readers do not know, a Claude seat never read, and a Codex seat whose `read_at` is not a time. | Fresh, one agent. Five seat rows: `seat-f` is dropped alone. `seat-a`, `seat-b` and `seat-d` have recent readings; `seat-c` and `seat-e` have none. `seat-d`'s 5-hour window counts as 0 used. The seat-cap guard's results for this file are in its spec. |
+| `attribution.json` | Three sessions under the default pattern. One has the hyphenated section `S0-1f` and a PR found through herdr. One has a PR with a source readers do not know. One has a label that fits no cut, so `repo`, `section` and `seat` are null, and a `pr` whose `number` is text. | Fresh, three rows. The first places in section `S0-1f` with PR 57. The second's source shows as text and ranks below `agent`. The third has no section, and its bad `pr` drops alone. |
 
-The first six files have no `seats` key. A reader finds no seat room in them, which is how a writer from before 21 October 2026 looks.
+The first six files have no `seats` key, and only `normal.json` and `attribution.json` carry `workspace_pattern` and `pr`. A file without them looks like a writer from before 21 October 2026: a reader finds no seat room, no pattern and no PR evidence.
 
 A missing file has no example: the test removes the file.

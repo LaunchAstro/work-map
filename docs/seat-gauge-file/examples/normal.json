@@ -1,6 +1,7 @@
 {
   "version": 1,
   "updated": "2026-10-21T03:00:00Z",
+  "workspace_pattern": "<repo>-<section>-<seat>",
   "sessions": [
     {
       "machine": "machine-a",
@@ -14,6 +15,12 @@
       "section": "board",
       "seat": "seat-a",
       "branch": "plan/12-example-change",
+      "pr": {
+        "repo": "example-org/repo",
+        "number": 31,
+        "url": "https://github.com/example-org/repo/pull/31",
+        "source": "branch"
+      },
       "started_at": "2026-10-21T02:30:00Z",
       "status": "working",
       "as_of": "2026-10-21T03:00:00Z",
@@ -52,6 +59,7 @@
       "section": "sync",
       "seat": "seat-b",
       "branch": "plan/14-another-change",
+      "pr": null,
       "started_at": "2026-10-21T02:45:00Z",
       "closed_at": null,
       "status": "idle",
@@ -79,6 +87,11 @@
       "section": "board",
       "seat": "seat-a",
       "branch": "plan/11-earlier-change",
+      "pr": {
+        "repo": "example-org/repo",
+        "number": 29,
+        "source": "agent"
+      },
       "started_at": "2026-10-21T01:50:00Z",
       "closed_at": "2026-10-21T02:40:00Z",
       "status": "closed",
