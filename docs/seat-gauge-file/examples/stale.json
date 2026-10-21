@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "updated": "2026-10-21T02:50:00Z",
+  "sessions": [
+    {
+      "machine": "machine-a",
+      "session_id": "11111111-1111-4111-8111-111111111111",
+      "workspace": "repo-board-seat-a",
+      "pane": "agent-1",
+      "tool": "claude",
+      "model": "model-x",
+      "effort": "high",
+      "repo": "repo",
+      "section": "board",
+      "seat": "seat-a",
+      "branch": "plan/12-example-change",
+      "started_at": "2026-10-21T02:30:00Z",
+      "status": "working",
+      "as_of": "2026-10-21T02:50:00Z",
+      "stale": false,
+      "tokens": {
+        "responses": 30,
+        "input": 900,
+        "output": 12800,
+        "thinking": 4200,
+        "cacheRead": 1630000,
+        "cacheWrite5m": 0,
+        "cacheWrite1h": 81000
+      },
+      "usd": 3.6211
+    },
+    {
+      "machine": "machine-b",
+      "session_id": "44444444-4444-4444-8444-444444444444",
+      "workspace": "agent-4",
+      "pane": "agent-4",
+      "tool": "codex",
+      "status": "blocked",
+      "as_of": "2026-10-21T02:41:00Z",
+      "stale": true
+    }
+  ],
+  "problems": {
+    "machine-b": "machine could not be read"
+  }
+}
