@@ -81,7 +81,7 @@ interface Board {
   title: string; header: { bars: Bar[]; tickets: TicketCounts | null; days_left: number | null; unplaced_prs: PrRef[] };
   stages: { id: string; title: string; bars: Bar[] }[];
   cards: Card[];                       // drawing order
-  wires: { from: string; to: string; kind: "flow" | "blocker" | "dependency" }[];
+  wires: { from: WireEnd; to: WireEnd; gap: number | null; lane: number; kind: "flow" | "dash" | "loop" | "blocker" | "dependency"; label: string | null }[];   // WireEnd = { id; side: "l" | "r" | "t" | "b"; offset }, as RF12
 }
 interface Card {
   id: string; title: string; text: string; stage: string; row: number;
@@ -114,8 +114,8 @@ Test: a type check fails when a `PendingWhy` code has no entry in the words tabl
 **S11. GitHub states and Sync.** The header draws L23's line for each `GitHubState`, with a Retry button that calls `retrySignIn`, and disables Sync in every state but `ready`. The Sync button draws each `SyncOutcome` kind and stays disabled while one runs. Its label drops "and round context".
 Test: each state and outcome fixture renders its line and the right enabled state.
 
-**S20. A newer release is one footer line.** When `hello.newer_release` is set (release spec R16), the footer says "Work map 1.3.0 is out on GitHub Releases." Served, the line is a link to `url`. In the window it is plain text with the address. There is no dismiss button and no download.
-Test: a `hello` fixture with `newer_release` shows the line, as a link only in served mode; without it the footer has no such line.
+**S20. A newer release is one footer line.** When `hello.newer_release` is set (release spec R16), the footer says "Work map 1.3.0 is out on GitHub Releases." The line is a link to `url` in both modes; in the window S14's handler passes it to the OS browser. There is no dismiss button and no download.
+Test: a `hello` fixture with `newer_release` shows the line as a link in both modes, and in a window build a click reaches the fake opener (S14); without it the footer has no such line.
 
 ## What is cut
 
