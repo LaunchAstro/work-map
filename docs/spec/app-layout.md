@@ -41,7 +41,7 @@ Test: `cargo tree -p engine` lists no `tauri`, `axum` or `hyper` server crate, a
 **L2. One binary, four entries.** `work-map` opens the window. `work-map serve [--port N] [--open]` runs windowless. `work-map kick [--project ID]` kicks a running app. `work-map dump` writes the parity numbers (its shape is #13's). Anything else prints usage and exits 2. `serve` never builds a Tauri app, so it starts no GTK or WebKit and needs no display.
 Test: `work-map serve --port 0` runs to its "serving" line on a CI runner with no display, and `work-map frob` exits 2.
 
-**L3. The screen is built once and embedded once.** Tauri embeds `web/dist` in the binary. `serve` reads the same embedded files through `Context::assets()` and hands them to `server` behind a small `Assets` trait. Tauri marks that API unstable. If it breaks, the fallback is to embed `web/dist` a second time with `rust-embed`, behind the same trait.
+**L3. The screen is built once and embedded once.** Tauri embeds `web/dist` in the binary. `serve` reads the same embedded files through `Context::assets()` and hands them to `server` behind a small `Assets` trait. Tauri marks that API unstable. If it breaks, the fallback is to embed `web/dist` a second time with `rust-embed`, behind the same trait. The headless build has no Tauri, so it always uses the `rust-embed` adapter (R3).
 Test: every file in `web/dist` comes back from `serve` with the same bytes and a matching content type.
 
 ## The view contract

@@ -70,7 +70,7 @@ Check: with `PATH` emptied and a fake `gh.exe` in each known folder in turn, the
 
 ## Workflow
 
-**R9. One workflow, two jobs that never block a merge.** `build.yml` runs on `pull_request`, on `push` to `main` and `v*` tags, and on `workflow_dispatch`. The `test` job runs on `ubuntu-22.04`, `windows-latest` and `macos-latest`: `npm ci`, type check, tests and build in `web/`, then `cargo fmt --check`, `cargo clippy --workspace -- -D warnings`, `cargo test --workspace` and the headless build. The `bundle` job runs on pushes and tags, not on pull requests, and builds every artefact in R1 with `cargo tauri build` (the Tauri CLI pinned in `web/package.json`). No branch rule requires either job, as #2's Notes ask. Runs on a pull request cancel the older run for the same branch.
+**R9. One workflow, two jobs that never block a merge.** `build.yml` runs on `pull_request`, on `push` to `main` and `v*` tags, and on `workflow_dispatch`. The `test` job runs on `ubuntu-22.04`, `windows-latest` and `macos-latest`: `pnpm install --frozen-lockfile` (S17), type check, tests and build in `web/`, then `cargo fmt --check`, `cargo clippy --workspace -- -D warnings`, `cargo test --workspace` and the headless build. The `bundle` job runs on pushes and tags, not on pull requests, and builds every artefact in R1 with `cargo tauri build` (the Tauri CLI pinned in `web/package.json`). No branch rule requires either job, as #2's Notes ask. Runs on a pull request cancel the older run for the same branch.
 Check: the repository's branch rules list no required status checks; a pull request with a failing test can still merge.
 
 **R10. Free by construction.** Every `runs-on` label is a standard runner from the list above. No larger runner, no paid add-on, no secret beyond `GITHUB_TOKEN`. Actions are pinned to full commit hashes. The workflow's default permission is `contents: read`. Only the release jobs ask for `contents: write`, and only the report job asks for `issues: write`.
@@ -95,7 +95,7 @@ Check: the `draft` job rejects a tag that is not semver or does not match the wo
 **R15. A quiet check, at most once a day, while someone looks.** The engine asks `GET /repos/LaunchAstro/work-map/releases/latest` only while a viewer exists (L19) and GitHub is `ready`, no sooner than 10 minutes after start, and no more than once in 24 hours, with the last check time kept in the data folder's `update.json`. It goes through the engine's GitHub port: one request in flight (B2), logged with its cost (B3), conditional with the stored ETag so an unchanged answer is a free 304 (B9), skipped under the light floor (B10) or during any pause (B12), and never retried. A failure waits for the next day. That is about one REST request a day, almost always free.
 Check: over a fake 72 hours with a viewer, the fake GitHub sees three requests to that path, the second and third conditional; with no viewer, or under the floor, it sees none.
 
-**R16. One line, no auto-update.** When the latest `tag_name` is a higher semver than the app's own version, `Hello` gains `newer_release: { version, url }`, with `url` the release's `html_url`, accepted only when it starts with `https://github.com/LaunchAstro/work-map/releases/`. The screen shows one line in the footer: "Work map 1.3.0 is out on GitHub Releases." Served, it is a link. In the window it is plain text with the address, because the window may open nothing (L13). There is no download, no Tauri updater and no dismiss button. `"check_for_updates": false` in `settings.json` or `WORK_MAP_NO_UPDATE_CHECK=1` turns the check off.
+**R16. One line, no auto-update.** When the latest `tag_name` is a higher semver than the app's own version, `Hello` gains `newer_release: { version, url }`, with `url` the release's `html_url`, accepted only when it starts with `https://github.com/LaunchAstro/work-map/releases/`. The screen shows one line in the footer: "Work map 1.3.0 is out on GitHub Releases." It is a link in both modes. In the window, S14's navigation handler hands the `https:` address to the OS browser from Rust, so the webview still has no opener permission (L13). There is no download, no Tauri updater and no dismiss button. `"check_for_updates": false` in `settings.json` or `WORK_MAP_NO_UPDATE_CHECK=1` turns the check off.
 Check: a fake answer with a higher tag puts `newer_release` in `hello` and the footer line on screen; an equal or lower tag, or a foreign `html_url`, adds nothing; with the setting off, no request goes out.
 
 ## README first-launch text
@@ -113,7 +113,7 @@ Check: the README's install section contains these four headings and the `xattr`
 
 ## Notes for other tickets
 
-- #9 and #10: `Hello` gains `newer_release` (R16). The window shows the notice as text because L13 allows no opener.
+- #9 and #10: `Hello` gains `newer_release` (R16). The window shows the notice as a link through S14's handler, with no opener permission (L13).
 - #11: `settings.json` gains `check_for_updates`, default true.
 - #13: parity runs use the headless build on the build machine.
 
