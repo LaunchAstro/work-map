@@ -2,12 +2,12 @@
 
 The one spec a build fleet works from. It gathers the settled decisions by linking the spec doc and ticket that owns each, and adds only what the build itself needs: the crate map and line budget, what each release holds, the build method, the checks every PR passes, the switch-over steps and the list of amendments later tickets made to earlier specs. The ticket plan is `docs/spec/build-tickets.md`. Part of #16.
 
-Inputs: the map (#2), its Notes and Decisions so far, the settled decisions (#3), every doc under `docs/`, the findings listed on #16, and the maintainer's answers on #2 through batch five (Q1 to Q20, Q31 to Q33), read on 21 October 2026. Revised the same day for the attribution answers, PR placement (#45), this repo's own map (#46), the Seat Gauge file's attribution fields (#7) and the maintainer's sections-first rule (Q20).
+Inputs: the map (#2), its Notes and Decisions so far, the settled decisions (#3), every doc under `docs/`, the findings listed on #16, and the maintainer's answers on #2 through batch five (Q1 to Q20, Q31 to Q33), read on 21 October 2026. Revised the same day for the attribution answers, PR placement (#45), this repo's own map (#46), the Seat Gauge file's attribution fields (#7) and the maintainer's sections-first rule (Q20), and again for the batch six answers (Q21, Q22).
 
 ## The answer in short
 
 - One Cargo workspace of three shipped crates (`engine`, `server`, `app`) and two dev-only crates (`parity`, `xtask`), with the React screen in `web/` and the example in `examples/`.
-- Release one, `v1.0.0`, is about 17,100 lines of Rust and TypeScript, tests aside, plus about 1,300 of CSS. `v1.1.0` adds the start-a-map command and comes to about 18,000 (19,400 with CSS). The owner's estimate holds at about 90% of 20,000. PR placement in layers, `where`, `sections`, `allowed_hosts` and the sections-first warnings added about 1,300 lines, so the margin is thinner than before: a 14% Rust overrun still fits, 20% would not. The line check guards it on every PR, and release two (#40) has just under 2,000 lines of room.
+- Release one, `v1.0.0`, is about 17,100 lines of Rust and TypeScript, tests aside, plus about 1,300 of CSS. `v1.1.0` adds the start-a-map command and comes to about 18,000 (19,400 with CSS). PR placement in layers, `where`, `sections`, `allowed_hosts` and the sections-first warnings added about 1,300 lines. These are sizing estimates, not limits: the maintainer dropped the 20,000-line ceiling (Q21). The line check reports estimates against actuals on every PR and fails nothing on size, and release two (#40) keeps everything planned, about 2,790 lines more.
 - 124 build tickets under 125 ids (B77 removed, Q16), in 22 batches: 110 for release one (14 batches), 14 for `v1.1.0` (8 batches). About 51,400 lines of change with tests for release one, plus about 3,600 lines of screen files moved across, and about 4,800 for `v1.1.0`.
 - Every ticket names one section and touches only that section's paths, plus its own lines in BS13's cross-section lists (BS14, Q20). Tickets that spanned two sections were split.
 - Small PRs that the builder merges itself once `cargo xtask check` is green and the reviewer's close gate passes. A bulk review after each batch. Hosted builds on three OSes from batch 1, never blocking, with each red run on `main` becoming a ticket. This repo's merge check moves from OM7's shell lines to `work-map where` once the commands ship (B99).
@@ -95,23 +95,23 @@ Test: `cargo xtask lines` fails on a `#[cfg(test)]` block with a body inside any
 
 Lines of code are non-blank lines that are not only a comment, in shipped source: `crates/engine`, `crates/server` and `crates/app` under `src/`, and `web/src`. Tests, `web/src/contract/` (generated from Rust) and the dev-only crates are left out. Estimates come from must-carry-over's line count, the screen spec and the later tickets.
 
-| Crate or part | Estimate | Ceiling | Where the estimate comes from |
-| --- | --- | --- | --- |
-| `engine`, release one | 11,680 | 12,800 | MC table (11,100 for engine, server and app) plus `model` 200, `dump` 100, `example` 200, the release check 120 and contract additions 50; `scores` comes out of `config`'s frozen-input share. Then placement's layers and evidence 220, the Seat Gauge reader's attribution fields 80, the `attribution` block and pattern helper 80, the one-PR read 150, finding the project and `sections` 100, the `where` verdict and answer 180, the contract's placement fields 30, `allowed_hosts` 30, and the sections-first warnings 90 |
-| `engine::start`, v1.1.0 | 600 | inside the engine ceiling | SM2 |
-| `server` | 500 | 550 | MC table 450, plus the guard's host list 50 (Q8) |
-| `app` | 850 | 1,000 | MC table 600, plus S14's handler, R7, the `rust-embed` adapter (R3) and the two start commands, then the `where` and `sections` entries 150 |
-| `web` TypeScript | 4,090, then 4,390 | 4,600 | S-spec: 3,650 drawing, 200 transport, 120 `useMap`; placement hovers and reason words 120; SM2's 300 sheet |
-| `web` CSS | 1,300, then 1,360 | 1,500 | S-spec, plus the hovers and the sheet |
-| The work map, v1.0.0 | 17,120, with CSS 18,420 | 20,000 | |
-| The work map, v1.1.0 | 18,020, with CSS 19,380 | 20,000 | |
-| `parity`, dev only | 1,500 | none | P-spec: capture, adapter, compare, report, streak |
-| `xtask`, dev only | 1,150 | none | checks, line count, example refresh, fixture export |
+| Crate or part | Estimate | Where the estimate comes from |
+| --- | --- | --- |
+| `engine`, release one | 11,680 | MC table (11,100 for engine, server and app) plus `model` 200, `dump` 100, `example` 200, the release check 120 and contract additions 50; `scores` comes out of `config`'s frozen-input share. Then placement's layers and evidence 220, the Seat Gauge reader's attribution fields 80, the `attribution` block and pattern helper 80, the one-PR read 150, finding the project and `sections` 100, the `where` verdict and answer 180, the contract's placement fields 30, `allowed_hosts` 30, and the sections-first warnings 90 |
+| `engine::start`, v1.1.0 | 600 | SM2 |
+| `server` | 500 | MC table 450, plus the guard's host list 50 (Q8) |
+| `app` | 850 | MC table 600, plus S14's handler, R7, the `rust-embed` adapter (R3) and the two start commands, then the `where` and `sections` entries 150 |
+| `web` TypeScript | 4,090, then 4,390 | S-spec: 3,650 drawing, 200 transport, 120 `useMap`; placement hovers and reason words 120; SM2's 300 sheet |
+| `web` CSS | 1,300, then 1,360 | S-spec, plus the hovers and the sheet |
+| The work map, v1.0.0 | 17,120, with CSS 18,420 | |
+| The work map, v1.1.0 | 18,020, with CSS 19,380 | |
+| `parity`, dev only | 1,500 | P-spec: capture, adapter, compare, report, streak |
+| `xtask`, dev only | 1,150 | checks, line count, example refresh, fixture export |
 
-The owner's test: each app under 20,000 lines of code, tests aside. The work map passes at about 90% of the target by `v1.1.0`, or 97% counting CSS. If Rust runs 14% over its estimate it reaches about 19,930 lines of code, just under; at 20% (`census` and `placement` hold the most edge cases, per #6) it passes 20,000. So the ceilings are hard, and the totals row fails the check too. Release two is not in these numbers: its specs size AI scoring at about 2,400 lines with the seat-cap guard (`docs/spec/scoring.md`, `docs/spec/scoring-runs.md`, `docs/spec/seat-cap-guard.md`), which would take the app past 20,000 on top of `v1.1.0`. #40 has just under 2,000 lines of room, less any overrun here, and should size its tickets to it or name the cut. Seat Gauge's side in this map is only the shared file's spec and examples, with no code; its own count belongs to its own map ([Seat Gauge in Rust (idea)](https://github.com/LaunchAstro/work-map/issues/20) records 12.4k Swift lines today).
+These numbers size the work. They are not limits (Q21): the maintainer's 20,000 figure was a rough guess, so nothing waits on them and nothing fails on them. `census` and `placement` are the likeliest to run long, since they hold the most edge cases (#6). Release two is not in these numbers: `docs/spec/release-two-scoring.md` sizes it at about 2,790 lines of shipped code (RT11), and it keeps everything planned. Seat Gauge's side in this map is only the shared file's spec and examples, with no code; its own count belongs to its own map ([Seat Gauge in Rust (idea)](https://github.com/LaunchAstro/work-map/issues/20) records 12.4k Swift lines today).
 
-**BS3. Ceilings fail the check.** `cargo xtask lines` prints each crate, module and the totals, and exits 1 when a ceiling in the table is passed, the 20,000 total of shipped code included.
-Test: a fixture tree one line over the `server` ceiling exits 1 naming `server`; one whose crates are each under their ceilings but total 20,001 exits 1 naming the total.
+**BS3. The line count only reports.** `cargo xtask lines` prints each crate, module and the totals, each beside its estimate in the table and the difference. It never exits 1 on size (Q21). Only BS2's check on test blocks makes it fail.
+Test: a fixture tree one line over the `server` estimate prints `server` with its estimate, its count and the difference, and exits 0; one whose total passes 20,000 also exits 0.
 
 **BS4. Over-estimate modules are named.** A PR that takes a module more than a quarter past its estimate says so in its body, and the batch's bulk review decides to cut or to raise the estimate here.
 Test: none; a review rule.
@@ -122,7 +122,7 @@ Test: none; a review rule.
 
 **`v1.1.0`.** `work-map start` in the window, on the command line and as a served-page hint (SM1 to SM23), with its amendments below. Nothing else.
 
-**Release two.** AI scoring returns as a planned feature, charted on the map (#2) from [Release two: what the old audit got right](https://github.com/LaunchAstro/work-map/issues/35) to [Release two: AI scoring build spec and tickets](https://github.com/LaunchAstro/work-map/issues/40). In outline: a deep audit at setup or on demand, re-scoring only the sections a merged PR touched, one model run through the user's own coding-agent subscription, off by default, tools off, text in and score out, pausing near the seat cap through Seat Gauge, with scores pinned to the commit they read and ticket counts carrying the bar between audits. None of it is in this plan: its build tickets, PR placement layer 4's AI guess among them, come from #40, wired to the release-one tickets they need. Release one's part is the scores seam above, step 11's reserved `ai_guess` rule (PL7), and the line room left in the budget.
+**Release two.** AI scoring returns as a planned feature, charted on the map (#2) from [Release two: what the old audit got right](https://github.com/LaunchAstro/work-map/issues/35) to [Release two: AI scoring build spec and tickets](https://github.com/LaunchAstro/work-map/issues/40). In outline: a deep audit at setup or on demand, re-scoring only the sections a merged PR touched, one model run through the user's own coding-agent subscription, off by default, tools off, text in and score out, pausing near the seat cap through Seat Gauge, with scores pinned to the commit they read and ticket counts carrying the bar between audits. None of it is in this plan: its build tickets, PR placement layer 4's AI guess among them, come from #40, wired to the release-one tickets they need. Release one's part is the scores seam above and step 11's reserved `ai_guess` rule (PL7). There is no line room to leave, since there is no ceiling (Q21).
 
 **Never.** The retired list in settled decision 10.
 
@@ -184,7 +184,7 @@ A PR that changes only Markdown under `docs/` may run `cargo xtask check --docs`
 
 ## Reconciliations
 
-Amendments that later tickets made to earlier specs, dated 21 October 2026. "Patched" marks a line in the owning spec changed in the PR that added the item because it had become plainly wrong. "Owed" marks such a line not yet changed in its owning spec, left to a follow-up on that spec. The rest are additions, applied in the ticket named. Items 18 to 31 were added in the revision for #45, #46, #7 and the batch three to five answers.
+Amendments that later tickets made to earlier specs, dated 21 October 2026. "Patched" marks a line in the owning spec changed in the PR that added the item because it had become plainly wrong. "Owed" marks such a line not yet changed in its owning spec, left to a follow-up on that spec. The rest are additions, applied in the ticket named. Items 18 to 31 were added in the revision for #45, #46, #7 and the batch three to five answers, and items 32 and 33 on 21 October 2026 for the batch six answers.
 
 1. From release packaging (#14): `Hello` gains `newer_release: { version, url } | null` (R16). B09.
 2. From release packaging (#14): the headless build always serves through the `rust-embed` adapter, so L3's fallback is required there (R3). Patched L3. B53.
@@ -217,6 +217,8 @@ Amendments that later tickets made to earlier specs, dated 21 October 2026. "Pat
 29. From the maintainer (Q20), as CF26 (#52): the loader warns, without refusing, about a section id that is not one word and about a glob claimed twice; the warnings show on the project's tab and in `work-map sections` (PL23's `warnings`). B49, B57, B67, B96, B125.
 30. Found here: placement's layers, the two commands and the one-PR read come to about 840 engine lines and 150 app lines, against #45's guess of about 350 in all, mostly for the one-PR read and the answer forms. The engine ceiling rises to 12,800 and the app's to 1,000, and BS3 gains a total row. Line budget.
 31. From the score contract (#38), for release two: SC22 adds a `score` note (commit, files read and owned, reason, floor) to the progress bar in the contract, beyond the shares and date the `scores` seam promises above. Release two's tickets (#40).
+32. From the maintainer (Q21), 21 October 2026: there is no line ceiling. The 20,000 figure was a rough guess, not a limit. The line budget keeps its estimates for sizing and loses its Ceiling column, BS3 only reports, and item 30's ceilings are spent. Release two keeps everything planned. Patched the line budget, BS3, the release two outline, release-two-scoring's RT11 and must-carry-over's 56% lines. B01, R01.
+33. From the maintainer (Q22), 21 October 2026: release two is `v2.0.0`, over R14's semver default of `v1.2.0`. Patched release-two-scoring's RT12 and the release-two tickets. R41.
 
 ## Public and private
 
