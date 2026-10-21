@@ -10,7 +10,7 @@ Inputs: the settled decisions in #3 (9 to 11), the config items in `docs/spec/mu
 - `files.source` says where the roadmap files come from: the config's own folder on disk, or the roadmap repository's default branch on GitHub. The GitHub source needs no clone and nothing to keep pulled.
 - `settings.json` in the app's data folder lists project configs by absolute path, in tab order, replacing the old tab file of loopback addresses. An entry can pin a roadmap folder and a frozen-input folder, which is how `work-map dump` reads the same inputs as the old engine.
 - A version 1 config is read as it is, in memory, and never rewritten, so the old and new engines can share one file during the comparison.
-- The example project ships inside the binary: a small fictional map with recorded GitHub answers. A first open, with no `gh` and no network, shows a working map. An optional public demo repo gives the same map live.
+- The example project ships inside the binary: this repo's own map with a recording of its GitHub answers (`docs/spec/own-map.md`). A first open, with no `gh` and no network, shows a working map. This repo's live map is the same map live.
 
 ## Defaults in force
 
@@ -64,7 +64,7 @@ Test: one good and one broken config give one tab plus the broken file's line; b
 
 One JSON object, UTF-8, at most 1 MB, with a byte order mark allowed and skipped (some Windows editors add one). The usual name is `work-map.json`; any name works, because settings name the path. JSON stays because version 1 is JSON, the old engine must read the same file during the comparison, and the Rust side needs no second parser. Field names stay as in version 1, so the version 1 reader is a short mapping rather than a second schema.
 
-The sample in `docs/spec/example/work-map.json` is the example project's own config and uses most fields.
+This repo's own config, `.work-map/work-map.json`, is the example project's config (`docs/spec/own-map.md`).
 
 | Field | Needed | Default | Meaning | From version 1 |
 | --- | --- | --- | --- | --- |
@@ -146,23 +146,23 @@ Test: a dump given a settings file whose entry pins a fixture checkout reads fro
 
 ## The example project
 
-The example lives in `examples/demo/` (the folder L1's layout reserves) and is built into the binary. Its outline, with every case it covers, is `docs/spec/example/fixture.md`. It is fictional, MIT and written fresh (KD-05, TN-61): the repository is `LaunchAstro/work-map-demo` and the served site is on `example.com`.
+The example lives in `examples/demo/` (the folder L1's layout reserves) and is built into the binary. It is this repo's own map: a copy of `.work-map/` and a recording of this repo's issues and PRs, with logins replaced, refreshed by `cargo xtask example-refresh` (`docs/spec/own-map.md`). It is MIT and public (KD-05, TN-61), and has no served site.
 
-**CF21. The example fills an empty app.** It shows as the only tab, with its config's id `demo` and title "Work map demo", whenever no project loads. It never shows beside the user's projects.
+**CF21. The example fills an empty app.** It shows as the only tab, with its config's id `work-map` and title "Work map", whenever no project loads. It never shows beside the user's projects.
 Test: with no projects it is the one tab; adding one good config replaces it within CF4's 30 seconds.
 
-**CF22. No network, no login.** The example runs on the recorded GitHub adapter, a recorded site fetch, the embedded roadmap files and an embedded Seat Gauge file, whatever its config's `files.source` says. While only the example is open, the engine does not run `gh` and `hello.github` carries the fixture's recorded budget, so no sign-in line shows. Sync replays the recording and returns `complete` with nothing spent.
+**CF22. No network, no login.** The example runs on the recorded GitHub adapter, the embedded roadmap files and an embedded Seat Gauge file, whatever its config's `files.source` says. While only the example is open, the engine does not run `gh` and `hello.github` carries the fixture's recorded budget, so no sign-in line shows. Sync replays the recording and returns `complete` with nothing spent.
 Test: with no `gh` on the path and a fake GitHub that fails any request, a first open shows every part of the example `current`, and Sync returns `complete` with `spent` zero.
 
 **CF23. The example always looks recent.** Recorded times are offsets from one reference instant. At load and at each Sync the example sets that instant to now, so the newest merge is minutes old and the merge chart has bars. Seat Gauge rows shift on every read, so the agents stay current while the example is open.
 Test: with fake clocks a week apart, the example's newest merge is the same minutes old and its agents are current at both.
 
-**CF24. One fixture, three users.** The engine's tests, the screen's fixtures (S16) and the parity harness's example test (P25) all come from `examples/demo/`. The embedded copy is under 300 KB.
+**CF24. One fixture, three users.** The engine's example tests, the screen's fixtures (S16) and the parity harness's example test (P25) all come from `examples/demo/`; rule cases the recording lacks are built inline over the fake GitHub (B04). The embedded copy is under 300 KB.
 Test: a build check fails when the embedded example passes 300 KB or `web/test/fixtures/` differs from a fresh export.
 
 ### The public demo repo (optional)
 
-The maintainer may create a public repo, `LaunchAstro/work-map-demo`, at no cost. Nothing in release one needs it. It would hold the same `work-map.json` with `files.source: "github"` and no `sites`, the roadmap files, a few source files that match the section map, and issues and PRs created from the fixture by a seed script in this repo, so issue numbers match. A user saves the config file, adds its path to settings and sees the map live on their own `gh` login, for a few points a Sync. #15 can test against it. Until it exists, the example's GitHub links lead to a 404 page.
+[Q7] Recommended not needed (`docs/spec/own-map.md`). This repo's own map is the example, so the example's links open real issues and PRs, and anyone can save `.work-map/work-map.json`, list its path in settings and see the same map live on their own `gh` login, for a few points a Sync. #15 can test against this repo.
 
 ## What the start-a-map command (#15) must output
 
@@ -193,4 +193,4 @@ When #15 ships, its command replaces step 4's copying.
 - #12 and `census`: CF11's roadmap file reads are Sync reads under B9 and B11.
 - #13: the operator adds `sites` and `timeZone: "+10:00"` (the old engine's zone) to each live version 1 file, and writes the dump's settings file with the pinned folders (CF20).
 - #15: the output list above.
-- #16: build tickets for settings (CF1 to CF5), the config loader (CF6 to CF17), the version 1 reader (CF18, CF19), the example and its recorder (CF21 to CF24), the demo seed script and the guide. The loader stays within the `config` module's 1,000 lines; the example's embedding and time shift add about 200 to `engine`.
+- #16: build tickets for settings (CF1 to CF5), the config loader (CF6 to CF17), the version 1 reader (CF18, CF19), the example and its refresh command (CF21 to CF24, `docs/spec/own-map.md`) and the guide. The loader stays within the `config` module's 1,000 lines; the example's embedding and time shift add about 200 to `engine`.

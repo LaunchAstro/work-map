@@ -10,7 +10,7 @@ Inputs: the settled decisions in #3, `docs/spec/config-v2.md` (CF ids), the exam
 - Roadmap files are lenient where the config is strict. They carry no version, other tools read them too, and people edit them by hand, so an unknown key is ignored and noted in the run log, never refused.
 - Only the diagram is required. A broken diagram refuses the project (CF10). Every other file failing switches its own part off with a line on the project's header, and a file that breaks on a later re-read keeps its last good version (as CF5 does for configs).
 - Each file sorts its faults into two kinds. A whole-file fault turns the file off. An entry fault drops that one entry and names it.
-- The example ships a ticket-count diagram and section map (`example/roadmap/`) and a scope-basis variant with an audit, a plan and mappings (`example/scope/`). Every rule below has a case in those files or a one-line inline case.
+- This repo's own map (`.work-map/`, see `own-map.md`) is the ticket-count example, with a diagram and section map, and `example/scope/` keeps a fictional scope-basis variant with an audit, a plan and mappings. Every rule below has a case in those files or a one-line inline case.
 
 ## Rules for every roadmap file
 
@@ -37,7 +37,7 @@ Test: section ids `Editor`, `outside` and `2fa` are each an entry fault; `two-fa
 
 ## The diagram (`files.flow`)
 
-The board: stages left to right, sections as cards, and the wires between them. Example: `example/roadmap/flow.json` (ticket map) and `example/scope/flow.json` (scope map, with units and a note).
+The board: stages left to right, sections as cards, and the wires between them. Example: `.work-map/flow.json` at the repo root (ticket map) and `example/scope/flow.json` (scope map, with units and a note).
 
 | Field | Needed | Default | Meaning |
 | --- | --- | --- | --- |
@@ -70,7 +70,7 @@ Test: `example/scope/flow.json` draws seven cards and no card or wire for `later
 Test: `search` in the scope example is a pending card; with the same diagram and plan under a ticket-count config, a PR titled `ST-2 retry` lands on `storage` through U02.
 
 **RF12. Wire ends.** `side` is `l`, `r`, `t` or `b`, default `r` at `from` and `l` at `to`. `offset` runs 0 to 1 along that side, default 0.5. `gap` is 1 to one less than the stage count, and `lane` runs from -200 to 200. A wire naming an unknown id, or with a bad side, offset or gap, is dropped with a line. Another `kind` is drawn plain, with a line. The config's `dependencies` add dashed wires, and the engine adds blocker wires (MC-63).
-Test: the demo's `search` wire routes through the second gap; a wire with `kind: "zigzag"` draws plain with one line; one to `serach` is dropped with one line.
+Test: this repo's `github` to `service` wire routes through the third gap; a wire with `kind: "zigzag"` draws plain with one line; one to `serach` is dropped with one line.
 
 ## The unit audit (`files.audit`, `progress.unitAudit.file`)
 
@@ -120,7 +120,7 @@ Test: `example/scope/plan.md` with U08 moved under the waves loads with one line
 
 ## The section map (`files.sections`)
 
-Which section owns which product paths, and which map issues place their tickets. Example: `example/roadmap/section-map.json`.
+Which section owns which product paths, and which map issues place their tickets. Example: `.work-map/section-map.json` at the repo root.
 
 | Field | Needed | Default | Meaning |
 | --- | --- | --- | --- |
@@ -130,13 +130,13 @@ Which section owns which product paths, and which map issues place their tickets
 | `maps` | no | `{}` | Map issue `owner/name#n` to a section or `outside` (MC-27) |
 
 **RF20. Globs.** `**` spans folders, `*` stays within one, `?` is one character, and a leading `**/` may match nothing. Matching is case-sensitive against the repository-relative path with `/`. A path belongs to the glob with the most literal characters, ties going to the first, shared globs before section globs (MC-53). A glob is 1 to 256 characters with no leading `/` and no `..` segment; the file holds at most 2,000.
-Test: in the demo, `src/editor/toolbar.ts` is `editor`, `README.md` is shared, and `scripts/release.sh` is a gap (fixture PR 65).
+Test: in this repo's map, `crates/engine/src/placement/pr.rs` is `placement`, `crates/engine/src/model/ids.rs` is `service`, `.github/pull_request_template.md` is `docs`, and `scripts/release.sh` is a gap.
 
 **RF21. Whole-file faults.** Not JSON, `boxes` not an object, or `repo` not in `repos`. The map is then off as in RF3.
 Test: `repo: "acme/other"` turns the map off with a line naming `repo`.
 
 **RF22. Entry faults.** A bad glob, a `maps` key that is not `owner/name#n` or names an unlisted repository, or a `maps` value that is not a diagram section or `outside`, is dropped with a line. A map entry naming a section that has left the diagram places nothing (MC-27).
-Test: `"LaunchAstro/work-map-demo#2": "share"` places none of issue 2's children and gives one line.
+Test: `"LaunchAstro/work-map#2": "doc"` places none of issue 2's children and gives one line.
 
 **RF23. A stale section in `boxes` still owns its paths.** Its globs keep those paths out of the gap count, but place nothing, and a line names the section. This keeps the gap count the archive showed when a section is renamed on the diagram before the map catches up.
 Test: renaming `search` on the diagram leaves `src/search/x.ts` neither a gap nor placed, with one line.
@@ -204,4 +204,4 @@ Each is ignored silently under RF6, so the maintainer's live files need no edit 
 - #11: `files.audit` on a ticket map is read by nothing and named once in the run log. The same audit format serves `progress.unitAudit.file`.
 - #13: before the comparison, the operator loads both live maps and expects no problem lines. Three readings differ from the archive only on input the live files do not contain today: a prose time without a zone word now counts (RF14), bad plan items drop alone (RF17), and the gap digest ignores `maps` (RF24). If the check finds any of them in a live file, it needs a KD row.
 - #15: the output list above.
-- #16: one build ticket for the roadmap readers, inside the `config` module's 1,000 lines (about 350 of them), taking RF1 to RF27 as its tests and the files in `docs/spec/example/` as fixtures.
+- #16: one build ticket for the roadmap readers, inside the `config` module's 1,000 lines (about 350 of them), taking RF1 to RF27 as its tests and `.work-map/` and `docs/spec/example/scope/` as fixtures.

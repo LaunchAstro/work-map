@@ -15,7 +15,7 @@ Inputs: the map (#2), its Notes and Decisions so far, the settled decisions (#3)
 ## Defaults and answers in force
 
 - (Q1) Settled by the maintainer: release one reads the retired features' last scores once, read-only, and shows their date (CF17, MC-05). AI scoring comes back in release two (below).
-- [Q7] A public demo repo, created from the example once the app works (B77). Recommended yes; open on #2.
+- [Q7] No separate public demo repo: this repo's own map is the example and is live already (`docs/spec/own-map.md`), so B77 drops. Recommended; open on #2.
 - [Q8] The request guard accepts a `Host` that is an IP address and refuses every name (L11). Recommended; open on #2.
 - [Q9] `work-map start` never writes to GitHub (SM21). Recommended; open on #2.
 
@@ -32,12 +32,13 @@ A tagged ticket changes only if the maintainer answers differently.
 | Shared Seat Gauge file | `docs/seat-gauge-file/README.md` | #7 | its tables and examples |
 | Crates, contract, served mode, window, kick, folders, `gh` | `docs/spec/app-layout.md` | #9 | L1 to L23 |
 | The screen | `docs/spec/screen.md` | #10 | S1 to S20, F1 to F8 |
-| Settings, config v2, example, guide | `docs/spec/config-v2.md`, `docs/spec/example/fixture.md` | #11 | CF1 to CF24 |
+| Settings, config v2, example, guide | `docs/spec/config-v2.md` | #11 | CF1 to CF24 |
+| This repo's own map, the Section rule, the example's source | `docs/spec/own-map.md`, `.work-map/` | #46 | OM1 to OM12 |
 | GitHub budget | `docs/spec/github-budget.md` | #12 | B1 to B14 |
 | Parity and switch-over | `docs/spec/parity.md` | #13 | P1 to P26 |
 | Release packaging | `docs/spec/release.md` | #14 | R1 to R17 |
 | Start-a-map command | `docs/spec/start-a-map.md` | #15 | SM1 to SM23 |
-| Roadmap file formats | `docs/spec/roadmap-files.md`, `docs/spec/example/` | #30 | RF1 to RF27 |
+| Roadmap file formats | `docs/spec/roadmap-files.md`, `docs/spec/example/scope/` | #30 | RF1 to RF27 |
 | Batch-one answers | the specs above | #32 | (Q2) to (Q5) |
 | Build method, lines, checks | this file | #16 | BS1 to BS12 |
 
@@ -69,7 +70,8 @@ work-map/
 ├── crates/parity/          dev only: capture, old adapter, compare, report, streak
 ├── crates/xtask/           dev only: check runner, line count, fixture tools, repo tests
 ├── web/                    the screen (S1 to S20)
-└── examples/demo/          the example project (fixture.md)
+├── examples/demo/          the example project, recorded from this repo (own-map.md)
+└── .work-map/              this repo's own map, the example's source (own-map.md)
 ```
 
 **The scores seam.** `progress` reads every unit and section score through one small trait in `scores`: a score is a value with its date, its source and, optionally, the commit it read. Release one has one adapter, the frozen inputs (CF17, MC-05, MC-34, MC-40). A later store keyed by section and commit can replace it without touching `view`, the contract or the screen, which only ever see the shares and the date for the hover.
@@ -95,7 +97,7 @@ Lines of code are non-blank lines that are not only a comment, in shipped source
 | The work map, v1.0.0 | 15,840, with CSS 17,110 | 20,000 | |
 | The work map, v1.1.0 | 16,740, with CSS 18,070 | 20,000 | |
 | `parity`, dev only | 1,500 | none | P-spec: capture, adapter, compare, report, streak |
-| `xtask`, dev only | 1,150 | none | checks, line count, fixture generator, demo seed |
+| `xtask`, dev only | 1,150 | none | checks, line count, example refresh, fixture export |
 
 The owner's test: each app under 20,000 lines of code, tests aside. The work map passes at about 84% of the target by `v1.1.0`, or 90% counting CSS. If Rust runs 20% over its estimate, as the riskiest modules may (`census` and `placement` hold the most edge cases, per #6), it reaches about 19,200 lines of code, still under, though CSS would take it past. So the ceilings are hard. Seat Gauge's side in this map is only the shared file's spec and examples, with no code; its own count belongs to its own map ([Seat Gauge in Rust (idea)](https://github.com/LaunchAstro/work-map/issues/20) records 12.4k Swift lines today).
 
@@ -119,7 +121,7 @@ Test: none; a review rule.
 
 From #2's Notes, made checkable.
 
-**BS5. One ticket, one small PR.** A ticket fits one agent session and one PR of about 300 to 800 lines with its tests. Moves of the archive's screen files count their copied lines apart. The PR body has `Why:`, `Left undone:` (ticket numbers or `none`) and `Closes #n`. Work found along the way becomes a new `build` ticket, not a bigger PR.
+**BS5. One ticket, one small PR.** A ticket fits one agent session and one PR of about 300 to 800 lines with its tests. Moves of the archive's screen files count their copied lines apart. The PR body has `Section: <id>` (`own-map.md`), `Why:`, `Left undone:` (ticket numbers or `none`) and `Closes #n`. Work found along the way becomes a new `build` ticket, not a bigger PR.
 
 **BS6. Local checks gate the merge.** The builder merges its own PR once `cargo xtask check` passes on the PR head on the always-on build machine and the reviewer's gate passes (BS7). There is no blocking hosted check and no merge queue. The build machine's pre-check posts each named step and its result on the PR.
 
@@ -185,6 +187,7 @@ Amendments that later tickets made to earlier specs, dated 21 October 2026. "Pat
 14. From the start-a-map command (#15), all in `v1.1.0`: L2 gains `start` as a fifth entry; L13's capability file gains `propose_map` and `start_map`; R7's refused list gains `start`; the data folder gains `maps/<id>/`. `contract` stays `1`. B85, B86.
 15. Found here: R9 said `npm ci`, but the screen pins pnpm with a committed lockfile (S17). Patched R9. B02.
 16. From the maintainer (Q1, settled): frozen scores stay, read through the `scores` seam, and release two replaces the adapter. B21, B32.
+17. From this repo's own map (#46): the example is a recording of this repo, refreshed by `cargo xtask example-refresh`; fixture.md is gone; P25's capture is generated and planted; every PR and build ticket carries `Section:`. Patched config-v2's example lines and CF21, CF22, CF24, the RF12, RF20 and RF22 tests, P25, BS5 and [Q7]. B56, B63, B71, B72, B77.
 
 ## Public and private
 

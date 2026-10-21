@@ -1,6 +1,6 @@
 # Build tickets
 
-The build plan for the work map in Rust, as batches in order. Each ticket fits one agent session and one small PR (BS5). A ticket starts when every ticket it is blocked by has merged, and the tickets in one batch share no file apart from the append-only lists in BS12. The rules each ticket names come from the specs listed in `docs/spec/build-spec.md`, and their tests are its acceptance list. Part of #16.
+The build plan for the work map in Rust, as batches in order. Each ticket fits one agent session and one small PR (BS5). A ticket starts when every ticket it is blocked by has merged, and the tickets in one batch share no file apart from the append-only lists in BS12. The rules each ticket names come from the specs listed in `docs/spec/build-spec.md`, and their tests are its acceptance list. Each ticket's issue carries the `Section:` line that `docs/spec/own-map.md`'s table gives it. Part of #16.
 
 Each ticket becomes a GitHub issue labelled `build`, with its blocked-by edges as native dependencies. B81 to B90 are also labelled `v1.1.0`, after switch-over (start-a-map's notes). Tickets marked "maintainer task" are steps on the build machine or in the private archive, not code. "Lines" is a rough count of code plus tests; moved screen files are counted apart.
 
@@ -176,7 +176,7 @@ An issue on the private archive naming the old engine's jobs, the live maps' loo
 ### B18. Diagram reader
 `files.flow` into the diagram type: nodes, notes, units, wires and their ends, with the whole-file and entry faults.
 - Rules: RF5, RF7 to RF12, MC-03.
-- Acceptance: the RF tests, over `docs/spec/example/roadmap/` and `docs/spec/example/scope/`.
+- Acceptance: the RF tests, over `.work-map/` and `docs/spec/example/scope/`.
 - Blocked by: B03.
 - Lines: about 650.
 - Touches: `crates/engine/src/config/roadmap/diagram.rs`.
@@ -192,7 +192,7 @@ The unit audit, its four date forms in the config's zone, and the plan's unit ta
 ### B20. Section map and mappings readers
 The section map with its `maps` entries, and approved PR mappings.
 - Rules: RF21, RF22, RF23, RF25, RF26 (entry shape), RF27.
-- Acceptance: those tests, over `docs/spec/example/`.
+- Acceptance: those tests, over `.work-map/` and `docs/spec/example/scope/`.
 - Blocked by: B03, B08.
 - Lines: about 550.
 - Touches: `crates/engine/src/config/roadmap/{section_map.rs, mapping.rs}`.
@@ -475,12 +475,12 @@ Tauri 2 behind the `window` feature: `tauri.conf.json`, the capability file, the
 - Touches: `crates/app/{tauri.conf.json, capabilities/, build.rs, icons/, src/window.rs}`.
 
 ### B56. Example fixture description and generator
-`examples/demo/` as fixture.md lays out: the config and roadmap files, a compact description of every issue, PR, agent and site row in `fixture.toml`, and `cargo xtask demo-fixture`, which writes recorded answers to the census's own queries, the site recording and the Seat Gauge file, with times as offsets.
-- Rules: CF23 (offsets), CF24 (size), fixture.md's tables.
-- Acceptance: two runs give the same bytes; the recorded adapter answers every request a full read of the demo makes; the embedded copy is under 300 KB.
+`cargo xtask example-refresh` as own-map.md lays out (OM8 to OM11): one full read of this repo through the live adapter, recorded as answers to the census's own queries with logins replaced and bodies trimmed, a copy of `.work-map/` and the synthetic Seat Gauge file, with times as offsets.
+- Rules: CF23 (offsets), CF24 (size), OM8 to OM11.
+- Acceptance: two refreshes over a fake GitHub give the same bytes; the recorded adapter answers every request a full read of the example makes; OM10's three refusals; the embedded copy is under 300 KB.
 - Blocked by: B04, B25, B26, B27, B28.
 - Lines: about 800.
-- Touches: `examples/demo/*`, `crates/xtask/src/demo_fixture.rs`.
+- Touches: `examples/demo/*`, `crates/xtask/src/example_refresh.rs`.
 
 ## Batch 4: checks, place, measure and the release job
 
@@ -600,7 +600,7 @@ Wire B65's parts into `view::build`, add each project's roadmap problem lines, a
 - Touches: `crates/engine/src/dump/*`, `crates/app/src/dump.rs`, `crates/parity/src/new.rs`.
 
 ### B71. Fixture export and the expected numbers
-Export the example's views into `web/test/fixtures/`, move the screen tests onto them, and write `examples/demo/expected.json`, reviewed by hand against fixture.md's expected numbers.
+Export the example's views into `web/test/fixtures/`, move the screen tests onto them, and write `examples/demo/expected.json`, written by the refresh and reviewed by hand in its PR (OM9).
 - Rules: S16 (fixtures), CF24.
 - Acceptance: S16's and CF24's regeneration checks; a test holds the example to `expected.json`.
 - Blocked by: B63, B66, B67.
@@ -610,7 +610,7 @@ Export the example's views into `web/test/fixtures/`, move the screen tests onto
 ## Batch 8: parity test, guide and the first candidate
 
 ### B72. Parity example project test
-A fresh, MIT old capture of the demo in the archive's served shape, with one KD-30 difference, one explained difference and one moved issue, plus the planted-bug fixture.
+The example's old capture in the archive's served shape, written by the refresh from the dump through `crates/xtask/src/old_capture.rs` and planted with one KD-30 difference, one explained difference and one moved issue, plus the planted-bug fixture (OM12).
 - Rules: P25, P26.
 - Acceptance: both checks, with no network, old engine or login.
 - Blocked by: B40, B41, B42, B52, B70, B71.
@@ -652,7 +652,7 @@ BS10's deslop pass over everything new since B01.
 - Touches: any shipped source.
 
 ### B77. The public demo repo [Q7]
-`cargo xtask demo-seed` creates the demo's issues, PRs and files from `examples/demo/fixture.toml`, so numbers match, with `files.source: "github"` and no sites. The maintainer creates the public repo and runs it, at no cost.
+Drops if [Q7] is answered as recommended, because this repo is the live example (own-map.md). Otherwise `cargo xtask demo-seed` creates the demo's issues, PRs and files from the example's recording, so numbers match, with `files.source: "github"` and no sites. The maintainer creates the public repo and runs it, at no cost.
 - Rules: config-v2's demo repo section, [Q7].
 - Acceptance: the seeded repo's live map shows the example's ticket counts.
 - Blocked by: B56, B75.
@@ -772,7 +772,7 @@ The guide's step 4 becomes `work-map start owner/name`.
 ## Batch 19: release (`v1.1.0`)
 
 ### B90. Release `v1.1.0`
-The version PR and tag, and a live check against the demo repo, where the labels source should come first and propose its `accounts`, `storage` and `editor` sections.
+The version PR and tag, and a live check against this repo, whose proposal is compared by hand with `.work-map/`.
 - Rules: R11, R14, start-a-map's fixtures note.
 - Acceptance: release `v1.1.0` has R1's assets; the live check's result is on the ticket.
 - Blocked by: B77, B89.

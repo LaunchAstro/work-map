@@ -118,7 +118,7 @@ Check: none; this is a process rule.
 
 ## The example project test
 
-**P25. The harness is an ordinary test too.** `cargo test -p parity` runs the dump code as a library over the example project (#11), the recorded GitHub adapter, a fake clock and the Seat Gauge example files. It compares against a hand-written old capture for the same project, written fresh in the archive's served shape, MIT, with no private data. That capture carries one KD-30 difference, one difference covered by an explanation file and one moved issue, so the test runs every result type.
+**P25. The harness is an ordinary test too.** `cargo test -p parity` runs the dump code as a library over the example project (#11), the recorded GitHub adapter, a fake clock and the Seat Gauge example files. It compares against an old capture for the same project in the archive's served shape, MIT, with no private data, which the example's refresh writes from the dump and then plants (`own-map.md`, OM12). That capture carries one KD-30 difference, one difference covered by an explanation file and one moved issue, so the test runs every result type.
 Check: the test passes on a clean checkout with no network, no old engine and no GitHub login, on macOS, Windows and Linux.
 
 **P26. A planted bug must fail it.** A second fixture changes one ticket's state in the old capture.
