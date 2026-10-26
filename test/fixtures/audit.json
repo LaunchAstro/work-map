@@ -1,0 +1,24 @@
+{
+  "asAt": "13 October 2026, about 8:45 pm AEST",
+  "units": {
+    "U01": {
+      "days": 12,
+      "code": 1,
+      "low": 0.9,
+      "high": 1,
+      "live": "yes",
+      "title": "Staging",
+      "why": "done"
+    },
+    "U02": {
+      "days": 11,
+      "code": 0.5,
+      "low": 0.4,
+      "high": 0.6,
+      "live": "partly",
+      "title": "Checks"
+    },
+    "U03": { "days": 9, "code": 0.5, "low": 0.5, "high": 0.5, "live": "no", "title": "Task page" },
+    "U04": { "days": 6, "code": 0, "low": 0, "high": 0, "live": "no", "title": "Live site fix" }
+  }
+}

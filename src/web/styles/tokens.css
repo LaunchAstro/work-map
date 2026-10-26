@@ -1,0 +1,103 @@
+/* The base palette, type and page rules the diagram's sheets build on. flow/01-base.css maps these onto the
+   diagram's own names and overrides some of them. Dark flips the base colours on <html> or .app. */
+:root {
+  --paper: oklch(1 0 0);
+  --paper-cream: oklch(0.945 0.006 70);
+  --ink: oklch(0 0 0);
+  --ink-muted: oklch(0.505 0.014 62);
+  --ink-faint: oklch(0.62 0.012 62);
+  --void: oklch(0.145 0.006 285);
+  --on-dark: oklch(0.98 0 0);
+  --on-dark-muted: color-mix(in oklch, var(--on-dark) 72%, transparent);
+  --rule: oklch(0 0 0);
+  --accent: oklch(0.58 0.21 285);
+  --bg: var(--paper);
+  --text: var(--ink);
+  --scheme: light;
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+
+  --font-display: 'Funnel Display', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: 'Funnel Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Chivo Mono', ui-monospace, SFMono-Regular, monospace;
+  --text-body: 14px;
+  --leading-normal: 1.55;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --type-body: var(--weight-regular) var(--text-body)/var(--leading-normal) var(--font-sans);
+  --type-body-tracking: 0;
+  --type-body-case: none;
+  --type-mono: var(--weight-regular) var(--text-body)/var(--leading-normal) var(--font-mono);
+  --type-mono-tracking: 0;
+  --type-mono-case: none;
+}
+
+/* The base colours flip and the names built on them are declared again, because a var() inside a custom
+   property resolves where that property is declared. */
+[data-theme='dark'] {
+  --paper: oklch(0.145 0.006 285);
+  --paper-cream: oklch(0.19 0.008 285);
+  --ink: oklch(0.98 0 0);
+  --ink-muted: var(--on-dark-muted);
+  --ink-faint: color-mix(in oklch, var(--on-dark) 55%, transparent);
+  --rule: oklch(1 0 0 / 0.24);
+  --bg: var(--void);
+  --text: var(--on-dark);
+  --scheme: dark;
+  --focus-ring: 0 0 0 2px var(--void), 0 0 0 4px var(--accent);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  color-scheme: var(--scheme);
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: var(--type-body);
+  letter-spacing: var(--type-body-tracking);
+  text-transform: var(--type-body-case);
+  /* Without it every glyph draws a shade heavier. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+/* No 700 face of the body family is loaded, so strong text is the medium weight. */
+b,
+strong {
+  font-weight: var(--weight-medium);
+}
+img,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+:where(a) {
+  color: inherit;
+}
+:where(button) {
+  font: inherit;
+  color: inherit;
+}
+:where(code, kbd, samp) {
+  font: var(--type-mono);
+  letter-spacing: var(--type-mono-tracking);
+  text-transform: var(--type-mono-case);
+}
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

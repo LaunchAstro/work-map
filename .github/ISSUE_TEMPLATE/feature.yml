@@ -1,0 +1,23 @@
+name: Feature
+description: Suggest something the work map should show or do.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What you're trying to do
+      description: The question you want the map to answer, or the job it makes hard today.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would help
+      description: What you'd like the map to show or do. A sketch or mock-up is welcome.
+    validations:
+      required: true
+  - type: textarea
+    id: cost
+    attributes:
+      label: GitHub reads
+      description: If it needs more from GitHub, say what and how often. The map shares your login's hourly GraphQL budget, so new reads need a good reason.

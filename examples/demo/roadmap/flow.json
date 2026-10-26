@@ -1,0 +1,103 @@
+{
+  "title": "Kettle: a made-up online tea shop",
+  "lede": "An example project for the work map. Every name, ticket and pull request in it is invented.",
+  "stages": ["Groundwork", "Ordering", "Repeat orders", "Fulfilment", "Launch"],
+  "nodes": [
+    {
+      "id": "accounts",
+      "title": "Accounts",
+      "repo": "kettle",
+      "text": "Sign-up, sign-in and the customer profile.",
+      "status": "planned",
+      "stage": 1,
+      "row": 1,
+      "units": []
+    },
+    {
+      "id": "catalogue",
+      "title": "Tea catalogue",
+      "repo": "kettle",
+      "text": "Teas, blends, tasting notes and stock levels.",
+      "status": "planned",
+      "stage": 1,
+      "row": 2,
+      "units": []
+    },
+    {
+      "id": "basket",
+      "title": "Basket",
+      "repo": "kettle",
+      "text": "Adding, changing and saving a basket across visits.",
+      "status": "planned",
+      "stage": 2,
+      "row": 1,
+      "units": []
+    },
+    {
+      "id": "checkout",
+      "title": "Checkout",
+      "repo": "kettle",
+      "text": "Payment, receipts and the order record.",
+      "status": "planned",
+      "stage": 2,
+      "row": 2,
+      "units": []
+    },
+    {
+      "id": "subscriptions",
+      "title": "Subscriptions",
+      "repo": "kettle",
+      "text": "Monthly boxes: choose, pause, skip and cancel.",
+      "status": "planned",
+      "stage": 3,
+      "row": 1,
+      "units": []
+    },
+    {
+      "id": "dispatch",
+      "title": "Dispatch",
+      "repo": "kettle",
+      "text": "Packing lists, labels and courier hand-off.",
+      "status": "planned",
+      "stage": 4,
+      "row": 1,
+      "units": []
+    },
+    {
+      "id": "launch",
+      "title": "Launch",
+      "repo": "kettle",
+      "text": "The public site, monitoring and the first customers.",
+      "status": "planned",
+      "stage": 5,
+      "row": 1,
+      "units": []
+    }
+  ],
+  "wires": [
+    {
+      "from": ["accounts", "r"],
+      "to": ["basket", "l"]
+    },
+    {
+      "from": ["catalogue", "r"],
+      "to": ["basket", "l"]
+    },
+    {
+      "from": ["basket", "b"],
+      "to": ["checkout", "t"]
+    },
+    {
+      "from": ["checkout", "r"],
+      "to": ["subscriptions", "l"]
+    },
+    {
+      "from": ["subscriptions", "r"],
+      "to": ["dispatch", "l"]
+    },
+    {
+      "from": ["dispatch", "r"],
+      "to": ["launch", "l"]
+    }
+  ]
+}

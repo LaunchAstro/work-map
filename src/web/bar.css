@@ -1,0 +1,100 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   The one bar (progress, review, ticket completion). Frames and dividers are real 1px borders:
+   browsers snap borders to whole pixels at any zoom, which inset shadows never are (#97). */
+.bar {
+  display: flex;
+  height: 18px;
+  overflow: hidden;
+  border: 1px solid var(--bar-border, var(--ink));
+  background: var(--paper);
+}
+.bar > span {
+  flex: 0 0 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  container-type: inline-size;
+  container-name: bar-part;
+}
+.bar > span:last-child {
+  border-right: 0;
+}
+.bar > span:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+}
+.bar [data-tone='live'],
+.bar [data-tone='reviewed'],
+.bar [data-tone='completed'] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.bar [data-tone='merged'] {
+  background: var(--merged);
+  color: var(--on-merged);
+}
+.bar [data-tone='built'] {
+  background: var(--paper-cream);
+  color: var(--ink);
+}
+.bar [data-tone='rest'] {
+  background: var(--paper);
+  color: var(--ink);
+}
+.bar[data-pending='yes'] {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--paper),
+    var(--paper) 5px,
+    var(--rule) 5px,
+    var(--rule) 6px
+  );
+}
+.bar[data-pending='yes'] > span {
+  background: transparent;
+  color: var(--ink);
+}
+.bar-label {
+  display: none;
+  font: inherit;
+  /* The segment's own text colour: white on the dark purple, near-black on the light purple. */
+  color: inherit;
+}
+@container bar-part (min-width: calc(4ch + 12px)) {
+  .bar-label {
+    display: block;
+  }
+}
+.app[data-percentages='hidden'] .bar-label {
+  display: none;
+}
+.app[data-theme='dark'] .bar {
+  --bar-border: var(--card-border);
+}
+.app[data-theme='dark'] .bar [data-tone='rest'] {
+  background: var(--bar-track);
+}
+.node[data-progress='live90'] .bar {
+  --bar-border: #fff;
+  background: transparent;
+}
+.node[data-progress='live90'] .bar > span {
+  border-right-color: color-mix(in srgb, #fff 50%, transparent);
+}
+.node[data-progress='live90'] .bar [data-tone='live'],
+.node[data-progress='live90'] .bar [data-tone='reviewed'],
+.node[data-progress='live90'] .bar [data-tone='completed'] {
+  background: #fff;
+  color: var(--accent);
+}
+.node[data-progress='live90'] .bar [data-tone='rest'],
+.node[data-progress='live90'] .bar[data-pending='yes'] > span {
+  background: transparent;
+  color: #fff;
+}

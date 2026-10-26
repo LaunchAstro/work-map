@@ -1,0 +1,38 @@
+{
+  "_readme": "Section map for the made-up example-org/example-app: each diagram box (the flow file's node ids) and the paths it owns, as globs (** any depth, * within one folder). A changed file belongs to the box with the most specific matching glob; shared files belong to no box.",
+  "repo": "example-org/example-app",
+  "shared": [
+    "pnpm-lock.yaml",
+    "package.json",
+    "**/package.json",
+    "*.md",
+    "docs/**",
+    "tsconfig*.json",
+    ".gitignore",
+    "LICENSE*"
+  ],
+  "boxes": {
+    "design": ["packages/ui/src/kit/**", "packages/ui/src/styles/**", "apps/web/src/frame/**"],
+    "accounts": [
+      "packages/core-records/**",
+      "packages/core-records/src/auth/**",
+      "apps/web/src/screens/SignIn*.tsx"
+    ],
+    "checks": [".github/**", "tests/e2e/**", "scripts/check-*.ts"],
+    "hosting": ["infra/**", "scripts/deploy-*.sh", "scripts/backup-*.sh"],
+    "beds": ["packages/core-records/src/beds/**", "apps/web/src/screens/Bed*.tsx"],
+    "plants": ["packages/core-records/src/plants/**", "data/plants/**"],
+    "tasks": ["packages/core-records/src/tasks/**", "apps/web/src/screens/Task*.tsx"],
+    "people": ["packages/core-records/src/members/**", "apps/web/src/screens/Invite*.tsx"],
+    "chat": ["packages/core-records/src/chat/**", "apps/web/src/chat/**"],
+    "calendar": ["packages/core-records/src/calendar/**", "apps/web/src/screens/Calendar*.tsx"],
+    "sitefix": ["packages/core-records/src/site/**", "apps/site/**"]
+  },
+  "_maps": "Maps (parent issues of tickets filed as issues) to boxes: a PR that refs or closes a ticket issue belongs to the box of the issue's own Section line or plan ticket ID, else of its parent map here. 'outside' is work outside the product.",
+  "maps": {
+    "example-org/example-roadmap#21": "beds",
+    "example-org/example-roadmap#22": "sitefix",
+    "example-org/example-roadmap#23": "accounts",
+    "example-org/tools#5": "outside"
+  }
+}

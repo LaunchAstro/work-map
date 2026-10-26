@@ -1,0 +1,17 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   The diagram's stylesheet, from the roadmap's diagram template, unchanged except where marked.
+   This file is the single entry: it imports the parts in their original order, so the cascade is unchanged. */
+
+@import './flow/01-base.css';
+@import './flow/02-diagram.css';
+@import './flow/03-live-view.css';
+@import './flow/04-header-strip.css';
+@import './flow/05-cards.css';
+@import './flow/06-callout.css';
+@import './flow/07-highlight-tooltip.css';
+@import './flow/08-merge-chart-sync.css';
+@import './flow/09-card-footer.css';
+@import './flow/10-camera-stage.css';
+@import './flow/11-site-versions.css';
+@import './flow/13-agents.css';
+@import './flow/14-seat-gauge.css';

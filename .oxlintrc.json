@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "oxc", "unicorn", "promise", "node"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "error",
+    "pedantic": "off"
+  },
+  "env": {
+    "node": true,
+    "browser": true,
+    "es2024": true
+  },
+  "ignorePatterns": ["node_modules", "dist", ".vendor", ".data"],
+  "overrides": [
+    {
+      "files": ["src/readers/versions.ts"],
+      "rules": {
+        "no-await-in-loop": "off"
+      }
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "asAt": "2 March 2026",
+  "source": "An invented audit of the made-up example-org/example-app, for tests only.",
+  "method": "One entry per build unit in the units table. days = the plan's estimate; code = the share built (low and high bound it); live = yes, partly or no.",
+  "units": {
+    "U01": {
+      "days": 8,
+      "code": 1,
+      "low": 0.95,
+      "high": 1,
+      "live": "yes",
+      "title": "Design kit",
+      "why": "Every kit part is on main and in use"
+    },
+    "U02": {
+      "days": 5,
+      "code": 0.9,
+      "low": 0.85,
+      "high": 0.95,
+      "live": "yes",
+      "title": "App frame",
+      "why": "Sidebar and header on main; the narrow layout is not"
+    },
+    "U03": {
+      "days": 9,
+      "code": 0.8,
+      "low": 0.7,
+      "high": 0.85,
+      "live": "partly",
+      "title": "Sign-in and households",
+      "why": "Sign-in is live; household roles are coded but switched off"
+    },
+    "U04": {
+      "days": 4,
+      "code": 0.75,
+      "low": 0.7,
+      "high": 0.8,
+      "live": "yes",
+      "title": "Test suite and checks",
+      "why": "Checks run on every change; browser tests are not written"
+    },
+    "U05": {
+      "days": 6,
+      "code": 0.6,
+      "low": 0.5,
+      "high": 0.7,
+      "live": "partly",
+      "title": "Hosting and backups",
+      "why": "Practice copy live; backups coded but not scheduled"
+    },
+    "U06": {
+      "days": 10,
+      "code": 0.65,
+      "low": 0.6,
+      "high": 0.7,
+      "live": "partly",
+      "title": "Draw beds",
+      "why": "Beds draw to scale; resizing is half done"
+    },
+    "U07": {
+      "days": 7,
+      "code": 0.3,
+      "low": 0.25,
+      "high": 0.4,
+      "live": "no",
+      "title": "Rows and moves",
+      "why": "Rows exist in the model only"
+    },
+    "U08": {
+      "days": 12,
+      "code": 0.45,
+      "low": 0.4,
+      "high": 0.5,
+      "live": "no",
+      "title": "Plant library",
+      "why": "About 140 of 300 plants entered"
+    },
+    "U09": {
+      "days": 6,
+      "code": 0.5,
+      "low": 0.45,
+      "high": 0.55,
+      "live": "partly",
+      "title": "Garden tasks",
+      "why": "Tasks work; repeat rules do not"
+    },
+    "U10": {
+      "days": 3,
+      "code": 0.2,
+      "low": 0.1,
+      "high": 0.3,
+      "live": "no",
+      "title": "Reminders",
+      "why": "Only the reminder settings page exists"
+    },
+    "U11": {
+      "days": 5,
+      "code": 0.15,
+      "low": 0.1,
+      "high": 0.2,
+      "live": "no",
+      "title": "Invites and roles",
+      "why": "Invite emails drafted, nothing sends"
+    },
+    "U12": {
+      "days": 4,
+      "code": 0,
+      "low": 0,
+      "high": 0,
+      "live": "no",
+      "title": "Garden chat",
+      "why": "Not started"
+    },
+    "U13": {
+      "days": 8,
+      "code": 0.1,
+      "low": 0.05,
+      "high": 0.15,
+      "live": "no",
+      "title": "Season calendar",
+      "why": "Frost-date lookup prototyped only"
+    },
+    "U14": {
+      "days": 2,
+      "code": 1,
+      "low": 1,
+      "high": 1,
+      "live": "yes",
+      "title": "Site fixes",
+      "why": "Both fixes merged and live"
+    }
+  }
+}

@@ -1,0 +1,62 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Related and inspected section highlighting, wire labels and the scope tooltip. */
+
+.node[data-related='yes'] {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.node[data-inspected='yes'],
+.node:hover {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.board[data-inspecting='yes'] .node[data-inspected='no']:not([data-progress='unstarted']) {
+  --card-border: color-mix(in srgb, var(--ink) 35%, transparent);
+}
+.node[data-related='yes'][data-inspected='no']:not(:hover) {
+  outline-color: color-mix(in srgb, var(--accent) 75%, transparent);
+}
+.edge.selected {
+  stroke: var(--accent);
+}
+.wire-labels {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.wire-label {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  max-width: 240px;
+  padding: 6px 9px;
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.scope-tooltip {
+  position: absolute;
+  z-index: 6;
+  max-width: min(320px, calc(100% - 16px));
+  padding: 7px 10px;
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  pointer-events: none;
+}
+.scope-tooltip .tooltip-label {
+  color: #d4d4d4;
+}
+.scope-tooltip .tooltip-value {
+  color: #fff;
+  margin-left: 10px;
+  font-weight: 500;
+}

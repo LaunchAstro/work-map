@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Work map</title>
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <script>
+      // Paints this map's saved theme before the page's script runs (#148). The keys are
+      // src/web/saved-view.ts's; storage may be blocked, and then the map starts light.
+      try {
+        var id =
+          new URLSearchParams(location.search).get('map') || localStorage.getItem('work-map:home');
+        var saved = id && JSON.parse(localStorage.getItem('work-map:view:' + id) || 'null');
+        if (saved && saved.theme === 'dark') document.documentElement.dataset.theme = 'dark';
+      } catch (error) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/web/main.tsx"></script>
+  </body>
+</html>

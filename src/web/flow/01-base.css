@@ -1,0 +1,72 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Tokens, light and dark themes, page base and the original diagram header. */
+
+/* Warm paper ground with a faint grid, square white cards ruled in ink, one violet hub, mono labels. Layout: one column per build stage (set in the project's diagram), wires drawn at right angles in the gaps. */
+:root {
+  /* The diagram's look on the base tokens (styles/tokens.css): the same values the template
+       carried as literals. The three status colours have no token yet and stay as the template had them. */
+  color-scheme: light;
+  --page: var(--paper);
+  --ground: var(--paper-cream);
+  --card: var(--paper);
+  --card-border: var(--ink);
+  --map-stroke: 1px;
+  --muted: var(--ink-muted);
+  --faint: var(--ink-faint);
+  --rule: oklch(0 0 0 / 0.14);
+  --grid: oklch(0 0 0 / 0.055);
+  --accent: #745cee;
+  --merged: #baaef7;
+  --on-accent: #fff;
+  --on-merged: #25202b;
+  --unstarted: #f5f2ef;
+  --built: oklch(0.42 0.16 290);
+  --progress: var(--merged);
+  --open: oklch(0.55 0.15 35);
+}
+/* <html> carries the theme from the first frame (index.html, #148); .app carries it after. */
+:root[data-theme='dark'],
+.app[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #191a1c;
+  --paper-cream: #202124;
+  --ink: #ebe6e2;
+  --ink-muted: #c4bbb5;
+  --ink-faint: #a79d97;
+  --page: #0c0d0f;
+  --ground: #0c0d0f;
+  --card: var(--paper);
+  --muted: var(--ink-muted);
+  --faint: var(--ink-faint);
+  --rule: color-mix(in srgb, var(--ink) 20%, transparent);
+  --card-border: var(--rule);
+  --grid: color-mix(in srgb, var(--ink) 5%, transparent);
+  --unstarted: #1d1e20;
+  --bar-track: #2f3032;
+  color: var(--ink);
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+  overflow: hidden;
+}
+a,
+button {
+  cursor: default;
+}
+h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(30px, 4.2vw, 46px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}

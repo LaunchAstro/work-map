@@ -1,0 +1,84 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Camera controls, the narrow header, stage columns, card and stage meters and the working icon. */
+
+.camera-controls {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.camera-controls button {
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  width: 32px;
+  height: 32px;
+}
+.camera-controls .zoom-readout,
+.camera-controls .agents-toggle {
+  width: auto;
+  min-width: 46px;
+  padding: 6px 8px;
+  font-variant-numeric: tabular-nums;
+}
+.camera-controls button[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+@media (max-width: 899px) {
+  .strip {
+    grid-template-columns: 1fr;
+  }
+  .bar-top {
+    flex-wrap: wrap;
+  }
+  .header-actions {
+    flex-wrap: wrap;
+  }
+}
+/* The stage title only: a descendant rule would also paint the bars' percentage labels (#144). */
+.stage > b {
+  grid-column: 1 / -1;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+.stage-meters {
+  grid-column: 1 / -1;
+}
+.node-meters,
+.stage-meters {
+  display: grid;
+  gap: 12px;
+}
+.node-meters {
+  padding-bottom: 6px;
+}
+.progress-meter,
+.review-meter,
+.tickets-meter {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+.working-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  animation: working-spin 1.2s linear infinite;
+}
+@keyframes working-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .working-icon {
+    animation: none;
+  }
+}

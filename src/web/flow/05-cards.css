@@ -1,0 +1,94 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Section card details: the frame, focus, planning checklist, last lane, agent pill, blockers. */
+
+.node::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: var(--map-stroke) solid var(--card-border);
+}
+.node:focus-visible,
+.node[data-open='yes'] {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.scope-caption {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.planning-mini {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  border: 0;
+  border-top: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--ink) 1.5%, transparent);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.planning-mini [data-exists='yes'] {
+  color: var(--accent);
+}
+.app[data-theme='dark'] .planning-mini [data-exists='yes'],
+.app[data-theme='dark'] .card-counts > span {
+  color: var(--ink);
+}
+.app[data-theme='dark'] .planning-mini [data-exists='yes'] i {
+  color: var(--accent);
+}
+.app[data-theme='dark'] .node[data-progress='live90'] .planning-mini [data-exists='yes'] i {
+  color: var(--on-accent);
+}
+.planning-mini [data-exists='no'] {
+  color: var(--faint);
+  text-decoration: none;
+}
+.agent-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+  padding: 2px 7px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper) 12%, transparent);
+  color: inherit;
+  font-size: 12px;
+  line-height: 1.4;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.agent-pill:hover,
+.agent-pill:focus-visible {
+  border-color: currentColor;
+}
+.agent-pill[data-previous='yes'] {
+  border-style: dashed;
+  opacity: 0.6;
+}
+.agent-pill[data-working='yes'] {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.node[data-progress='live90'] .agent-pill[data-working='yes'] {
+  background: #fff;
+  color: var(--accent);
+  border-color: #fff;
+}
+.blocked {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--muted);
+}
+.edge.blocked {
+  stroke: var(--open);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}

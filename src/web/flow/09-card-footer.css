@@ -1,0 +1,134 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Bar titles, the card footer counts and planning checklist, and the tooltip and wire-label arrows. */
+
+.bar-title {
+  margin-bottom: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+}
+.card-counts {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  border-top: 1px solid var(--rule);
+  text-align: center;
+}
+.node-footer {
+  margin-top: auto;
+  margin-inline: -21px;
+  margin-bottom: -21px;
+}
+.card-counts > span {
+  padding: 6px 2px;
+}
+.card-counts > span + span {
+  border-left: 1px solid var(--rule);
+}
+.node .card-counts > span {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+/* #255: the figure over its one-line label. */
+.node .card-counts b {
+  font-size: 18px;
+  font-weight: 500;
+}
+.node .card-counts small {
+  font-size: 12px;
+}
+.planning-mini > span {
+  display: grid;
+  grid-template-rows: 31px 24px;
+  text-align: center;
+  padding: 0;
+}
+.planning-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 18px;
+}
+.planning-mini > span + span {
+  border-left: 1px solid var(--rule);
+}
+.planning-mini > span > i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 31px;
+  box-sizing: border-box;
+  padding: 0;
+  line-height: 18px;
+  border-bottom: 1px solid var(--rule);
+  font-style: normal;
+  font-size: 18px;
+}
+.pending-label {
+  font-size: 10px;
+  font-weight: 400;
+}
+.scope-tooltip::after,
+.wire-label::after {
+  content: '';
+  position: absolute;
+  border: 7px solid transparent;
+  pointer-events: none;
+}
+.scope-tooltip::after {
+  left: var(--arrow-x);
+  transform: translateX(-50%);
+  top: 100%;
+  border-top-color: #111;
+}
+.scope-tooltip[data-below='yes']::after {
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: #111;
+}
+.wire-label::after {
+  left: 50%;
+  transform: translateX(-50%);
+  top: 100%;
+  border-top-color: #111;
+}
+.wire-label[data-side='right'] {
+  transform: translateY(-50%);
+}
+.wire-label[data-side='right']::after {
+  left: auto;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top-color: transparent;
+  border-right-color: #111;
+}
+.planning-link {
+  color: inherit;
+  text-decoration: none;
+}
+/* Three footer counts (open PRs, blockers, open bugs) share the row a little tighter (#207). */
+.node .card-counts > span:nth-last-child(3),
+.node .card-counts > span:nth-last-child(3) ~ span {
+  font-size: 12px;
+  /* Wrap onto a second line rather than cut "open bugs" off (18 Oct 2026). */
+  white-space: normal;
+  line-height: 1.25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.momentum {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--muted);
+}

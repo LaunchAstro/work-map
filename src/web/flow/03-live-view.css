@@ -1,0 +1,46 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Live view additions: zoom and pan, and the overview list. */
+
+/* ---- Live view additions: zoom and pan. ---- */
+.viewport {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background-color: var(--ground);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 56px 56px;
+  cursor: default;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.viewport .callout {
+  -webkit-user-select: text;
+  user-select: text;
+}
+.viewport a {
+  -webkit-user-drag: none;
+}
+.viewport.dragging {
+  cursor: grabbing;
+}
+.canvas {
+  transform-origin: 0 0;
+}
+.ov-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-weight: 300;
+  font-size: 11px;
+  color: var(--muted);
+}
+.ov-list a {
+  color: var(--ink);
+}

@@ -1,0 +1,27 @@
+name: Config question
+description: Ask how to set up the work map for your own project.
+labels: [question]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        `docs/config.md` describes every setting. Issues are public, so trim your config to what the question needs and replace private names.
+  - type: textarea
+    id: goal
+    attributes:
+      label: What you want the map to show
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Your project.json
+      description: The relevant part, with private names replaced.
+      render: json
+  - type: textarea
+    id: result
+    attributes:
+      label: What you see instead
+      description: The error, or a screenshot of the map.
+    validations:
+      required: true

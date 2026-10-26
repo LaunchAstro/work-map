@@ -1,0 +1,197 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   The app shell, header bar, map tabs and the overview strip with its merge summary and pace. */
+
+.app {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--page);
+}
+.bar-top {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px 14px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--card-border);
+}
+.bar-top h1,
+.updated {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.bar-top h1 {
+  text-transform: capitalize;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+}
+.updated {
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--faint);
+  cursor: default;
+}
+/* Every ticket on the map's repositories, split by kind on hover (#225). */
+.all-tickets {
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink);
+  cursor: help;
+}
+.header-details,
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.header-status {
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+}
+/* The actions wrap under the stamp when the row is full, never squeeze it (18 Oct 2026). */
+.header-details {
+  flex-wrap: wrap;
+}
+.header-details .header-actions {
+  margin-left: auto;
+}
+.map-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+}
+.map-links a {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  padding: 0 0 6px;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  text-transform: capitalize;
+  text-decoration: none;
+}
+.map-links a[aria-current='page'] {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+.map-links a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.map-title-accessible {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.section-context {
+  white-space: pre-line;
+}
+.bar-top .camera-controls,
+.bar-top .sync-controls {
+  font-size: 11.5px;
+}
+.strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 208px 208px;
+  align-items: start;
+  gap: 10px 16px;
+  padding: 8px 20px 12px;
+  border-bottom: 1px solid var(--card-border);
+  background: var(--card);
+}
+.strip .m {
+  display: grid;
+  grid-template-columns: auto;
+  gap: 4px;
+  min-width: 0;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+.strip-tabs {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-start;
+  gap: 4px;
+  /* #257: a full-width band, set apart from the panel below; the selected tab joins the panel. */
+  margin: -8px -20px 0;
+  padding: 6px 20px 0;
+  background: var(--ground);
+  border-bottom: 1px solid var(--card-border);
+}
+.strip-tabs button {
+  margin-bottom: -1px;
+  padding: 7px 14px 9px;
+  border: 1px solid transparent;
+  border-bottom: 2px solid transparent;
+  border-radius: 6px 6px 0 0;
+  background: none;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: 14px;
+  cursor: pointer;
+}
+.strip-tabs button[aria-pressed='true'] {
+  border-color: var(--card-border);
+  border-bottom: 2px solid var(--accent);
+  background: var(--card);
+  color: var(--ink);
+  font-weight: 600;
+}
+.overview-panel {
+  min-height: 122px;
+  display: grid;
+  align-items: center;
+}
+.status-column {
+  border-left: 1px solid var(--rule);
+  padding: 8px 0 0 20px;
+}
+.merge-summary {
+  display: grid;
+  gap: 4px;
+  border-left: 1px solid var(--rule);
+  padding: 8px 0 0 20px;
+}
+.merge-summary .m,
+.placement-group .m {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 4px;
+}
+.merge-summary .big small {
+  font-size: 11px;
+  font-weight: 400;
+}
+.strip .ml {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.strip .gaps {
+  cursor: default;
+}
+.strip .ov-list {
+  grid-column: 1 / -1;
+  max-height: 30vh;
+  overflow: auto;
+}
+.strip .pace {
+  display: grid;
+  gap: 4px;
+}

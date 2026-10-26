@@ -1,0 +1,8 @@
+node_modules
+dist
+.vendor
+.data
+pnpm-lock.yaml
+.v2data
+.local
+public/*.svg

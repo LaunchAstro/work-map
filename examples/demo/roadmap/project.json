@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "id": "kettle",
+  "title": "Kettle work map",
+  "roadmapRepo": "example-work-map/kettle-roadmap",
+  "productRepo": "example-work-map/kettle",
+  "repos": ["example-work-map/kettle"],
+  "files": {
+    "flow": "flow.json",
+    "audit": "audit.json",
+    "plan": "units.md",
+    "mapping": "mapping.json",
+    "sections": "section-map.json"
+  },
+  "lanePrefix": "KT-",
+  "laneRules": [],
+  "ticketConventions": {
+    "readyLabel": "ready",
+    "ticketLabels": ["ready"],
+    "mapLabel": "map",
+    "ideaLabels": [],
+    "ideaPattern": "^Idea:",
+    "specLabels": [],
+    "specPattern": "^Spec:"
+  },
+  "progress": {
+    "basis": "ticket-count",
+    "repositories": {},
+    "notPlaced": "sections",
+    "placement": {
+      "example-work-map/kettle": {
+        "titlePrefixes": {
+          "Accounts": "accounts",
+          "Catalogue": "catalogue",
+          "Basket": "basket",
+          "Checkout": "checkout",
+          "Subscriptions": "subscriptions",
+          "Dispatch": "dispatch",
+          "Launch": "launch"
+        }
+      }
+    }
+  },
+  "dependencies": []
+}

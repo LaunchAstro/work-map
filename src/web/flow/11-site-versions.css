@@ -1,0 +1,17 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   Header text at narrower window widths. */
+
+@media (max-width: 1200px) {
+  .bar-top h1,
+  .map-links a {
+    font-size: 18px;
+  }
+  .bar-top {
+    gap: 8px;
+  }
+  .bar-top .updated,
+  .bar-top .camera-controls,
+  .bar-top .sync-controls {
+    font-size: 11px;
+  }
+}

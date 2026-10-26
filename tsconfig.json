@@ -1,0 +1,32 @@
+{
+  // Strict settings for the data logic, readers and command line.
+  "compilerOptions": {
+    "target": "es2023",
+    // Browser tests and the web modules they import need DOM types; a stray triple-slash reference supplied them until #252.
+    "lib": ["ES2023", "DOM"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["node"],
+    "moduleDetection": "force",
+    "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "isolatedDeclarations": true,
+    "declaration": true,
+    "noEmit": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "erasableSyntaxOnly": true,
+    "useUnknownInCatchVariables": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/core/**/*.ts", "src/readers/**/*.ts", "src/cli/**/*.ts", "test/**/*.ts"],
+  "exclude": ["**/node_modules", "**/dist"]
+}

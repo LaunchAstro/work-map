@@ -1,0 +1,14 @@
+{
+  "repo": "example-work-map/kettle",
+  "maps": {},
+  "shared": ["package.json", "README.md"],
+  "boxes": {
+    "accounts": ["src/accounts/**"],
+    "catalogue": ["src/catalogue/**"],
+    "basket": ["src/basket/**"],
+    "checkout": ["src/checkout/**"],
+    "subscriptions": ["src/subscriptions/**"],
+    "dispatch": ["src/dispatch/**"],
+    "launch": ["src/launch/**"]
+  }
+}

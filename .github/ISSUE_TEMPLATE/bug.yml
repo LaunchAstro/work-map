@@ -1,0 +1,45 @@
+name: Bug
+description: Something on the map, the server or a collector does the wrong thing.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check the open issues first. Don't paste tokens, private repository names or anything else you'd rather keep private: issues are public.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: From a fresh start, as few steps as show the problem.
+      placeholder: |
+        1. pnpm install --frozen-lockfile
+        2. ...
+    validations:
+      required: true
+  - type: input
+    id: commit
+    attributes:
+      label: Commit
+      description: The output of `git rev-parse --short HEAD` in your work map clone.
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: macOS, Node and pnpm versions
+      placeholder: macOS 26.1, Node 24.11.0, pnpm 12.3.4
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Error output, the last lines of `runs.jsonl` in your data folder, or a screenshot. Remove anything private first.
+      render: text

@@ -1,0 +1,46 @@
+[
+  {
+    "pattern": "^(On)?SiteFix|PublicSite|SignUpPage",
+    "box": "sitefix"
+  },
+  {
+    "pattern": "^(On)?Invites?|Members?|Roles",
+    "box": "people"
+  },
+  {
+    "pattern": "^(On)?Chat|Messages",
+    "box": "chat"
+  },
+  {
+    "pattern": "^(On)?Beds?|Rows|Layout",
+    "box": "beds"
+  },
+  {
+    "pattern": "^(On)?Plants?|Library|Spacing",
+    "box": "plants"
+  },
+  {
+    "pattern": "^(On)?Tasks?|Reminders?",
+    "box": "tasks"
+  },
+  {
+    "pattern": "^(On)?Calendar|Frost|Season",
+    "box": "calendar"
+  },
+  {
+    "pattern": "^(On)?SignIn|Accounts?|Households?",
+    "box": "accounts"
+  },
+  {
+    "pattern": "^(Staging|Prod)?Deploy|Backups?|Hosting",
+    "box": "hosting"
+  },
+  {
+    "pattern": "^FlakeFix|CISpeed|Lint|Checks",
+    "box": "checks"
+  },
+  {
+    "pattern": "^Design|Kit|Frame|Sidebar",
+    "box": "design"
+  }
+]

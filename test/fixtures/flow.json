@@ -1,0 +1,35 @@
+{
+  "title": "Fixture flow",
+  "lede": "Lede",
+  "stages": ["Foundation", "Tasks"],
+  "nodes": [
+    {
+      "id": "found",
+      "title": "Foundation",
+      "repo": "r",
+      "text": "t",
+      "stage": 1,
+      "row": 1,
+      "units": ["U01", "U02"]
+    },
+    {
+      "id": "tasks",
+      "title": "Tasks",
+      "repo": "r",
+      "text": "t",
+      "stage": 2,
+      "row": 1,
+      "units": ["U03"]
+    },
+    {
+      "id": "fix",
+      "title": "Fix",
+      "repo": "r",
+      "text": "t",
+      "stage": 2,
+      "row": 2,
+      "units": ["U04"]
+    }
+  ],
+  "wires": [{ "from": ["found", "r"], "to": ["tasks", "l"] }]
+}

@@ -1,0 +1,154 @@
+{
+  "howToEdit": "Boxes: each entry in nodes has id, title, repo (the small grey line), text, stage (the column) and row (the place in the column, top first), and lists its build units. Wires join a box's side (l or r) to another box's side.",
+  "asAt": "2 March 2026",
+  "shot": {
+    "width": 1400,
+    "height": 1100
+  },
+  "title": "How Acme Garden Planner fits together, and how far each part is built",
+  "lede": "The whole planner in build order, left to right. The foundation is mostly built; planning is under way; sharing has barely started.",
+  "stages": ["Foundation", "Planning", "Sharing"],
+  "nodes": [
+    {
+      "id": "design",
+      "title": "Design kit and app frame",
+      "repo": "kit · frame · icons",
+      "text": "Colours, type, the component kit and the app frame with its sidebar.",
+      "stage": 1,
+      "row": 1,
+      "units": ["U01", "U02"]
+    },
+    {
+      "id": "accounts",
+      "title": "Accounts and sign-in",
+      "repo": "sign-in · households",
+      "text": "Sign-in, households and who can see which garden.",
+      "stage": 1,
+      "row": 2,
+      "units": ["U03"]
+    },
+    {
+      "id": "checks",
+      "title": "Checks and test suite",
+      "repo": "ci · tests",
+      "text": "The test suite and the checks every change runs.",
+      "stage": 1,
+      "row": 3,
+      "units": ["U04"]
+    },
+    {
+      "id": "hosting",
+      "title": "Hosting and backups",
+      "repo": "deploy · backups",
+      "text": "A practice copy, the live copy and nightly backups.",
+      "stage": 1,
+      "row": 4,
+      "units": ["U05"]
+    },
+    {
+      "id": "beds",
+      "title": "Garden beds",
+      "repo": "beds · layout",
+      "text": "Draw beds to scale, split them into rows and move them about.",
+      "stage": 2,
+      "row": 1,
+      "units": ["U06", "U07"]
+    },
+    {
+      "id": "plants",
+      "title": "Plant library",
+      "repo": "plants · spacing",
+      "text": "A library of plants with spacing, sun and season notes.",
+      "stage": 2,
+      "row": 2,
+      "units": ["U08"]
+    },
+    {
+      "id": "tasks",
+      "title": "Garden tasks",
+      "repo": "tasks · reminders",
+      "text": "Sowing, watering and harvest tasks, with reminders.",
+      "stage": 2,
+      "row": 3,
+      "units": ["U09", "U10"]
+    },
+    {
+      "id": "people",
+      "title": "Members and invites",
+      "repo": "invites · roles",
+      "text": "Invite a neighbour to a shared garden and give them a role.",
+      "stage": 3,
+      "row": 1,
+      "units": ["U11"]
+    },
+    {
+      "id": "chat",
+      "title": "Garden chat",
+      "repo": "messages",
+      "text": "Short messages on a bed or a task.",
+      "stage": 3,
+      "row": 2,
+      "units": ["U12"]
+    },
+    {
+      "id": "calendar",
+      "title": "Season calendar",
+      "repo": "calendar · frost dates",
+      "text": "A calendar of what to sow and harvest, from local frost dates.",
+      "stage": 3,
+      "row": 3,
+      "units": ["U13"]
+    },
+    {
+      "id": "sitefix",
+      "title": "Public site fixes",
+      "repo": "site",
+      "text": "Fixes to the public site and its sign-up page.",
+      "stage": 3,
+      "row": 4,
+      "units": ["U14"]
+    }
+  ],
+  "wires": [
+    {
+      "from": ["design", "r"],
+      "to": ["beds", "l"]
+    },
+    {
+      "from": ["accounts", "r"],
+      "to": ["beds", "l"]
+    },
+    {
+      "from": ["accounts", "r"],
+      "to": ["people", "l"]
+    },
+    {
+      "from": ["beds", "r"],
+      "to": ["tasks", "l"]
+    },
+    {
+      "from": ["plants", "r"],
+      "to": ["calendar", "l"]
+    },
+    {
+      "from": ["tasks", "r"],
+      "to": ["chat", "l"]
+    }
+  ],
+  "steps": [
+    {
+      "title": "Foundation.",
+      "text": "The design kit and app frame, sign-in and households, the checks and the hosting with backups."
+    },
+    {
+      "title": "Planning.",
+      "text": "Beds drawn to scale, the plant library and the garden tasks with their reminders."
+    },
+    {
+      "title": "Sharing.",
+      "text": "Members and invites, garden chat, the season calendar and fixes to the public site."
+    }
+  ],
+  "footnote": "Percentages come from an audit of each build unit against the code, weighted by its estimate in days. Live counts a unit fully when it is in use, half when it is partly in use.",
+  "overallNote": "Measured against everything the plan holds: 14 build units, about 89 estimate-days, each weighted by its size."
+}

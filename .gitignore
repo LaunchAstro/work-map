@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.vendor/
+.data/
+.v2data/
+.data*/
+.local/

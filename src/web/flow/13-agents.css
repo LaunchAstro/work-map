@@ -1,0 +1,23 @@
+/* SPDX-License-Identifier: AGPL-3.0-only
+   A ticket card's frozen score line and its agent pills (#252). */
+
+.score-line {
+  font-size: 12px;
+  line-height: 1.3;
+  opacity: 0.85;
+}
+
+.agent-sparkle {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 12px;
+}
+.agent-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding-bottom: 6px;
+}
+.app[data-agents='hidden'] .agent-pills {
+  display: none;
+}
